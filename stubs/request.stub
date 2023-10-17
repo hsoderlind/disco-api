@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests;
+namespace {{ namespace }};
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ShopRequest extends FormRequest
+class {{ class }} extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,12 +22,7 @@ class ShopRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'orgnumber' => 'required|string|unique:shops|max:12',
-            'address_street1' => 'required|string|max:255',
-            'address_street2' => 'nullable|string|max:255',
-            'address_zip' => 'required|string|max:255',
-            'address_city' => 'required|string|max:255',
+            //
         ];
     }
 }
