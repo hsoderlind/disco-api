@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read int $id
  * @property-read int $shop_id
  * @property int $tax_id
- * @property int $barcode_id
  * @property int $supplier_id
  * @property int $manufacturer_id
  * @property int $price

@@ -9,6 +9,6 @@ abstract class ShopMigrationMethods
 {
     public static function addShopIdColumn(Blueprint $table): void
     {
-        $table->foreignIdFor(Shop::class);
+        $table->foreignIdFor(Shop::class)->constrained();
     }
 }

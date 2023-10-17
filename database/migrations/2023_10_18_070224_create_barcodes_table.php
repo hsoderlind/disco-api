@@ -2,7 +2,8 @@
 
 use App\MigrationMethods\ShopMigrationMethods;
 use App\Models\Barcode;
-use App\Models\Tax;
+use App\Models\BarcodeType;
+use App\Models\Product;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,13 +15,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('barcodes', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Tax::class);
-            $table->foreignIdFor(Barcode::class);
+            $table->foreignIdFor(BarcodeType::class)->constrained();
+            $table->string('value', 255);
             $table->softDeletes();
             $table->timestamps();
             ShopMigrationMethods::addShopIdColumn($table);
+        });
+
+        Schema::create('barcode_product', function (Blueprint $table) {
+            $table->foreignIdFor(Barcode::class);
+            $table->foreignIdFor(Product::class);
         });
     }
 
@@ -29,6 +35,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('barcodes');
+        Schema::dropIfExists('barcode_product');
     }
 };
