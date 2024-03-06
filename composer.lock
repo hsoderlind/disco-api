@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a3b78df11ddc535e21f326b7ed36a7fb",
+    "content-hash": "aacd42dac0a8e9371092818f99116142",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1080,6 +1080,46 @@
                 }
             ],
             "time": "2021-10-07T12:57:01+00:00"
+        },
+        {
+            "name": "hsoderlind/discogs-api-php",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hsoderlind/discogs-api-php.git",
+                "reference": "3825304141ef513edbed03b36fb5e379b5ba6320"
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.5.5|^7.0.1",
+                "php": "^7.3|^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Hsoderlind\\Discogs\\": "src/",
+                    "Hsoderlind\\Discogs\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Henrik Söderlind",
+                    "email": "henrik.soderlind@live.se"
+                }
+            ],
+            "description": "This library is a PHP implementation of the Discogs API, a REST-based interface",
+            "keywords": [
+                "api",
+                "discogs",
+                "php"
+            ],
+            "time": "2022-11-01T20:24:06+00:00"
         },
         {
             "name": "laravel/fortify",
@@ -9121,7 +9161,7 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,

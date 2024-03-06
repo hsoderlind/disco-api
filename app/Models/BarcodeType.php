@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null $deleted_at
  * @property string $created_at
  * @property string $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Barcode[] $barcodes
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)

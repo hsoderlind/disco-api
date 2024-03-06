@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Shop\ShopSession;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +23,7 @@ class ShopsPermission
 
         if (! empty($shopId)) {
             // session value set on login
-            setPermissionsTeamId($shopId);
+            ShopSession::setId($shopId);
         }
 
         return $next($request);

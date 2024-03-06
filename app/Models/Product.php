@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Product\ProductCondition;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -40,6 +41,9 @@ class Product extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'tax_id',
+        'supplier_id',
+        'manufacturer_id',
         'price',
         'reference',
         'supplier_reference',
@@ -48,6 +52,11 @@ class Product extends Model
         'condition',
         'name',
         'description',
+    ];
+
+    protected $casts = [
+        'condition' => ProductCondition::class,
+        'available_at' => 'date:Y-m-d',
     ];
 
     // Relationships
