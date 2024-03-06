@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
-use Symfony\Component\HttpFoundation\Response;
 
 class Controller extends BaseController
 {
@@ -28,7 +27,7 @@ class Controller extends BaseController
         //
     }
 
-    protected function afterCallingAction(Response $response, $method, $parameters)
+    protected function afterCallingAction($response, $method, $parameters)
     {
         //
     }
