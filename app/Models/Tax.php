@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property-read int $id
- * @property-read int $shop_id
+ * @property int $shop_id
  * @property string $name
  * @property int $value
  * @property bool $active
