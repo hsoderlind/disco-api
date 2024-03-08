@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aacd42dac0a8e9371092818f99116142",
+    "content-hash": "54eaf428845fd4c975b6ad0eeed5638f",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1187,16 +1187,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v10.10.1",
+            "version": "v10.16.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "be0478dea96a6619bb77676f36f67c1500846b17"
+                "reference": "5c93d2795c393b462481179ce42dedfb30cc19b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/be0478dea96a6619bb77676f36f67c1500846b17",
-                "reference": "be0478dea96a6619bb77676f36f67c1500846b17",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/5c93d2795c393b462481179ce42dedfb30cc19b5",
+                "reference": "5c93d2795c393b462481179ce42dedfb30cc19b5",
                 "shasum": ""
             },
             "require": {
@@ -1383,7 +1383,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2023-05-11T13:20:25+00:00"
+            "time": "2023-07-26T03:30:46+00:00"
         },
         {
             "name": "laravel/sanctum",
@@ -9162,7 +9162,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "hsoderlind/discogs-api-php": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
