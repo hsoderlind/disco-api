@@ -19,6 +19,8 @@ class CategoryResource extends JsonResource
             'name' => $this->name,
             'parent' => $this->parent,
             'level' => $this->level,
+            'sort_order' => $this->sort_order,
+            'children_count' => $this->whenCounted('children'),
             'children' => self::collection($this->whenLoaded('children')),
         ];
     }

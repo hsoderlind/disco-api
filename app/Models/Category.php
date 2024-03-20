@@ -11,10 +11,11 @@ use Illuminate\Support\Collection as SupportCollection;
 
 /**
  * @property-read int $id
- * @property-read int $shop_id
+ * @property int $shop_id
  * @property string $name
  * @property int $parent
  * @property int $level
+ * @property int $sort_order
  * @property string|null $deleted_at
  * @property string $created_at
  * @property string $updated_at
@@ -48,6 +49,7 @@ class Category extends Model
     protected $fillable = [
         'name',
         'parent',
+        'sort_order',
     ];
 
     // Relationships
@@ -58,7 +60,9 @@ class Category extends Model
 
     public function children(): HasMany
     {
-        return $this->hasMany(self::class, 'parent');
+        return $this->hasMany(self::class, 'parent')
+            ->orderBy('sort_order')
+            ->orderBy('name');
     }
 
     // Local Scopes

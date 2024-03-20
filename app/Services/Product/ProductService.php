@@ -12,9 +12,15 @@ class ProductService
         //
     }
 
-    public function list()
+    public function list(?int $category = 0)
     {
-        return Product::inShop($this->shopId)->get();
+        if (! isset($category) || $category === 0) {
+            return Product::inShop($this->shopId)->get();
+        } else {
+            return Product::inShop($this->shopId)
+                ->whereHas('categories', fn ($query) => $query->where('categories.id', $category))
+                ->get();
+        }
     }
 
     public function create(array $data): Product

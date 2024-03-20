@@ -32,15 +32,16 @@ class TaxService
 
     public function update(int $id, array $data): Tax
     {
-        $tax = Tax::findOrDie($id);
+        $tax = Tax::findOrFail($id);
         $tax->fille($data);
+        $tax->save();
 
         return $tax;
     }
 
     public function delete(int $id)
     {
-        $tax = Tax::find($id);
+        $tax = Tax::findOrFail($id);
         $tax->delete();
     }
 }

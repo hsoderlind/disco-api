@@ -8,6 +8,7 @@ use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Services\Product\ProductService;
 use App\Services\Shop\ShopSession;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -18,9 +19,9 @@ class ProductController extends Controller
         $this->service = new ProductService(ShopSession::getId());
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $products = $this->service->list();
+        $products = $this->service->list((int) $request->query('category'));
 
         return ProductResource::collection($products);
     }
