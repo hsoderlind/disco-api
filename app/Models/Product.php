@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $available_at
  * @property string $condition
  * @property string $name
+ * @property string|null $summary
  * @property string|null $description
  * @property string|null $deleted_at
  * @property string $created_at

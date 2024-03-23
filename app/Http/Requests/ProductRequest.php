@@ -34,6 +34,7 @@ class ProductRequest extends FormRequest
             'available_at' => 'sometimes|nullable|date',
             'condition' => [Rule::enum(ProductCondition::class)],
             'name' => 'required|string|max:255',
+            'summary' => 'nullable|string',
             'description' => 'nullable|string',
             'barcodes.*' => 'integer',
             'categories.*' => 'integer',

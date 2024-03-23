@@ -23,6 +23,7 @@ class ProductResource extends JsonResource
             'available_at' => $this->available_at,
             'condition' => $this->condition,
             'name' => $this->name,
+            'summary' => $this->summary,
             'description' => $this->description,
             'categories' => CategoryResource::collection($this->whenLoaded('categories')),
             'tax' => new TaxResource($this->tax),
