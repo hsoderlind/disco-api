@@ -23,9 +23,7 @@ class TaxService
 
     public function create(array $data): Tax
     {
-        $tax = new Tax($data);
-        $tax->shop_id = $this->shopId;
-        $tax->save();
+        $tax = Tax::create($data);
 
         return $tax;
     }

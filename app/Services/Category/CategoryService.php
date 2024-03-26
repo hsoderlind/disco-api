@@ -22,9 +22,7 @@ class CategoryService
 
     public function create(array $data): Category
     {
-        $category = new Category($data);
-        $category->shop_id = $this->shopId;
-        $category->save();
+        $category = Category::create($data);
 
         return $category;
     }

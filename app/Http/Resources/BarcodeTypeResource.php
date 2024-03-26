@@ -17,6 +17,9 @@ class BarcodeTypeResource extends JsonResource
         return [
             'id' => $this->id,
             'label' => $this->label,
+            'format' => $this->format,
+            'sort_order' => $this->sort_order,
+            'active' => $this->active,
             'barcodes' => BarcodeResource::collection($this->whenLoaded('barcodes')),
         ];
     }

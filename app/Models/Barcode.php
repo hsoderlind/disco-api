@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Shop\ShopSession;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -30,6 +31,13 @@ class Barcode extends Model
     protected $fillable = [
         'value',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(fn ($instance) => $instance->shop_id = ShopSession::getId());
+    }
 
     // Relationships
     public function products(): BelongsToMany

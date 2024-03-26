@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Services\Product\ProductCondition;
+use App\Services\Shop\ShopSession;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property-read int $id
- * @property-read int $shop_id
+ * @property int $shop_id
  * @property int $tax_id
  * @property int $supplier_id
  * @property int $manufacturer_id
@@ -59,6 +60,13 @@ class Product extends Model
         'condition' => ProductCondition::class,
         'available_at' => 'date:Y-m-d',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(fn ($instance) => $instance->shop_id = ShopSession::getId());
+    }
 
     // Relationships
     public function categories(): BelongsToMany

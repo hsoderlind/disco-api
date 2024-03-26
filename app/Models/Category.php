@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Shop\ShopSession;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,6 +35,7 @@ class Category extends Model
         parent::boot();
 
         static::creating(function ($instance) {
+            $instance->shop_id = ShopSession::getId();
             $parentCategory = static::find($instance->parent);
             $instance->level = $parentCategory ? $parentCategory->level++ : 0;
         });
