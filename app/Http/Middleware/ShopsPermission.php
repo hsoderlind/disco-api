@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Shop\ShopService;
 use App\Services\Shop\ShopSession;
 use Closure;
 use Illuminate\Http\Request;
@@ -21,10 +22,20 @@ class ShopsPermission
         $shopidFromParams = $request->route()->parameter('shopId');
         $shopId = $shopIdFromHeader ?? $shopIdFromQuery ?? $shopidFromParams;
 
-        if (! empty($shopId)) {
-            // session value set on login
-            ShopSession::setId($shopId);
+        if (empty($shopId)) {
+            abort(404);
         }
+
+        ShopSession::setId($shopId);
+
+        $shop = ShopService::get($shopId);
+        $userBelongsToShop = ShopService::verifyUser($request->user(), $shop);
+
+        if (! $userBelongsToShop) {
+            abort(403);
+        }
+
+        $request->merge(['shop' => $shop]);
 
         return $next($request);
     }

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -34,6 +35,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Barcode[] $barcodes
  * @property-read \App\Models\Supplier $supplier
  * @property-read \App\Models\Manufacturer $manufacturer
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\AttributeProduct[] $productAttributes
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
@@ -92,6 +94,11 @@ class Product extends Model
     public function manufacturer(): HasOne
     {
         return $this->hasOne(Manufacturer::class);
+    }
+
+    public function productAttributes(): HasMany
+    {
+        return $this->hasMany(AttributeProduct::class);
     }
 
     // Local Scopes

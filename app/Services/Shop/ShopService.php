@@ -89,4 +89,13 @@ abstract class ShopService
     {
         return $user->shops()->get();
     }
+
+    public static function verifyUser(User $user, ?Shop $shop = null): bool
+    {
+        if (! $shop) {
+            $shop = self::get(ShopSession::getId());
+        }
+
+        return $shop->users()->where('user_id', $user->getKey())->exists();
+    }
 }

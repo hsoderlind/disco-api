@@ -21,6 +21,11 @@ class ShopController extends Controller
     public function readByUrlAlias(Request $request, string $urlAlias)
     {
         $shop = ShopService::getByUrlAlias($urlAlias);
+        $userBelongsToShop = ShopService::verifyUser($request->user(), $shop);
+
+        if (! $userBelongsToShop) {
+            abort(403);
+        }
 
         return new ShopResource($shop);
     }
