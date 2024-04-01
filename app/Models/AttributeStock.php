@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property-read int $id
  * @property-read int $shop_id
+ * @property string $sku
  * @property string $stock_unit
  * @property string $out_of_stock_message
  * @property string $available_at
@@ -28,9 +29,11 @@ class AttributeStock extends Model
     use HasFactory;
 
     protected $fillable = [
+        'sku',
         'stock_unit',
         'out_of_stock_message',
         'available_at',
+        'allow_order_out_of_stock',
         'initial_quantity',
         'reserved_quantity',
         'sold_quantity',

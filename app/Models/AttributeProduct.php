@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read int $shop_id
  * @property int $sort_order
  * @property bool $active
+ * @property-read int $product_id
+ * @property-read int $attribute_type_id
+ * @property-read int $attribute_value_id
  * @property-read \App\Models\Product $product
  * @property-read \App\Models\AttributeType $attribute_type
  * @property-read \App\Models\AttributeValue $attribute_value

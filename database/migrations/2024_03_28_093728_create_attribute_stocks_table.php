@@ -17,11 +17,12 @@ return new class extends Migration
             $table->id();
             ShopMigrationMethods::addShopIdColumn($table);
             $table->foreignIdFor(AttributeProduct::class)->constrained();
+            $table->string('sku')->nullable();
             $table->string('stock_unit')->nullable();
-            $table->string('out_of_stock_message');
-            $table->dateTime('available_at');
+            $table->string('out_of_stock_message')->nullable();
+            $table->dateTime('available_at')->nullable();
             $table->boolean('allow_order_out_of_stock')->default(false);
-            $table->bigInteger('initial_quantity');
+            $table->bigInteger('initial_quantity')->default(0);
             $table->bigInteger('reserved_quantity')->nullable();
             $table->bigInteger('sold_quantity')->nullable();
             $table->timestamps();

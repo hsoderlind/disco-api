@@ -2,17 +2,17 @@
 
 namespace App\Http\Requests;
 
-use App\Services\Product\ProductRules;
+use App\Services\ProductAttribute\ProductsAttributeRules;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductRequest extends FormRequest
+class AttributeProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return (new ProductRules())->authorize($this->user());
+        return false;
     }
 
     /**
@@ -22,7 +22,7 @@ class ProductRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = new ProductRules();
+        $rules = new ProductsAttributeRules();
 
         if (! $rules->shouldValidate($this->getMethod())) {
             return [];

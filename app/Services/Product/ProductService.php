@@ -3,6 +3,7 @@
 namespace App\Services\Product;
 
 use App\Models\Product;
+use App\Services\ProductAttribute\ProductAttributeService;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
@@ -54,6 +55,16 @@ class ProductService
             $product = Product::create($data);
             $product->categories()->sync($data['categories']);
             $product->barcodes()->sync($data['barcodes']);
+
+            if (isset($data['product_attributes'])) {
+                $productAttributeService = new ProductAttributeService($this->shopId);
+
+                foreach ($data['product_attributes'] as $productAttributeData) {
+                    $productAttribute = $productAttributeService->create($productAttributeData);
+
+                    $productAttribute->product()->associate($product);
+                }
+            }
 
             return $product;
         });
