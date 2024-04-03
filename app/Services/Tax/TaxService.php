@@ -30,15 +30,16 @@ class TaxService
 
     public function update(int $id, array $data): Tax
     {
-        $tax = Tax::findOrFail($id);
+        $tax = Tax::inShop($this->shopId)->findOrFail($id);
         $tax->update($data);
 
         return $tax;
     }
 
-    public function delete(int $id)
+    public function delete(int $id): bool
     {
-        $tax = Tax::findOrFail($id);
-        $tax->delete();
+        $tax = Tax::inShop($this->shopId)->findOrFail($id);
+
+        return $tax->delete();
     }
 }

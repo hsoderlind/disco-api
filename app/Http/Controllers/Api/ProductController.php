@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\HttpResponseCode;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
@@ -12,7 +13,7 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    private $service;
+    private ProductService $service;
 
     protected function beforeCallingAction($method, $parameters)
     {
@@ -47,6 +48,12 @@ class ProductController extends Controller
 
     public function destroy(ProductRequest $request, int $id)
     {
-        $this->service->delete($id);
+        $deleted = $this->service->delete($id);
+
+        if (! $deleted) {
+            abort(HttpResponseCode::METHOD_NOT_ALLOWED, 'Produkten raderades inte.');
+        }
+
+        response()->setStatusCode(HttpResponseCode::OK)->send();
     }
 }

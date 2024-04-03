@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\HttpResponseCode;
 use App\Http\Requests\TaxRequest;
 use App\Http\Resources\TaxResource;
 use App\Services\Shop\ShopSession;
@@ -45,6 +46,12 @@ class TaxController extends Controller
 
     public function destroy(int $id)
     {
-        $this->service->delete($id);
+        $deleted = $this->service->delete($id);
+
+        if (! $deleted) {
+            abort(HttpResponseCode::METHOD_NOT_ALLOWED, 'Momsklassen raderades inte.');
+        }
+
+        response()->setStatusCode(HttpResponseCode::OK)->send();
     }
 }

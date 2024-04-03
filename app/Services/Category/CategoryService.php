@@ -36,9 +36,10 @@ class CategoryService
         return $category;
     }
 
-    public function delete(int $id)
+    public function delete(int $id): bool
     {
         $category = Category::findOrFail($id);
-        $category->delete();
+
+        return $category->delete();
     }
 }

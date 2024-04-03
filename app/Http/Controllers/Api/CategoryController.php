@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\HttpResponseCode;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Services\Category\CategoryService;
@@ -41,6 +42,12 @@ class CategoryController extends Controller
 
     public function destroy(int $id)
     {
-        $this->service->delete($id);
+        $deleted = $this->service->delete($id);
+
+        if (! $deleted) {
+            abort(HttpResponseCode::METHOD_NOT_ALLOWED, 'Kategorin raderades inte.');
+        }
+
+        response()->setStatusCode(HttpResponseCode::OK)->send();
     }
 }

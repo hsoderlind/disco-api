@@ -34,7 +34,7 @@ class BarcodeTypeService
 
     public function update(int $id, array $data): BarcodeType
     {
-        $barcodeType = BarcodeType::findOrFail($id);
+        $barcodeType = BarcodeType::inShop($this->shopId)->findOrFail($id);
         $barcodeType->fill($data);
         $barcodeType->save();
 
@@ -43,7 +43,8 @@ class BarcodeTypeService
 
     public function delete(int $id)
     {
-        $barcodeType = BarcodeType::findOrFail($id);
-        $barcodeType->delete();
+        $barcodeType = BarcodeType::inShop($this->shopId)->findOrFail($id);
+
+        return $barcodeType->delete();
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\HttpResponseCode;
 use App\Http\Requests\BarcodeTypeRequest;
 use App\Http\Resources\BarcodeTypeResource;
 use App\Services\BarcodeType\BarcodeTypeService;
@@ -40,6 +41,12 @@ class BarcodeTypeController extends Controller
 
     public function destroy(BarcodeTypeRequest $request, int $id)
     {
-        $this->service->delete($id);
+        $deleted = $this->service->delete($id);
+
+        if (! $deleted) {
+            abort(HttpResponseCode::METHOD_NOT_ALLOWED, 'Attributtypen raderades inte.');
+        }
+
+        response()->setStatusCode(HttpResponseCode::OK)->send();
     }
 }
