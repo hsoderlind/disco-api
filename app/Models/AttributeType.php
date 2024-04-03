@@ -6,6 +6,7 @@ use App\Services\Shop\ShopSession;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -40,6 +41,11 @@ class AttributeType extends Model
     public function attributeValues(): HasMany
     {
         return $this->hasMany(AttributeValue::class);
+    }
+
+    public function products(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'attribute_products');
     }
 
     // Local Scopes

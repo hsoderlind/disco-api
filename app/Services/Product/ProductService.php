@@ -5,7 +5,6 @@ namespace App\Services\Product;
 use App\Models\Product;
 use App\Services\ProductAttribute\ProductAttributeService;
 use Illuminate\Support\Facades\DB;
-use InvalidArgumentException;
 
 class ProductService
 {
@@ -32,18 +31,10 @@ class ProductService
      */
     public function read(int $id, ?array $withRelations = []): Product
     {
-        $product = Product::findOrFail($id);
+        $product = Product::inShop($this->shopId)->findOrFail($id);
 
         if (count($withRelations) > 0) {
-            foreach ($withRelations as $relation) {
-                if (is_string($relation)) {
-                    $product->load($relation);
-                } elseif (is_array($relation) && count($relation) === 2 && is_callable($relation[1])) {
-                    $product->load($relation[0], $relation[1]);
-                } else {
-                    throw new InvalidArgumentException('The array entry does not match the valid format of array<string | array<string, function>>.');
-                }
-            }
+            $product->load($withRelations);
         }
 
         return $product;
@@ -73,9 +64,8 @@ class ProductService
     public function update(int $id, array $data): Product
     {
         return DB::transaction(function () use ($id, $data) {
-            $product = Product::find($id);
-            $product->fill($data);
-            $product->save();
+            $product = Product::inShop($this->shopId)->findOrFail($id);
+            $product->update($data);
             $product->categories()->sync($data['categories']);
             $product->barcodes()->sync($data['barcodes']);
 
@@ -83,8 +73,10 @@ class ProductService
         });
     }
 
-    public function delete(Product $product)
+    public function delete(int $id): bool
     {
-        $product->delete();
+        $product = Product::inShop($this->shopId)->findOrFail($id);
+
+        return $product->delete();
     }
 }

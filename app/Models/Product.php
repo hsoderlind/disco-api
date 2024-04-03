@@ -101,6 +101,11 @@ class Product extends Model
         return $this->hasMany(AttributeProduct::class);
     }
 
+    public function attributeTypes(): BelongsToMany
+    {
+        return $this->belongsToMany(AttributeType::class, 'attribute_products');
+    }
+
     // Local Scopes
     public function scopeInShop(Builder $query, int $shopId)
     {

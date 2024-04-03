@@ -31,8 +31,7 @@ class TaxService
     public function update(int $id, array $data): Tax
     {
         $tax = Tax::findOrFail($id);
-        $tax->fille($data);
-        $tax->save();
+        $tax->update($data);
 
         return $tax;
     }

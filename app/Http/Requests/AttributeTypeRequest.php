@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Services\AttributeType\AttributeTypeRules;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AttributeTypeRequest extends FormRequest
@@ -11,7 +12,7 @@ class AttributeTypeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('access product');
+        return (new AttributeTypeRules())->authorize($this->user());
     }
 
     /**
@@ -21,13 +22,12 @@ class AttributeTypeRequest extends FormRequest
      */
     public function rules(): array
     {
-        if ($this->getMethod() === 'GET' || $this->getMethod() === 'DELETE') {
+        $rules = new AttributeTypeRules();
+
+        if (! $rules->shouldValidate($this->getMethod())) {
             return [];
         }
 
-        return [
-            'label' => 'required|string|max:255',
-            'active' => 'required|boolean',
-        ];
+        return $rules->rules();
     }
 }
