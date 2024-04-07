@@ -17,7 +17,7 @@ class AttributeTypeResource extends JsonResource
         return [
             'label' => $this->label,
             'active' => $this->active,
-            'attribute_values' => $this->whenLoaded('attributeValues', AttributeValueResource::collection($this->attribute_values)),
+            // 'attribute_values' => $this->whenLoaded('attributeValues', AttributeValueResource::collection($this->attribute_values)),
         ];
     }
 }

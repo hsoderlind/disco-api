@@ -1,16 +1,16 @@
 <?php
 
-use App\Http\Controllers\Api\AttributeTypeController;
+use App\Http\Controllers\Api\AttributeValueController;
 use Illuminate\Support\Facades\Route;
 
-Route::controller(AttributeTypeController::class)
-    ->prefix('attribute-type')
+Route::controller(AttributeValueController::class)
+    ->prefix('attribute-value')
     ->middleware(['shop_id'])
     ->group(function () {
         Route::get('/', 'list')->name('list');
-        Route::get('/product/{productId}', 'listByProduct')
-            ->name('listByProduct')
-            ->whereNumber('productId');
+        Route::get('/attribute-type/{attributeTypeId}', 'listByAttributeType')
+            ->name('listByAttributeType')
+            ->whereNumber('attributeTypeId');
         Route::post('/', 'create')->name('create');
         Route::get('/{id}', 'read')
             ->name('read')
@@ -22,4 +22,4 @@ Route::controller(AttributeTypeController::class)
             ->name('delete')
             ->whereNumber('id');
     })
-    ->name('attribute_type');
+    ->name('attribute_value');

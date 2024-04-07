@@ -18,7 +18,7 @@ class AttributeValueService
             ->get();
     }
 
-    public function listForAttributeType(int $attributeTypeId)
+    public function listByAttributeType(int $attributeTypeId)
     {
         return AttributeValue::inShop($this->shopId)
             ->whereHas('attributeType', fn ($query) => $query->where('attribute_types.id', $attributeTypeId))
