@@ -37,6 +37,13 @@ class TaxController extends Controller
         return new TaxResource($tax);
     }
 
+    public function show(TaxRequest $request, int $id)
+    {
+        $tax = $this->service->read($id);
+
+        return new TaxResource($tax);
+    }
+
     public function update(TaxRequest $request, int $id)
     {
         $tax = $this->service->update($id, $request->validated());

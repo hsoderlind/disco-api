@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Services\ProductAttribute\ProductsAttributeRules;
+use App\Services\ProductAttribute\ProductAttributeRules;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AttributeProductRequest extends FormRequest
@@ -22,7 +22,7 @@ class AttributeProductRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = new ProductsAttributeRules();
+        $rules = new ProductAttributeRules();
 
         if (! $rules->shouldValidate($this->getMethod())) {
             return [];

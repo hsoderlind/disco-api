@@ -36,6 +36,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \App\Models\Supplier $supplier
  * @property-read \App\Models\Manufacturer $manufacturer
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\AttributeProduct[] $productAttributes
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductSpecialPrice[] $specialPrices
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
@@ -104,6 +105,11 @@ class Product extends Model
     public function attributeTypes(): BelongsToMany
     {
         return $this->belongsToMany(AttributeType::class, 'attribute_products');
+    }
+
+    public function specialPrices(): HasMany
+    {
+        return $this->hasMany(ProductSpecialPrice::class);
     }
 
     // Local Scopes

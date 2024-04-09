@@ -6,26 +6,29 @@ use App\Services\Shop\ShopSession;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property-read int $id
- * @property-read int $shop_id
- * @property string $label
- * @property int $sort_order
+ * @property-read int $shopId
+ * @property int $special_price
+ * @property string $entry_date
+ * @property string $expiration_date
  * @property string $created_at
  * @property string $updated_at
- * @property-read \App\Models\AttributeType $attribute_type
+ * @property \App\Models\Product $product
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  */
-class AttributeValue extends Model
+class ProductSpecialPrice extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'label',
+        'special_price',
+        'entry_date',
+        'expiration_date',
     ];
 
     protected static function boot()
@@ -36,9 +39,9 @@ class AttributeValue extends Model
     }
 
     // Relationships
-    public function attributeType(): BelongsTo
+    public function product(): HasOne
     {
-        return $this->belongsTo(AttributeType::class);
+        return $this->hasOne(Product::class);
     }
 
     // Local Scopes

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Services\Tax\TaxRules;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TaxRequest extends FormRequest
@@ -11,7 +12,7 @@ class TaxRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('access tax');
+        return (new TaxRules)->authorize($this->user());
     }
 
     /**
@@ -21,10 +22,12 @@ class TaxRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => 'required|string|max:255',
-            'value' => 'required|integer|min:0',
-            'priority' => 'required|integer|min:0',
-        ];
+        $rules = new TaxRules;
+
+        if (! $rules->shouldValidate($this->getMethod())) {
+            return [];
+        }
+
+        return $rules->rules();
     }
 }

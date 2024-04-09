@@ -5,7 +5,7 @@ namespace App\Services\ProductAttribute;
 use App\Interfaces\IRules;
 use App\Services\ProductAttributeStock\ProductAttributeStockRules;
 
-class ProductsAttributeRules implements IRules
+class ProductAttributeRules implements IRules
 {
     public function authorize(mixed $user): bool
     {

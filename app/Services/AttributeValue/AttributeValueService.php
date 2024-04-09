@@ -14,6 +14,7 @@ class AttributeValueService
     public function list()
     {
         return AttributeValue::inShop($this->shopId)
+            ->orderBy('sort_order')
             ->orderBy('label')
             ->get();
     }
@@ -22,6 +23,7 @@ class AttributeValueService
     {
         return AttributeValue::inShop($this->shopId)
             ->whereHas('attributeType', fn ($query) => $query->where('attribute_types.id', $attributeTypeId))
+            ->orderBy('sort_order')
             ->orderBy('label')
             ->get();
     }
@@ -29,8 +31,12 @@ class AttributeValueService
     public function create(array $data)
     {
         /** @var AttributeValue $attributeValue */
-        $attributeValue = AttributeValue::create(['label' => $data['label']]);
+        $attributeValue = new AttributeValue([
+            'label' => $data['label'],
+            'sort_order' => $data['sort_order'],
+        ]);
         $attributeValue->attributeType()->associate($data['attribute_type_id']);
+        $attributeValue->save();
 
         return $attributeValue;
     }
@@ -43,7 +49,10 @@ class AttributeValueService
     public function update(int $id, array $data): false|AttributeValue
     {
         $attributeValue = AttributeValue::inShop($this->shopId)->findOrFail($id);
-        $updated = $attributeValue->update(['label' => $data['label']]);
+        $updated = $attributeValue->update([
+            'label' => $data['label'],
+            'sort_order' => $data['sort_order'],
+        ]);
 
         if (! $updated) {
             return false;

@@ -3,11 +3,15 @@
 namespace App\Services\Product;
 
 use App\Interfaces\IRules;
-use App\Services\ProductAttribute\ProductsAttributeRules;
+use App\Services\ProductAttribute\ProductAttributeRules;
+use App\Services\ProductSpecialPrice\ProductSpecialPriceRules;
+use App\Traits\RulesMerger;
 use Illuminate\Validation\Rule;
 
 class ProductRules implements IRules
 {
+    use RulesMerger;
+
     public function authorize(mixed $user): bool
     {
         return $user->can('access product');
@@ -20,9 +24,6 @@ class ProductRules implements IRules
 
     public function rules(): array
     {
-        $productAttributeRules = (new ProductsAttributeRules())->rules();
-        $joinedProductAttributeFields = implode(',', array_keys($productAttributeRules));
-
         $rules = [
             'tax_id' => 'integer',
             'supplier_id' => 'integer',
@@ -38,12 +39,9 @@ class ProductRules implements IRules
             'description' => 'nullable|string',
             'barcodes.*' => 'sometimes|integer',
             'categories.*' => 'integer',
-            'product_attributes' => 'sometimes|array:'.$joinedProductAttributeFields,
+            ...$this->merge('product_attributes', new ProductAttributeRules(), 'sometimes', true),
+            ...$this->merge('special_prices', new ProductSpecialPriceRules(), 'sometimes', true),
         ];
-
-        foreach ($productAttributeRules as $field => $rule) {
-            $rules['product_attributes.*.'.$field] = $rule;
-        }
 
         return $rules;
     }

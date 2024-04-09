@@ -30,6 +30,7 @@ class ProductResource extends JsonResource
             'barcodes' => BarcodeResource::collection($this->whenLoaded('barcodes')),
             'supplier' => new SupplierResource($this->supplier),
             'mmanufacturer' => new ManufacturerResource($this->manufacturer),
+            'special_prices' => ProductSpecialPriceResource::collection($this->whenLoaded('specialPrices')),
         ];
     }
 }

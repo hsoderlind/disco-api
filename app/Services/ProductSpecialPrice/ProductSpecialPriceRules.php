@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services\AttributeValue;
+namespace App\Services\ProductSpecialPrice;
 
 use App\Interfaces\IRules;
 
-class AttributeValueRules implements IRules
+class ProductSpecialPriceRules implements IRules
 {
     public function authorize(mixed $user): bool
     {
@@ -19,9 +19,10 @@ class AttributeValueRules implements IRules
     public function rules(): array
     {
         return [
-            'label' => 'required|string|max:255',
-            'sort_order' => 'required|integer|numeric|min:0',
-            'attribute_type_id' => 'required|integer|numeric|exists:attribute_types,id',
+            'special_price' => 'required|integer|numeric|min:0',
+            'entry_date' => 'required|date',
+            'expiration_date' => 'sometimes|nullable|date',
+            'product_id' => 'required|integer|numeric|exists:products,id',
         ];
     }
 }

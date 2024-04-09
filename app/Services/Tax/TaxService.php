@@ -28,6 +28,13 @@ class TaxService
         return $tax;
     }
 
+    public function read(int $id): Tax
+    {
+        $tax = Tax::inShop($this->shopId)->findOrFail($id);
+
+        return $tax;
+    }
+
     public function update(int $id, array $data): Tax
     {
         $tax = Tax::inShop($this->shopId)->findOrFail($id);
