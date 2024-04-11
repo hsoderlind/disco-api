@@ -36,10 +36,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \App\Models\Supplier $supplier
  * @property-read \App\Models\Manufacturer $manufacturer
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\AttributeProduct[] $productAttributes
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductSpecialPrice[] $specialPrices
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductFile[] $files
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Barcode[] $barcodes
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductImage[] $images
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
+ * @method \Illuminate\Database\Eloquent\Builder|static inCategories(array $categoryIds)
+ * @method static \Illuminate\Database\Eloquent\Builder|static inCategories(array $categoryIds)
  */
 class Product extends Model
 {
@@ -110,6 +114,16 @@ class Product extends Model
     public function specialPrices(): HasMany
     {
         return $this->hasMany(ProductSpecialPrice::class);
+    }
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(ProductFile::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductImage::class);
     }
 
     // Local Scopes
