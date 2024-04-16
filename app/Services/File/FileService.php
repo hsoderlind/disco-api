@@ -26,6 +26,14 @@ class FileService
         return $storageProvider;
     }
 
+    public function getPhysicalFileService(int $id)
+    {
+        $model = $this->get($id);
+        $storageProvider = $this->getStorageProvider();
+
+        return new PhysicalFileService($model, $storageProvider);
+    }
+
     public function create(): File
     {
         $storageProvider = $this->getStorageProvider();
