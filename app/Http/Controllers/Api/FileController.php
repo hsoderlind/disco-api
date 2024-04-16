@@ -11,7 +11,7 @@ use App\Services\Shop\ShopSession;
 
 class FileController extends Controller
 {
-    public function create(FileRequest $request)
+    public function upload(FileRequest $request)
     {
         $file = $this->getService($request)->create();
 
