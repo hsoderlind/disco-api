@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('extension');
             $table->string('mimetype');
             $table->mediumInteger('size');
+            $table->string('storage_resolver');
             $table->timestamps();
         });
     }

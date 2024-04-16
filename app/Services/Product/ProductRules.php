@@ -2,27 +2,27 @@
 
 namespace App\Services\Product;
 
-use App\Interfaces\IRules;
 use App\Services\ProductAttribute\ProductAttributeRules;
 use App\Services\ProductSpecialPrice\ProductSpecialPriceRules;
 use App\Traits\RulesMerger;
+use App\Validation\Rules;
 use Illuminate\Validation\Rule;
 
-class ProductRules implements IRules
+class ProductRules extends Rules
 {
     use RulesMerger;
 
-    public function authorize(mixed $user): bool
+    public function authorize(): bool
     {
-        return $user->can('access product');
+        return $this->request->user()->can('access product');
     }
 
-    public function shouldValidate(string $requestMethod): bool
+    public function shouldValidate(): bool
     {
-        return $requestMethod === 'POST' || $requestMethod === 'PUT';
+        return $this->request->getMethod() === 'POST' || $this->request->getMethod() === 'PUT';
     }
 
-    public function rules(): array
+    public function getRules(): array
     {
         $rules = [
             'tax_id' => 'integer',
@@ -39,8 +39,8 @@ class ProductRules implements IRules
             'description' => 'nullable|string',
             'barcodes.*' => 'sometimes|integer',
             'categories.*' => 'integer',
-            ...$this->merge('product_attributes', new ProductAttributeRules(), 'sometimes', true),
-            ...$this->merge('special_prices', new ProductSpecialPriceRules(), 'sometimes', true),
+            ...$this->merge('product_attributes', new ProductAttributeRules($this->request), 'sometimes', true),
+            ...$this->merge('special_prices', new ProductSpecialPriceRules($this->request), 'sometimes', true),
         ];
 
         return $rules;

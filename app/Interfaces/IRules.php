@@ -4,9 +4,9 @@ namespace App\Interfaces;
 
 interface IRules
 {
-    public function authorize(mixed $user): bool;
+    public function authorize(): bool;
 
-    public function shouldValidate(string $requestMethod): bool;
+    public function shouldValidate(): bool;
 
-    public function rules(): array;
+    public function getRules(): array;
 }

@@ -2,18 +2,18 @@
 
 namespace App\Services\AttributeValue;
 
-use App\Interfaces\IRules;
+use App\Validation\Rules;
 
-class AttributeValueRules implements IRules
+class AttributeValueRules extends Rules
 {
-    public function authorize(mixed $user): bool
+    public function authorize(): bool
     {
-        return $user->can('access product');
+        return $this->request->user()->can('access product');
     }
 
-    public function shouldValidate(string $requestMethod): bool
+    public function shouldValidate(): bool
     {
-        return $requestMethod === 'POST' || $requestMethod === 'PUT';
+        return $this->request->getMethod() === 'POST' || $this->request->getMethod() === 'PUT';
     }
 
     public function rules(): array

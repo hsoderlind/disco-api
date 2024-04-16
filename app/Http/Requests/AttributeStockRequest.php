@@ -3,16 +3,24 @@
 namespace App\Http\Requests;
 
 use App\Services\ProductAttributeStock\ProductAttributeStockRules;
+use App\Validation\Rules;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AttributeStockRequest extends FormRequest
 {
+    protected Rules $rules;
+
+    protected function prepareForValidation()
+    {
+        $this->rules = new ProductAttributeStockRules($this);
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->rules->authorize();
     }
 
     /**
@@ -22,12 +30,10 @@ class AttributeStockRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = new ProductAttributeStockRules();
-
-        if (! $rules->shouldValidate($this->getMethod())) {
+        if (! $this->rules->shouldValidate()) {
             return [];
         }
 
-        return $rules->rules();
+        return $this->rules->getRules();
     }
 }

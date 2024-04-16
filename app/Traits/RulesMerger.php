@@ -9,7 +9,7 @@ trait RulesMerger
 {
     public function merge(string $key, IRules $rulesClass, ?string $additionRules = '', bool $isArray = false): array
     {
-        $rules = $rulesClass->rules();
+        $rules = $rulesClass->getRules();
         $joinedFields = implode(',', array_keys($rules));
 
         if ($additionRules !== '' && ! Str::endsWith($additionRules, '|')) {

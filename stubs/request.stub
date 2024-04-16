@@ -3,9 +3,17 @@
 namespace {{ namespace }};
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Validation\Rules;
 
 class {{ class }} extends FormRequest
 {
+    protected Rules $rules;
+
+    protected function prepareForValidation()
+    {
+        // Initiate property $rules here...
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */

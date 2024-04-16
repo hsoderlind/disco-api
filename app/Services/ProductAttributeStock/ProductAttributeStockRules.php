@@ -2,18 +2,18 @@
 
 namespace App\Services\ProductAttributeStock;
 
-use App\Interfaces\IRules;
+use App\Validation\Rules;
 
-class ProductAttributeStockRules implements IRules
+class ProductAttributeStockRules extends Rules
 {
-    public function authorize(mixed $user): bool
+    public function authorize(): bool
     {
-        return $user->can('access product');
+        return $this->request->user()->can('access product');
     }
 
-    public function shouldValidate(string $requestMethod): bool
+    public function shouldValidate(): bool
     {
-        return $requestMethod === 'PUT' || $requestMethod === 'POST';
+        return $this->request->getMethod() === 'PUT' || $this->request->getMethod() === 'POST';
     }
 
     public function rules(): array

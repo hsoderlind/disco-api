@@ -3,16 +3,24 @@
 namespace App\Http\Requests;
 
 use App\Services\AttributeValue\AttributeValueRules;
+use App\Validation\Rules;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AttributeValueRequest extends FormRequest
 {
+    protected Rules $rules;
+
+    protected function prepareForValidation()
+    {
+        $this->rules = new AttributeValueRules($this);
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return (new AttributeValueRules())->authorize($this->user());
+        return $this->rules->authorize();
     }
 
     /**
@@ -22,12 +30,10 @@ class AttributeValueRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = new AttributeValueRules();
-
-        if (! $rules->shouldValidate($this->getMethod())) {
+        if (! $this->rules->shouldValidate()) {
             return [];
         }
 
-        return $rules->rules();
+        return $this->rules->getRules();
     }
 }

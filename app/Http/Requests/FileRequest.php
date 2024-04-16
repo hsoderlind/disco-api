@@ -2,17 +2,17 @@
 
 namespace App\Http\Requests;
 
-use App\Services\Tax\TaxRules;
+use App\Services\File\FileRules;
 use App\Validation\Rules;
 use Illuminate\Foundation\Http\FormRequest;
 
-class TaxRequest extends FormRequest
+class FileRequest extends FormRequest
 {
     protected Rules $rules;
 
     protected function prepareForValidation()
     {
-        $this->rules = new TaxRules($this);
+        $this->rules = new FileRules($this);
     }
 
     /**
@@ -30,10 +30,6 @@ class TaxRequest extends FormRequest
      */
     public function rules(): array
     {
-        if (! $this->rules->shouldValidate()) {
-            return [];
-        }
-
         return $this->rules->getRules();
     }
 }
