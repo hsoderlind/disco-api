@@ -19,22 +19,18 @@ class ShopsPermission
     public function handle(Request $request, Closure $next): Response
     {
         $shopIdFromHeader = $request->header('x-shop-id');
-        $shopIdFromQuery = $request->query('shop_id');
-        $shopidFromParams = $request->route()->parameter('shopId');
-        $shopId = $shopIdFromHeader ?? $shopIdFromQuery ?? $shopidFromParams;
+        $shopIdFromQuery = $request->query('shop_id') ?? $request->query('shopId');
+        $shopIdFromParams = $request->route()->parameter('shopId');
+        $shopId = $shopIdFromHeader ?? $shopIdFromQuery ?? $shopIdFromParams;
 
-        if (empty($shopId)) {
-            abort(HttpResponseCode::FORBIDDEN, 'Saknar butikskontext');
-        }
+        abort_if(empty($shopId), HttpResponseCode::FORBIDDEN, 'Saknar butikskontext');
 
         ShopSession::setId($shopId);
 
         $shop = ShopService::get($shopId);
         $userBelongsToShop = ShopService::verifyUser($request->user(), $shop);
 
-        if (! $userBelongsToShop) {
-            abort(HttpResponseCode::FORBIDDEN, 'Ajabaja, du är inte användare av butiken.');
-        }
+        abort_if(! $userBelongsToShop, HttpResponseCode::FORBIDDEN, 'Ajabaja, du är inte användare av butiken.');
 
         $request->merge(['shop' => $shop]);
 
