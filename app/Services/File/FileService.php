@@ -7,7 +7,7 @@ use App\Models\File;
 
 class FileService
 {
-    protected File $model;
+    protected File|null $model = null;
 
     public function __construct(
         protected readonly int $shopId,
@@ -22,7 +22,7 @@ class FileService
 
     protected function getStorageProvider(): StorageProvider
     {
-        if (isset($this->model)) {
+        if (! is_null($this->model)) {
             $storageProvider = new StorageProvider(inputName: $this->model->storage_resolver);
         } else {
             $storageProvider = new StorageProvider(request: $this->request);
@@ -46,7 +46,7 @@ class FileService
 
         $physicalFileService = new PhysicalFileService($model, $storageProvider);
         [$fileInput, $path] = $physicalFileService->store($this->request);
-        $model->storage_resolver = $this->request->input('input_name');
+        $model->storage_resolver = $this->request->input('storage_provider');
         $model->path = $path;
         $model->filename = $fileInput->getClientOriginalName();
         $model->extension = $fileInput->getClientOriginalExtension();

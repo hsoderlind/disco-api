@@ -17,10 +17,10 @@ class FileValidationProvider
     public function resolve(FormRequest $request): IFileRules
     {
         $request->validate([
-            'input_name' => 'required|string',
+            'storage_provider' => 'required|string',
         ]);
 
-        $inputName = $request->input('input_name');
+        $inputName = $request->input('storage_provider') ?? $request->query('storage_provider');
         $provider = $this->providers[$inputName];
 
         if (! isset($provider)) {
