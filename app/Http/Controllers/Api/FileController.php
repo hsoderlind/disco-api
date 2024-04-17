@@ -32,8 +32,6 @@ class FileController extends Controller
         $deleted = $this->getService($request)->delete($id);
 
         abort_if(! $deleted, HttpResponseCode::METHOD_NOT_ALLOWED, 'Filen raderades inte.');
-
-        response()->setStatusCode(HttpResponseCode::OK)->send();
     }
 
     protected function getService(FileRequest $request)

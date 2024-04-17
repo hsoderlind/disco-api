@@ -43,10 +43,6 @@ class BarcodeTypeController extends Controller
     {
         $deleted = $this->service->delete($id);
 
-        if (! $deleted) {
-            abort(HttpResponseCode::METHOD_NOT_ALLOWED, 'Attributtypen raderades inte.');
-        }
-
-        response()->setStatusCode(HttpResponseCode::OK)->send();
+        abort_if(! $deleted, HttpResponseCode::METHOD_NOT_ALLOWED, 'Attributtypen raderades inte.');
     }
 }

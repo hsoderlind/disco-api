@@ -51,7 +51,5 @@ class ProductImageController extends Controller
         $deleted = $this->service->delete($id);
 
         abort_if(! $deleted, HttpResponseCode::METHOD_NOT_ALLOWED, 'Produktbilden kunde inte raderas');
-
-        return response()->setStatusCode(HttpResponseCode::OK)->send();
     }
 }

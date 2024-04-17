@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Helpers\HttpResponseCode;
 use App\Http\Requests\ShopRequest;
 use App\Http\Resources\ShopResource;
 use App\Services\Shop\ShopService;
@@ -23,9 +24,7 @@ class ShopController extends Controller
         $shop = ShopService::getByUrlAlias($urlAlias);
         $userBelongsToShop = ShopService::verifyUser($request->user(), $shop);
 
-        if (! $userBelongsToShop) {
-            abort(403);
-        }
+        abort_if(! $userBelongsToShop, HttpResponseCode::FORBIDDEN);
 
         return new ShopResource($shop);
     }

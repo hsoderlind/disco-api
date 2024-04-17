@@ -58,7 +58,5 @@ class AttributeValueController extends Controller
         $deleted = $this->service->delete($id);
 
         abort_if(! $deleted, HttpResponseCode::METHOD_NOT_ALLOWED, 'Attributvärdet kunde inte raderas.');
-
-        response()->setStatusCode(HttpResponseCode::OK)->send();
     }
 }
