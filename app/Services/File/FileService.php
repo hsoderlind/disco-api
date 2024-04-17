@@ -15,6 +15,11 @@ class FileService
     ) {
     }
 
+    public static function staticGet(int $shopId, int $id)
+    {
+        return File::inShop($shopId)->findOrFail($id);
+    }
+
     protected function getStorageProvider(): StorageProvider
     {
         if (isset($this->model)) {
@@ -41,6 +46,7 @@ class FileService
 
         $physicalFileService = new PhysicalFileService($model, $storageProvider);
         [$fileInput, $path] = $physicalFileService->store($this->request);
+        $model->storage_resolver = $this->request->input('input_name');
         $model->path = $path;
         $model->filename = $fileInput->getClientOriginalName();
         $model->extension = $fileInput->getClientOriginalExtension();

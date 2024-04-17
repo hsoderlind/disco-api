@@ -24,6 +24,11 @@ class ProductImage extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'sort_order',
+        'use_as_cover',
+    ];
+
     protected static function boot()
     {
         parent::boot();

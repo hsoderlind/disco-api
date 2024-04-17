@@ -24,6 +24,7 @@ class ProductImageRules extends Rules implements IFileRules
         return [
             'use_as_cover' => 'boolean',
             'sort_order' => 'integer|numeric|min:0',
+            'meta.id' => 'required|integer|numeric|exists:files,id',
         ];
     }
 
@@ -33,7 +34,7 @@ class ProductImageRules extends Rules implements IFileRules
             'product_image' => [
                 'required',
                 File::image()
-                    ->max('100mb')
+                    ->max(100000)
                     ->dimensions(Rule::dimensions()->minWidth(150)->minHeight(150)),
             ],
         ];

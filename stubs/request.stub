@@ -19,7 +19,7 @@ class {{ class }} extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return $this->rules->authorize();
     }
 
     /**
@@ -29,8 +29,6 @@ class {{ class }} extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        return $this->rules->shouldValidate() ? $this->rules->getRules() : [];
     }
 }

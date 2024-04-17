@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Helpers\HttpResponseCode;
 use App\Services\Shop\ShopService;
 use App\Services\Shop\ShopSession;
 use Closure;
@@ -23,7 +24,7 @@ class ShopsPermission
         $shopId = $shopIdFromHeader ?? $shopIdFromQuery ?? $shopidFromParams;
 
         if (empty($shopId)) {
-            abort(404);
+            abort(HttpResponseCode::FORBIDDEN, 'Saknar butikskontext');
         }
 
         ShopSession::setId($shopId);
@@ -32,7 +33,7 @@ class ShopsPermission
         $userBelongsToShop = ShopService::verifyUser($request->user(), $shop);
 
         if (! $userBelongsToShop) {
-            abort(403);
+            abort(HttpResponseCode::FORBIDDEN, 'Ajabaja, du är inte användare av butiken.');
         }
 
         $request->merge(['shop' => $shop]);

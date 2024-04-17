@@ -3,9 +3,53 @@
 namespace {{ namespace }};
 
 use {{ rootNamespace }}Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use {{ rootNamespace }}Http\Helpers\HttpResponseCode;
+use Illuminate\Foundation\Http\FormRequest;
+use {{ rootNamespace }}Services\Shop\ShopSession;
 
 class {{ class }} extends Controller
 {
-    //
+    protected Service $service;
+
+    protected function beforeCallingAction($method, $parameters)
+    {
+        $this->service = new Service(ShopSession::getId());
+    }
+
+    public function index(FormRequest $request)
+    {
+        $models = $this->service->list();
+
+        return Resource::collection($models);
+    }
+
+    public function create(FormRequest $request)
+    {
+        $model = $this->service->create($request->validated());
+
+        return new Resource($model);
+    }
+
+    public function read(FormRequest $request, int $id)
+    {
+        $model = $this->service->get($id);
+
+        return new Resource($model);
+    }
+
+    public function update(FormRequest $request, int $id)
+    {
+        $model = $this->service->update($id, $request->validated());
+
+        return new Resource($model);
+    }
+
+    public function delete(FormRequest $request, int $id)
+    {
+        $deleted = $this->service->delete($id);
+
+        abort_if(! $deleted, HttpResponseCode::METHOD_NOT_ALLOWED, 'Produktbilden kunde inte raderas');
+
+        return response()->setStatusCode(HttpResponseCode::OK)->send();
+    }
 }

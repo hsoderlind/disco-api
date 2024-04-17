@@ -2,10 +2,10 @@
 
 namespace App\Services\File;
 
-use App\Interfaces\IRules;
+use App\Validation\Rules;
 use Illuminate\Foundation\Http\FormRequest;
 
-class FileRules implements IRules
+class FileRules extends Rules
 {
     protected IFileRules $validationProvider;
 

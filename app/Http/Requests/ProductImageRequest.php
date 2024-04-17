@@ -2,16 +2,17 @@
 
 namespace App\Http\Requests;
 
-use App\Services\File\FileRules;
+use App\Services\ProductImage\ProductImageRules;
+use App\Validation\Rules;
 use Illuminate\Foundation\Http\FormRequest;
 
-class FileRequest extends FormRequest
+class ProductImageRequest extends FormRequest
 {
-    protected FileRules $rules;
+    protected Rules $rules;
 
     protected function prepareForValidation()
     {
-        $this->rules = new FileRules($this);
+        $this->rules = new ProductImageRules($this);
     }
 
     /**
@@ -29,6 +30,6 @@ class FileRequest extends FormRequest
      */
     public function rules(): array
     {
-        return $this->rules->getRules();
+        return $this->rules->shouldValidate() ? $this->rules->getRules() : [];
     }
 }

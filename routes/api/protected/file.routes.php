@@ -15,4 +15,4 @@ Route::controller(FileController::class)
             ->name('delete')
             ->whereNumber('id');
     })
-    ->name('file');
+    ->name('file.');

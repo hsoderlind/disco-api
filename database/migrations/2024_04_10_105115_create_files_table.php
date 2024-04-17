@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->id();
             ShopMigrationMethods::addShopIdColumn($table);
-            $table->morphs('fileable');
+            $table->nullableMorphs('fileable');
             $table->string('path');
             $table->string('filename');
             $table->string('extension');
