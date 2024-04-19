@@ -2,6 +2,7 @@
 
 namespace App\Services\File;
 
+use App\Services\ProductFile\ProductFileStorageResolver;
 use App\Services\ProductImage\ProductImageStorageResolver;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
@@ -17,6 +18,7 @@ class StorageProvider
 
     protected $providers = [
         'product_image' => ProductImageStorageResolver::class,
+        'product_file' => ProductFileStorageResolver::class,
     ];
 
     public function __construct(?Request $request = null, ?string $inputName = null)

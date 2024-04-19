@@ -2,6 +2,7 @@
 
 namespace App\Services\File;
 
+use App\Services\ProductFile\ProductFileRules;
 use App\Services\ProductImage\ProductImageRules;
 use Illuminate\Foundation\Http\FormRequest;
 use InvalidArgumentException;
@@ -12,6 +13,7 @@ class FileValidationProvider
 {
     protected $providers = [
         'product_image' => ProductImageRules::class,
+        'product_file' => ProductFileRules::class,
     ];
 
     public function resolve(FormRequest $request): IFileRules
