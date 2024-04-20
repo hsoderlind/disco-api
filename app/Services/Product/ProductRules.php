@@ -4,6 +4,7 @@ namespace App\Services\Product;
 
 use App\Services\ProductAttribute\ProductAttributeRules;
 use App\Services\ProductSpecialPrice\ProductSpecialPriceRules;
+use App\Services\ProductStock\ProductStockRules;
 use App\Traits\RulesMerger;
 use App\Validation\Rules;
 use Illuminate\Validation\Rule;
@@ -41,6 +42,7 @@ class ProductRules extends Rules
             'categories.*' => 'integer',
             ...$this->merge('product_attributes', new ProductAttributeRules($this->request), 'sometimes', true),
             ...$this->merge('special_prices', new ProductSpecialPriceRules($this->request), 'sometimes', true),
+            ...$this->merge('stock', new ProductStockRules($this->request), 'sometimes'),
         ];
 
         return $rules;
