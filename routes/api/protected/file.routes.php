@@ -14,5 +14,8 @@ Route::controller(FileController::class)
         Route::delete('/{id}', 'delete')
             ->name('delete')
             ->whereNumber('id');
+        Route::get('/{id}/signed-url', 'createSignedUrl')
+            ->name('signed_url')
+            ->whereNumber('id');
     })
     ->name('file.');

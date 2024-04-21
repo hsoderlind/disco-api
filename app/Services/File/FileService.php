@@ -11,7 +11,7 @@ class FileService
 
     public function __construct(
         protected readonly int $shopId,
-        protected readonly FileRequest $request
+        protected readonly ?FileRequest $request = null
     ) {
     }
 
@@ -59,9 +59,9 @@ class FileService
 
     public function get(int $id): File
     {
-        $file = File::inShop($this->shopId)->findOrFail($id);
+        $this->model = File::inShop($this->shopId)->findOrFail($id);
 
-        return $file;
+        return $this->model;
     }
 
     public function delete(int $id): bool

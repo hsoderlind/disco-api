@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * @property-read int $id
- * @property-read int $shopId
+ * @property-read int $shop_id
  * @property string $path
  * @property string $filename
  * @property string $extension
