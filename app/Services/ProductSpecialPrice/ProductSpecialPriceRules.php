@@ -16,7 +16,7 @@ class ProductSpecialPriceRules extends Rules
         return $this->request->getMethod() === 'POST' || $this->request->getMethod() === 'PUT';
     }
 
-    public function rules(): array
+    public function getRules(): array
     {
         return [
             'special_price' => 'required|integer|numeric|min:0',

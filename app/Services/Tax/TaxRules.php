@@ -16,7 +16,7 @@ class TaxRules extends Rules
         return $this->request->getMethod() === 'POST' || $this->request->getMethod() === 'PUT';
     }
 
-    public function rules(): array
+    public function getRules(): array
     {
         return [
             'name' => 'required|string|max:255',

@@ -16,7 +16,7 @@ class ProductAttributeStockRules extends Rules
         return $this->request->getMethod() === 'PUT' || $this->request->getMethod() === 'POST';
     }
 
-    public function rules(): array
+    public function getRules(): array
     {
         return [
             'sku' => 'sometimes|string|nullable|max:255',
