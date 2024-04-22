@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Services\Product\ProductCondition;
+use App\Services\Product\ProductState;
 use App\Services\Shop\ShopSession;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,6 +28,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $name
  * @property string|null $summary
  * @property string|null $description
+ * @property string $state
  * @property string|null $deleted_at
  * @property string $created_at
  * @property string $updated_at
@@ -44,6 +46,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method \Illuminate\Database\Eloquent\Builder|static inCategories(array $categoryIds)
  * @method static \Illuminate\Database\Eloquent\Builder|static inCategories(array $categoryIds)
+ * @method \Illuminate\Database\Eloquent\Builder|static isPublished()
+ * @method static \Illuminate\Database\Eloquent\Builder|static isPublished()
+ * @method \Illuminate\Database\Eloquent\Builder|static isDraft()
+ * @method static \Illuminate\Database\Eloquent\Builder|static isDraft()
  */
 class Product extends Model
 {
@@ -66,6 +72,7 @@ class Product extends Model
     protected $casts = [
         'condition' => ProductCondition::class,
         'available_at' => 'date:Y-m-d',
+        'state' => ProductState::class,
     ];
 
     protected static function boot()
@@ -135,5 +142,15 @@ class Product extends Model
     public function scopeInCategories(Builder $query, array $categoryIds)
     {
         return $query->whereHas('categories', fn ($query) => $query->whereIn('id', $categoryIds));
+    }
+
+    public function scopeIsPublished(Builder $query)
+    {
+        return $query->where('state', '=', ProductState::Published);
+    }
+
+    public function scopeIsDraft(Builder $query)
+    {
+        return $query->where('state', '=', ProductState::Draft);
     }
 }

@@ -2,9 +2,13 @@
 
 namespace App\Services\Product;
 
-enum ProductCondition
+use App\Traits\EnumValues;
+
+enum ProductCondition: string
 {
-    case New;
-    case Used;
-    case Refurbished;
+    use EnumValues;
+
+    case New = 'new';
+    case Used = 'used';
+    case Refurbished = 'refurbished';
 }

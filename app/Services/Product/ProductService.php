@@ -24,6 +24,30 @@ class ProductService
         }
     }
 
+    public function listPublished(?int $category = 0)
+    {
+        if (! isset($category) || $category === 0) {
+            return Product::inShop($this->shopId)->isPublished()->get();
+        } else {
+            return Product::inShop($this->shopId)
+                ->isPublished()
+                ->whereHas('categories', fn ($query) => $query->where('categories.id', $category))
+                ->get();
+        }
+    }
+
+    public function listDraft(?int $category = 0)
+    {
+        if (! isset($category) || $category === 0) {
+            return Product::inShop($this->shopId)->isDraft()->get();
+        } else {
+            return Product::inShop($this->shopId)
+                ->isDraft()
+                ->whereHas('categories', fn ($query) => $query->where('categories.id', $category))
+                ->get();
+        }
+    }
+
     /**
      * Get one product
      *
