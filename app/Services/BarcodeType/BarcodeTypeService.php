@@ -32,6 +32,11 @@ class BarcodeTypeService
         return $barcodeType;
     }
 
+    public function get(int $id)
+    {
+        return BarcodeType::inShop($this->shopId)->findOrFail($id);
+    }
+
     public function update(int $id, array $data): BarcodeType
     {
         $barcodeType = BarcodeType::inShop($this->shopId)->findOrFail($id);

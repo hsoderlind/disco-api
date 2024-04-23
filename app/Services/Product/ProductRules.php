@@ -2,6 +2,7 @@
 
 namespace App\Services\Product;
 
+use App\Services\Barcode\BarcodeRules;
 use App\Services\ProductAttribute\ProductAttributeRules;
 use App\Services\ProductSpecialPrice\ProductSpecialPriceRules;
 use App\Services\ProductStock\ProductStockRules;
@@ -30,6 +31,7 @@ class ProductRules extends Rules
             'supplier_id' => 'integer',
             'manufacturer_id' => 'integer',
             'price' => 'required|numeric|integer',
+            'cost_price' => 'sometimes|required|numeric|integer',
             'reference' => 'nullable|string|max:255',
             'supplier_reference' => 'nullable|string|max:255',
             'available_for_order' => 'boolean',
@@ -38,8 +40,8 @@ class ProductRules extends Rules
             'name' => 'required|string|max:255',
             'summary' => 'nullable|string',
             'description' => 'nullable|string',
-            'barcodes.*' => 'sometimes|integer',
             'categories.*' => 'integer',
+            ...$this->merge('barcodes', new BarcodeRules($this->request), 'sometimes', true),
             ...$this->merge('product_attributes', new ProductAttributeRules($this->request), 'sometimes', true),
             ...$this->merge('special_prices', new ProductSpecialPriceRules($this->request), 'sometimes', true),
             ...$this->merge('stock', new ProductStockRules($this->request), 'sometimes'),

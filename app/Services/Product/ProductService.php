@@ -3,7 +3,9 @@
 namespace App\Services\Product;
 
 use App\Models\Product;
+use App\Services\Barcode\BarcodeService;
 use App\Services\ProductAttribute\ProductAttributeService;
+use App\Services\ProductSpecialPrice\ProductSpecialPriceService;
 use Illuminate\Support\Facades\DB;
 
 class ProductService
@@ -67,9 +69,34 @@ class ProductService
     public function create(array $data): Product
     {
         return DB::transaction(function () use ($data) {
-            $product = Product::create($data);
+            /** @var \App\Models\Product $product */
+            $product = Product::create(
+                collect($data)->only([
+                    'state',
+                    'price',
+                    'cost_price',
+                    'reference',
+                    'supplier_reference',
+                    'condition',
+                    'name',
+                    'summary',
+                    'description',
+                ])->toArray()
+            );
+
             $product->categories()->sync($data['categories']);
-            $product->barcodes()->sync($data['barcodes']);
+
+            if (isset($data['barcodes'])) {
+                $barcodeIds = [];
+
+                foreach ($data['barcodes'] as $barcodeData) {
+                    $barcodeService = new BarcodeService($this->shopId);
+                    $barcode = $barcodeService->create($barcodeData);
+                    $barcodeIds[] = $barcode->getKey();
+                }
+
+                $product->barcodes()->sync($barcodeIds);
+            }
 
             if (isset($data['product_attributes'])) {
                 $productAttributeService = new ProductAttributeService($this->shopId);
@@ -80,6 +107,19 @@ class ProductService
                     $productAttribute->product()->associate($product);
                 }
             }
+
+            if (isset($data['special_prices'])) {
+                $specialPriceModels = [];
+
+                foreach ($data['special_prices'] as $specialPriceData) {
+                    $specialPriceService = ProductSpecialPriceService::factory($this->shopId);
+                    $specialPriceModels[] = $specialPriceService->initModel($specialPriceData)->getData();
+                }
+
+                $product->specialPrices()->saveMany($specialPriceModels);
+            }
+
+            $product->save();
 
             return $product;
         });

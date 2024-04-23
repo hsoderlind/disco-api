@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $supplier_id
  * @property int $manufacturer_id
  * @property int $price
+ * @property int $cost_price
  * @property string|null $reference
  * @property string|null $supplier_reference
  * @property bool $available_for_order
@@ -56,10 +57,12 @@ class Product extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'state',
         'tax_id',
         'supplier_id',
         'manufacturer_id',
         'price',
+        'cost_price',
         'reference',
         'supplier_reference',
         'available_for_order',
@@ -67,6 +70,7 @@ class Product extends Model
         'condition',
         'name',
         'description',
+        'summary',
     ];
 
     protected $casts = [
