@@ -19,7 +19,7 @@ class ProductAttributeRules extends Rules
 
     public function getRules(): array
     {
-        $stockRules = (new ProductAttributeStockRules($this->request))->rules();
+        $stockRules = (new ProductAttributeStockRules($this->request))->getRules();
 
         $joinedStockRuleFields = implode(',', array_keys($stockRules));
 

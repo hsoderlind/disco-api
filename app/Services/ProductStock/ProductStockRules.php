@@ -26,7 +26,7 @@ class ProductStockRules extends Rules
             'allow_order_out_of_stock' => 'boolean',
             'send_email_out_of_stock' => 'boolean',
             'in_stock_message' => 'string|nullable|max:255',
-            'available_at' => 'date_format:Y-m-d|nullable',
+            'available_at' => 'sometimes|date|nullable',
         ];
     }
 }

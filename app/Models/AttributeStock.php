@@ -32,7 +32,6 @@ class AttributeStock extends Model
         'sku',
         'stock_unit',
         'out_of_stock_message',
-        'available_at',
         'allow_order_out_of_stock',
         'initial_quantity',
         'reserved_quantity',
@@ -40,7 +39,7 @@ class AttributeStock extends Model
     ];
 
     protected $casts = [
-        'available_at' => 'date:Y-m-d',
+        'available_at' => 'datetime',
     ];
 
     protected static function boot()
@@ -51,7 +50,7 @@ class AttributeStock extends Model
     }
 
     // Relationships
-    protected function productAttribute(): BelongsTo
+    public function attributeProduct(): BelongsTo
     {
         return $this->belongsTo(AttributeProduct::class);
     }

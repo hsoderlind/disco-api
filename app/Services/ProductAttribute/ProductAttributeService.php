@@ -3,6 +3,7 @@
 namespace App\Services\ProductAttribute;
 
 use App\Models\AttributeProduct;
+use App\Models\Product;
 use App\Services\ProductAttributeStock\ProductAttributeStockService;
 use Illuminate\Support\Facades\DB;
 
@@ -33,21 +34,24 @@ class ProductAttributeService
         return $attributeProduct;
     }
 
-    public function create(array $data): AttributeProduct
+    public function create(Product $product, array $data): AttributeProduct
     {
 
-        return DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($product, $data) {
             /** @var AttributeProduct $productAttribute */
-            $productAttribute = AttributeProduct::create([
+            $productAttribute = new AttributeProduct([
                 'sort_order' => $data['sort_order'],
                 'active' => $data['active'],
             ]);
 
             $productAttribute->attributeType()->associate($data['attribute_type_id']);
             $productAttribute->attributeValue()->associate($data['attribute_value_id']);
+            $productAttribute->product()->associate($product->getKey());
+
+            $productAttribute->save();
 
             if (isset($data['stock'])) {
-                $attributeStock = (new ProductAttributeStockService($this->shopId))->create($data['stock']);
+                $attributeStock = (new ProductAttributeStockService($this->shopId))->create($productAttribute, $data['stock']);
                 $productAttribute->stock()->save($attributeStock);
             }
 

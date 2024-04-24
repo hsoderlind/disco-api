@@ -5,7 +5,11 @@ namespace App\Services\Product;
 use App\Models\Product;
 use App\Services\Barcode\BarcodeService;
 use App\Services\ProductAttribute\ProductAttributeService;
+use App\Services\ProductFile\ProductFileService;
+use App\Services\ProductImage\ProductImageService;
 use App\Services\ProductSpecialPrice\ProductSpecialPriceService;
+use App\Services\ProductStock\ProductStockService;
+use App\Services\Tax\TaxService;
 use Illuminate\Support\Facades\DB;
 
 class ProductService
@@ -69,8 +73,10 @@ class ProductService
     public function create(array $data): Product
     {
         return DB::transaction(function () use ($data) {
+            $taxService = new TaxService($this->shopId);
+
             /** @var \App\Models\Product $product */
-            $product = Product::create(
+            $product = new Product(
                 collect($data)->only([
                     'state',
                     'price',
@@ -83,6 +89,10 @@ class ProductService
                     'description',
                 ])->toArray()
             );
+
+            $product->tax_id = $taxService->read($data['tax_id'])->getKey();
+
+            $product->save();
 
             $product->categories()->sync($data['categories']);
 
@@ -102,7 +112,7 @@ class ProductService
                 $productAttributeService = new ProductAttributeService($this->shopId);
 
                 foreach ($data['product_attributes'] as $productAttributeData) {
-                    $productAttribute = $productAttributeService->create($productAttributeData);
+                    $productAttribute = $productAttributeService->create($product, $productAttributeData);
 
                     $productAttribute->product()->associate($product);
                 }
@@ -110,16 +120,45 @@ class ProductService
 
             if (isset($data['special_prices'])) {
                 $specialPriceModels = [];
+                $specialPriceService = ProductSpecialPriceService::factory($this->shopId);
 
                 foreach ($data['special_prices'] as $specialPriceData) {
-                    $specialPriceService = ProductSpecialPriceService::factory($this->shopId);
-                    $specialPriceModels[] = $specialPriceService->initModel($specialPriceData)->getData();
+                    $specialPriceModels[] = $specialPriceService->newModel($specialPriceData)->get();
                 }
 
                 $product->specialPrices()->saveMany($specialPriceModels);
             }
 
-            $product->save();
+            if (isset($data['images'])) {
+                $imageModels = [];
+                $productImageService = new ProductImageService($this->shopId);
+
+                foreach ($data['images'] as $imageData) {
+                    $imageModels[] = $productImageService->newModel($imageData);
+                }
+
+                $product->images()->saveMany($imageModels);
+            }
+
+            if (isset($data['files'])) {
+                $fileModels = [];
+                $productFileService = ProductFileService::factory($this->shopId);
+
+                foreach ($data['files'] as $fileData) {
+                    $fileModels[] = $productFileService->newModel($fileData)->get();
+                }
+
+                $product->files()->saveMany($fileModels);
+            }
+
+            if (isset($data['stock'])) {
+                /** @var \App\Models\ProductStock */
+                $productStock = ProductStockService::factory($this->shopId)
+                    ->newModel($data['stock'])
+                    ->get();
+
+                $product->stock()->save($productStock);
+            }
 
             return $product;
         });

@@ -20,13 +20,13 @@ abstract class AbstractService
     public static function factory(int $shopId)
     {
         if (is_null(self::$instance)) {
-            self::$instance = new static($shopId);
+            static::$instance = new static($shopId);
         }
 
-        return self::$instance;
+        return static::$instance;
     }
 
-    public function getData()
+    public function get()
     {
         return $this->data;
     }

@@ -22,7 +22,7 @@ class ProductAttributeStockRules extends Rules
             'sku' => 'sometimes|string|nullable|max:255',
             'stock_unit' => 'sometimes|string|nullable|max:255',
             'out_of_stock_message' => 'sometimes|string|nullable|max:255',
-            'available_at' => 'sometimes|date_format:Y-m-d',
+            'available_at' => 'sometimes|date',
             'allow_order_out_of_stock' => 'sometimes|boolean',
             'initial_quantity' => 'required|integer|numeric',
             'reserved_quantity' => 'sometimes|integer|numeric',

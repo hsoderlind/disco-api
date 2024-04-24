@@ -10,12 +10,14 @@ class ProductSpecialPriceService extends AbstractService
 {
     protected $resource = ProductSpecialPriceResource::class;
 
-    public function initModel(array $data)
+    public function newModel(array $data)
     {
         $this->data = new ProductSpecialPrice(
             collect($data)
                 ->only(['special_price', 'entry_date', 'expiration_date'])
                 ->toArray()
         );
+
+        return $this;
     }
 }

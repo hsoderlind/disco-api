@@ -38,11 +38,10 @@ class ProductStock extends Model
         'allow_order_out_of_stock',
         'send_email_out_of_stock',
         'in_stock_message',
-        'available_at',
     ];
 
     protected $casts = [
-        'available_at' => 'date:Y-m-d',
+        'available_at' => 'datetime',
     ];
 
     protected static function boot()

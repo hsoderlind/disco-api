@@ -12,6 +12,18 @@ class ProductImageService
 
     }
 
+    public function newModel(array $data): ProductImage
+    {
+        $model = new ProductImage(
+            collect($data)
+                ->only(['sort_order', 'use_as_cover'])
+                ->toArray()
+        );
+        $model->meta()->save(FileService::staticGet($this->shopId, $data['meta']['id']));
+
+        return $model;
+    }
+
     public function list(int $productId)
     {
         return ProductImage::inShop($this->shopId)
@@ -22,7 +34,11 @@ class ProductImageService
 
     public function create(array $data): ProductImage
     {
-        $model = new ProductImage($data);
+        $model = new ProductImage(
+            collect($data)
+                ->only(['sort_order', 'use_as_cover'])
+                ->toArray()
+        );
         $model->meta()->save(FileService::staticGet($this->shopId, $data['meta']['id']));
         $model->save();
 

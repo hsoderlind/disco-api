@@ -16,7 +16,7 @@ class BarcodeService
     {
         $barcodeTypeService = new BarcodeTypeService($this->shopId);
 
-        $barcode = new Barcode(compact($data['value']));
+        $barcode = new Barcode(['value' => $data['value']]);
         $barcode->barcodeType()->associate($barcodeTypeService->get($data['barcode_type_id']));
 
         $barcode->save();

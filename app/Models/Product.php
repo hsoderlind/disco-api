@@ -8,6 +8,7 @@ use App\Services\Shop\ShopSession;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -42,6 +43,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductFile[] $files
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Barcode[] $barcodes
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductImage[] $images
+ * @property-read \App\Models\ProductStock $stock
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
@@ -92,9 +94,9 @@ class Product extends Model
         return $this->belongsToMany(Category::class);
     }
 
-    public function tax(): HasOne
+    public function tax(): BelongsTo
     {
-        return $this->hasOne(Tax::class);
+        return $this->belongsTo(Tax::class);
     }
 
     public function barcodes(): BelongsToMany
@@ -102,14 +104,14 @@ class Product extends Model
         return $this->belongsToMany(Barcode::class);
     }
 
-    public function supplier(): HasOne
+    public function supplier(): BelongsTo
     {
-        return $this->hasOne(Supplier::class);
+        return $this->belongsTo(Supplier::class);
     }
 
-    public function manufacturer(): HasOne
+    public function manufacturer(): BelongsTo
     {
-        return $this->hasOne(Manufacturer::class);
+        return $this->belongsTo(Manufacturer::class);
     }
 
     public function productAttributes(): HasMany
@@ -135,6 +137,11 @@ class Product extends Model
     public function images(): HasMany
     {
         return $this->hasMany(ProductImage::class);
+    }
+
+    public function stock(): HasOne
+    {
+        return $this->hasOne(ProductStock::class);
     }
 
     // Local Scopes
