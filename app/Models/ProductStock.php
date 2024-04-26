@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Services\Shop\ShopSession;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $send_email_out_of_stock
  * @property string $in_stock_message
  * @property string $available_at
+ * @property-read int $disposable_quantity
+ * @property-read int $approx_disposable_quantity
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
@@ -49,6 +52,21 @@ class ProductStock extends Model
         parent::boot();
 
         static::creating(fn ($instance) => $instance->shop_id = ShopSession::getId());
+    }
+
+    // Accessors & Mutators
+    protected function disposableQuantity(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->initial_quantity - $this->sold_quantity
+        );
+    }
+
+    protected function approxDisposableQuantity(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->initial_quantity - $this->sold_quantity - $this->reserved_quantity
+        );
     }
 
     // Relationships
