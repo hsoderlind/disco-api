@@ -31,6 +31,7 @@ class ProductResource extends JsonResource
             'supplier' => new SupplierResource($this->supplier),
             'mmanufacturer' => new ManufacturerResource($this->manufacturer),
             'special_prices' => ProductSpecialPriceResource::collection($this->whenLoaded('specialPrices')),
+            'stock' => new ProductStockResource($this->stock),
         ];
     }
 }

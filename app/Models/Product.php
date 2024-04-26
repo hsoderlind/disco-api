@@ -75,6 +75,14 @@ class Product extends Model
         'summary',
     ];
 
+    protected $with = [
+        'tax',
+        'stock',
+        'images',
+        'productAttributes',
+        'specialPrices',
+    ];
+
     protected $casts = [
         'condition' => ProductCondition::class,
         'available_at' => 'date:Y-m-d',
