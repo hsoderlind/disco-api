@@ -19,6 +19,7 @@ class ProductAttributeStockRules extends Rules
     public function getRules(): array
     {
         return [
+            'id' => 'sometimes|required|exists:attribute_stocks,id',
             'sku' => 'sometimes|string|nullable|max:255',
             'stock_unit' => 'sometimes|string|nullable|max:255',
             'out_of_stock_message' => 'sometimes|string|nullable|max:255',
