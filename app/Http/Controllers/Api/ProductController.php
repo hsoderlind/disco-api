@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Helpers\HttpResponseCode;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
-use App\Models\Product;
 use App\Services\Product\ProductService;
 use App\Services\Product\ProductState;
 use App\Services\Shop\ShopSession;
@@ -41,8 +40,10 @@ class ProductController extends Controller
         return new ProductResource($product);
     }
 
-    public function show(Product $product)
+    public function show(ProductRequest $request, int $id)
     {
+        $product = $this->service->read($id);
+
         return new ProductResource($product);
     }
 

@@ -34,6 +34,16 @@ class AttributeProduct extends Model
         'active',
     ];
 
+    protected $with = [
+        'attributeValue',
+        'attributeType',
+        'stock',
+    ];
+
+    protected $casts = [
+        'active' => 'boolean',
+    ];
+
     protected static function boot()
     {
         parent::boot();

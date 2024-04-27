@@ -17,7 +17,8 @@ class BarcodeResource extends JsonResource
         return [
             'id' => $this->id,
             'value' => $this->value,
-            'barcode_type' => new BarcodeTypeResource($this->barcode_type),
+            'barcode_type_id' => $this->barcode_type_id,
+            'barcode_type' => new BarcodeTypeResource($this->barcodeType),
         ];
     }
 }

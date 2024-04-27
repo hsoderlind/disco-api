@@ -32,6 +32,10 @@ class Barcode extends Model
         'value',
     ];
 
+    protected $with = [
+        'barcodeType',
+    ];
+
     protected static function boot()
     {
         parent::boot();

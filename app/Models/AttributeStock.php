@@ -40,6 +40,9 @@ class AttributeStock extends Model
 
     protected $casts = [
         'available_at' => 'datetime',
+        'allow_order_out_of_stock' => 'boolean',
+        'sku' => 'string',
+        'stock_unit' => 'string',
     ];
 
     protected static function boot()

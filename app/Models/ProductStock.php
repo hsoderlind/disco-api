@@ -45,6 +45,8 @@ class ProductStock extends Model
 
     protected $casts = [
         'available_at' => 'datetime',
+        'allow_order_out_of_stock' => 'boolean',
+        'send_email_out_of_stock' => 'boolean',
     ];
 
     protected static function boot()
