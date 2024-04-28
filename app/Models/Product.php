@@ -44,6 +44,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Barcode[] $barcodes
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductImage[] $images
  * @property-read \App\Models\ProductStock $stock
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductSpecialPrice[] $specialPrices
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)

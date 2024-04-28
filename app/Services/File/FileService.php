@@ -15,7 +15,7 @@ class FileService
     ) {
     }
 
-    public static function staticGet(int $shopId, int $id)
+    public static function staticGet(int $shopId, int $id): File
     {
         return File::inShop($shopId)->findOrFail($id);
     }

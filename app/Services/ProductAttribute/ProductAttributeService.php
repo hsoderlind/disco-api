@@ -70,6 +70,15 @@ class ProductAttributeService
         });
     }
 
+    public function updateOrCreate(Product $product, array $data): AttributeProduct
+    {
+        if (isset($data['id'])) {
+            return $this->update($data['id'], $data);
+        } else {
+            return $this->create($product, $data);
+        }
+    }
+
     public function delete(int $id): bool
     {
         $attributeProduct = AttributeProduct::inShop($this->shopId)->findOrFail($id);

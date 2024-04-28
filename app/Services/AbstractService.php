@@ -10,7 +10,7 @@ abstract class AbstractService
 
     protected mixed $data;
 
-    protected string $resource;
+    protected $resource;
 
     private function __construct(protected readonly int $shopId)
     {
@@ -26,7 +26,7 @@ abstract class AbstractService
         return static::$instance;
     }
 
-    public function get()
+    public function &get()
     {
         return $this->data;
     }

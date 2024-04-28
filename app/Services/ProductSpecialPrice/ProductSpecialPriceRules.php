@@ -22,7 +22,7 @@ class ProductSpecialPriceRules extends Rules
             'special_price' => 'required|integer|numeric|min:0',
             'entry_date' => 'required|date',
             'expiration_date' => 'sometimes|nullable|date',
-            'product_id' => 'required|integer|numeric|exists:products,id',
+            'product_id' => 'sometimes|required|integer|numeric|exists:products,id',
         ];
     }
 }

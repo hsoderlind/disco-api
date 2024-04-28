@@ -10,6 +10,7 @@ use App\Services\ProductImage\ProductImageService;
 use App\Services\ProductSpecialPrice\ProductSpecialPriceService;
 use App\Services\ProductStock\ProductStockService;
 use App\Services\Tax\TaxService;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ProductService
@@ -72,10 +73,10 @@ class ProductService
 
     public function create(array $data): Product
     {
-        return DB::transaction(function () use ($data) {
+        DB::beginTransaction();
+        try {
             $taxService = new TaxService($this->shopId);
 
-            /** @var \App\Models\Product $product */
             $product = new Product(
                 collect($data)->only([
                     'state',
@@ -97,62 +98,26 @@ class ProductService
             $product->categories()->sync($data['categories']);
 
             if (isset($data['barcodes'])) {
-                $barcodeIds = [];
-
-                foreach ($data['barcodes'] as $barcodeData) {
-                    $barcodeService = new BarcodeService($this->shopId);
-                    $barcode = $barcodeService->create($barcodeData);
-                    $barcodeIds[] = $barcode->getKey();
-                }
-
-                $product->barcodes()->sync($barcodeIds);
+                $product = $this->attachBarcodes($product, $data['barcodes']);
             }
 
             if (isset($data['product_attributes'])) {
-                $productAttributeService = new ProductAttributeService($this->shopId);
-
-                foreach ($data['product_attributes'] as $productAttributeData) {
-                    $productAttribute = $productAttributeService->create($product, $productAttributeData);
-
-                    $productAttribute->product()->associate($product);
-                }
+                $product = $this->associateProductAttributes($product, collect($data['product_attributes']));
             }
 
             if (isset($data['special_prices'])) {
-                $specialPriceModels = [];
-                $specialPriceService = ProductSpecialPriceService::factory($this->shopId);
-
-                foreach ($data['special_prices'] as $specialPriceData) {
-                    $specialPriceModels[] = $specialPriceService->newModel($specialPriceData)->get();
-                }
-
-                $product->specialPrices()->saveMany($specialPriceModels);
+                $product = $this->associateSpecialPrices($product, collect($data['special_prices']));
             }
 
             if (isset($data['images'])) {
-                $imageModels = [];
-                $productImageService = new ProductImageService($this->shopId);
-
-                foreach ($data['images'] as $imageData) {
-                    $imageModels[] = $productImageService->newModel($imageData);
-                }
-
-                $product->images()->saveMany($imageModels);
+                $product = $this->associateImages($product, collect($data['images']));
             }
 
             if (isset($data['files'])) {
-                $fileModels = [];
-                $productFileService = ProductFileService::factory($this->shopId);
-
-                foreach ($data['files'] as $fileData) {
-                    $fileModels[] = $productFileService->newModel($fileData)->get();
-                }
-
-                $product->files()->saveMany($fileModels);
+                $product = $this->associateFiles($product, collect($data['files']));
             }
 
             if (isset($data['stock'])) {
-                /** @var \App\Models\ProductStock */
                 $productStock = ProductStockService::factory($this->shopId)
                     ->newModel($data['stock'])
                     ->get();
@@ -160,20 +125,80 @@ class ProductService
                 $product->stock()->save($productStock);
             }
 
+            DB::commit();
+
             return $product;
-        });
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
     }
 
     public function update(int $id, array $data): Product
     {
-        return DB::transaction(function () use ($id, $data) {
+        DB::beginTransaction();
+        try {
             $product = Product::inShop($this->shopId)->findOrFail($id);
-            $product->update($data);
+            $product->update(collect($data)->only([
+                'state',
+                'price',
+                'cost_price',
+                'reference',
+                'supplier_reference',
+                'condition',
+                'name',
+                'summary',
+                'description',
+            ])->toArray());
             $product->categories()->sync($data['categories']);
-            $product->barcodes()->sync($data['barcodes']);
+
+            if ($product->tax_id !== $data['tax_id']) {
+                $product = $this->setTaxId($product, $data['tax_id']);
+            }
+
+            if (isset($data['barcodes'])) {
+                $product = $this->attachBarcodes($product, $data['barcodes']);
+            } elseif ($product->barcodes->count() > 0) {
+                $product = $this->detachBarcodes($product);
+            }
+
+            if (isset($data['product_attributes'])) {
+                $collection = collect($data['product_attributes']);
+                $product = $this->associateProductAttributes($product, $collection);
+                $product = $this->deleteProductAttributesIfNeeded($product, $collection);
+            } elseif ($product->productAttributes->count() > 0) {
+                $product = $this->deleteProductAttributes($product);
+            }
+
+            if (isset($data['special_prices'])) {
+                $collection = collect($data['special_prices']);
+                $product = $this->associateSpecialPrices($product, $collection);
+                $product = $this->deleteSpecialPricesIfNeeded($product, $collection);
+            } elseif ($product->specialPrices->count() > 0) {
+                $product = $this->deleteSpecialPrices($product);
+            }
+
+            if (isset($data['images'])) {
+                $collection = collect($data['images']);
+                $product = $this->associateImages($product, $collection);
+                $product = $this->deleteImagesIfNeeded($product, $collection);
+            } elseif ($product->images->count() > 0) {
+                $product = $this->deleteImages($product);
+            }
+
+            if (isset($data['files'])) {
+                $collection = collect($data['files']);
+                $product = $this->associateFiles($product, $collection);
+                $product = $this->deleteFilesIfNeeded($product, $collection);
+            } elseif ($product->files->count() > 0) {
+                $product = $this->deleteFiles($product);
+            }
+
+            DB::commit();
 
             return $product;
-        });
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
     }
 
     public function delete(int $id): bool
@@ -181,5 +206,167 @@ class ProductService
         $product = Product::inShop($this->shopId)->findOrFail($id);
 
         return $product->delete();
+    }
+
+    protected function setTaxId(Product $product, int $taxId): Product
+    {
+        $taxService = new TaxService($this->shopId);
+        $product->tax_id = $taxService->read($taxId)->getKey();
+
+        return $product;
+    }
+
+    protected function attachBarcodes(Product $product, array $barcodes): Product
+    {
+        $barcodeService = new BarcodeService($this->shopId);
+        $barcodeIds = collect($barcodes)->each(fn ($barcodeData) => $barcodeService->updateOrCreate($barcodeData))->only('id')->toArray();
+
+        $product->barcodes()->sync($barcodeIds);
+
+        return $product;
+    }
+
+    protected function detachBarcodes(Product $product): Product
+    {
+        $product->barcodes()->detach();
+
+        return $product;
+    }
+
+    protected function associateProductAttributes(Product &$product, Collection $productAttributes): Product
+    {
+        $productAttributeService = new ProductAttributeService($this->shopId);
+        $productAttributes->each(fn ($productAttributeData) => $productAttributeService->updateOrCreate($product, $productAttributeData));
+
+        return $product;
+    }
+
+    protected function deleteProductAttributesIfNeeded(Product $product, Collection $collection): Product
+    {
+        return $this->deleteProductAttributes($product, $collection);
+    }
+
+    protected function deleteProductAttributes(Product $product, ?Collection $collection = null): Product
+    {
+        $productAttributeService = new ProductAttributeService($this->shopId);
+
+        if (! is_null($collection)) {
+            $product->productAttributes->each(function ($model) use ($collection, $productAttributeService) {
+                $result = $collection->where('id', $model->getKey())->count();
+
+                if (! $result) {
+                    $productAttributeService->delete($model->getKey());
+                }
+
+                return true;
+            });
+        } else {
+            $product->productAttributes->each(fn ($model) => $productAttributeService->delete($model->getKey()));
+        }
+
+        return $product;
+    }
+
+    protected function associateSpecialPrices(Product $product, Collection $specialPrices): Product
+    {
+        $specialPriceService = ProductSpecialPriceService::factory($this->shopId);
+        $specialPrices->each(fn ($specialPriceData) => $specialPriceService->updateOrCreate($product, $specialPriceData));
+
+        return $product;
+    }
+
+    protected function deleteSpecialPricesIfNeeded(Product $product, Collection $collection): Product
+    {
+        return $this->deleteSpecialPrices($product, $collection);
+    }
+
+    protected function deleteSpecialPrices(Product $product, ?Collection $collection = null): Product
+    {
+        $specialPriceService = ProductSpecialPriceService::factory($this->shopId);
+
+        if (! is_null($collection)) {
+            $product->specialPrices->each(function ($model) use ($collection, $specialPriceService) {
+                $result = $collection->where('id', $model->getKey())->count();
+
+                if (! $result) {
+                    $specialPriceService->delete($model->getKey());
+                }
+
+                return true;
+            });
+        } else {
+            $product->specialPrices->each(fn ($model) => $specialPriceService->delete($model->getKey()));
+        }
+
+        return $product;
+    }
+
+    protected function associateImages(Product $product, Collection $images): Product
+    {
+        $productImageService = new ProductImageService($this->shopId);
+        $images->each(fn ($imageData) => $productImageService->updateOrCreate($product, $imageData));
+
+        return $product;
+    }
+
+    protected function deleteImagesIfNeeded(Product $product, Collection $collection): Product
+    {
+        return $this->deleteImages($product, $collection);
+    }
+
+    protected function deleteImages(Product $product, ?Collection $collection = null): Product
+    {
+        $productImageService = new ProductImageService($this->shopId);
+
+        if (! is_null($collection)) {
+            $product->images->each(function ($model) use ($collection, $productImageService) {
+                $result = $collection->where('id', $model->getKey())->count();
+
+                if (! $result) {
+                    $productImageService->delete($model->getKey());
+                }
+
+                return true;
+            });
+        } else {
+            $product->images->each(fn ($model) => $productImageService->delete($model->getKey()));
+        }
+
+        return $product;
+    }
+
+    protected function associateFiles(Product $product, Collection $files): Product
+    {
+        $productFileService = ProductFileService::factory($this->shopId);
+
+        $files->each(fn ($data) => $productFileService->updateOrCreate($product, $data));
+
+        return $product;
+    }
+
+    protected function deleteFilesIfNeeded(Product $product, Collection $collection): Product
+    {
+        return $this->deleteFiles($product, $collection);
+    }
+
+    protected function deleteFiles(Product $product, ?Collection $collection = null): Product
+    {
+        $productImageService = ProductFileService::factory($this->shopId);
+
+        if (! is_null($collection)) {
+            $product->files->each(function ($model) use ($collection, $productImageService) {
+                $result = $collection->where('id', $model->getKey())->count();
+
+                if (! $result) {
+                    $productImageService->delete($model->getKey());
+                }
+
+                return true;
+            });
+        } else {
+            $product->files->each(fn ($model) => $productImageService->delete($model->getKey()));
+        }
+
+        return $product;
     }
 }
