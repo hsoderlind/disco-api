@@ -219,7 +219,11 @@ class ProductService
     protected function attachBarcodes(Product $product, array $barcodes): Product
     {
         $barcodeService = new BarcodeService($this->shopId);
-        $barcodeIds = collect($barcodes)->each(fn ($barcodeData) => $barcodeService->updateOrCreate($barcodeData))->only('id')->toArray();
+        $barcodeIds = [];
+
+        foreach ($barcodes as $barcode) {
+            $barcodeIds[] = $barcodeService->updateOrCreate($barcode)?->getKey();
+        }
 
         $product->barcodes()->sync($barcodeIds);
 

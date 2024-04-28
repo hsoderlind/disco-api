@@ -19,6 +19,7 @@ class ProductSpecialPriceRules extends Rules
     public function getRules(): array
     {
         return [
+            'id' => 'sometimes|required|exists:product_special_prices,id',
             'special_price' => 'required|integer|numeric|min:0',
             'entry_date' => 'required|date',
             'expiration_date' => 'sometimes|nullable|date',

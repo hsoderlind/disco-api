@@ -19,7 +19,7 @@ class ProductSpecialPriceResource extends JsonResource
             'special_price' => $this->special_price,
             'entry_date' => $this->entry_date,
             'expiration_date' => $this->expiration_date,
-            'product' => new ProductResource($this->product),
+            'product' => new ProductResource($this->whenLoaded('product')),
         ];
     }
 }
