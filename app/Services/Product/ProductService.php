@@ -12,6 +12,7 @@ use App\Services\ProductStock\ProductStockService;
 use App\Services\Tax\TaxService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProductService
 {
@@ -135,6 +136,7 @@ class ProductService
 
     public function update(int $id, array $data): Product
     {
+        Log::info('JSON: '.json_encode($data));
         DB::beginTransaction();
         try {
             $product = Product::inShop($this->shopId)->findOrFail($id);

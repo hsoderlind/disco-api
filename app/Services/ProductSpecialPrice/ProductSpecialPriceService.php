@@ -48,8 +48,8 @@ class ProductSpecialPriceService extends AbstractService
 
     public function updateOrCreate(Product $product, array $data)
     {
-        if (isset($daata['id'])) {
-            $this->update($daata['id'], $daata);
+        if (isset($data['id'])) {
+            $this->update($data['id'], $data);
         } else {
             $this->create($product, $data);
         }

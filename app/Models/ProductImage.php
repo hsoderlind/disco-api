@@ -29,6 +29,8 @@ class ProductImage extends Model
         'use_as_cover',
     ];
 
+    protected $with = ['meta'];
+
     protected static function boot()
     {
         parent::boot();

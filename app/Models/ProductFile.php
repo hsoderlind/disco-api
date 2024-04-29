@@ -27,6 +27,8 @@ class ProductFile extends Model
         'sort_order',
     ];
 
+    protected $with = ['meta'];
+
     protected static function boot()
     {
         parent::boot();

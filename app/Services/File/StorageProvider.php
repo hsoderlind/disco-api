@@ -25,9 +25,9 @@ class StorageProvider
     {
         if (! is_null($request)) {
             $request->validate([
-                'storage_provider' => 'required|string',
+                'storage_resolver' => 'required|string',
             ]);
-            $this->inputName = $request->input('storage_provider') ?? $request->query('storage_provider');
+            $this->inputName = $request->input('storage_resolver') ?? $request->query('storage_resolver');
         } elseif (is_string($inputName)) {
             $this->inputName = $inputName;
         } else {

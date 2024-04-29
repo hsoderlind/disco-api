@@ -46,7 +46,7 @@ class FileService
 
         $physicalFileService = new PhysicalFileService($model, $storageProvider);
         [$fileInput, $path] = $physicalFileService->store($this->request);
-        $model->storage_resolver = $this->request->input('storage_provider');
+        $model->storage_resolver = $this->request->input('storage_resolver');
         $model->path = $path;
         $model->filename = $fileInput->getClientOriginalName();
         $model->extension = $fileInput->getClientOriginalExtension();

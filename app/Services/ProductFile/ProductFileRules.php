@@ -2,12 +2,16 @@
 
 namespace App\Services\ProductFile;
 
+use App\Services\File\FileModelRules;
 use App\Services\File\IFileRules;
+use App\Traits\RulesMerger;
 use App\Validation\Rules;
 use Illuminate\Validation\Rules\File;
 
 class ProductFileRules extends Rules implements IFileRules
 {
+    use RulesMerger;
+
     public function authorize(): bool
     {
         return $this->request->user()->can('access product');
@@ -22,6 +26,7 @@ class ProductFileRules extends Rules implements IFileRules
     {
         return [
             'sort_order' => 'required|integer|numeric|min:0',
+            ...$this->merge('meta', new FileModelRules($this->request), 'required'),
         ];
     }
 

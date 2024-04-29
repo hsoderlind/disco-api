@@ -29,4 +29,15 @@ class FileRules extends Rules
     {
         return $this->shouldValidate() ? $this->validationProvider->getFileRules() : [];
     }
+
+    public function getModelRules(): array
+    {
+        return [
+            'id' => 'sometimes|required|exists:files,id',
+            'filename' => 'required|string|max:255',
+            'extension' => 'required|string|max:255',
+            'mimetype' => 'required|string|max:255',
+            'size' => 'required|numeric|integer',
+        ];
+    }
 }

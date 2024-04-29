@@ -33,6 +33,8 @@ class ProductResource extends JsonResource
             'special_prices' => ProductSpecialPriceResource::collection($this->whenLoaded('specialPrices')),
             'stock' => new ProductStockResource($this->stock),
             'product_attributes' => ProductAttributeResource::collection($this->whenLoaded('productAttributes')),
+            'images' => ProductImageResource::collection($this->whenLoaded('images')),
+            'files' => ProductFileResource::collection($this->whenLoaded('files')),
         ];
     }
 }
