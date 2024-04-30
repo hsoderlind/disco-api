@@ -16,15 +16,23 @@ class Service
 
     protected array $reservedAttributes = ['username'];
 
+    protected array $modelAttributes = [];
+
     public function __construct(
         protected readonly ServiceProvider $serviceProvider
     ) {
         $this->loadResourceDefs();
+        $this->loadAttributesFromModel();
     }
 
     protected function loadResourceDefs()
     {
         $this->resourceDefs = new LoadResourceDefs($this->getServiceName());
+    }
+
+    protected function loadAttributesFromModel()
+    {
+        $this->modelAttributes['username'] = $this->serviceProvider->model->getUsername();
     }
 
     public function getServiceName(): string
@@ -38,6 +46,10 @@ class Service
 
         if (! method_exists($this->serviceProvider->client, $method)) {
             throw new RuntimeException('A service with name '.$this->serviceName.' do not exist');
+        }
+
+        if (! array_key_exists($action, $this->resourceDefs)) {
+            throw new RuntimeException('Can not call '.$action.' on '.get_class($this));
         }
 
         $arguments = $this->pickAttributesForAction($action);
@@ -97,5 +109,12 @@ class Service
     public function __call($name, $arguments)
     {
         return $this->call($name);
+    }
+
+    public static function make(\Illuminate\Database\Eloquent\Model $model): static
+    {
+        $serviceProvider = new ServiceProvider($model);
+
+        return new static($serviceProvider);
     }
 }
