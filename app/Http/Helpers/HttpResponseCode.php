@@ -9,6 +9,8 @@ abstract class HttpResponseCode
      */
     const OK = 200;
 
+    const TEMP_REDIRECT = 302;
+
     /**
      * Används när den efterfrågade resursen kräver att klienten prenumererar på den.
      */

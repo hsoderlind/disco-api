@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Traits\DiscogsTokenizer;
+namespace App\Discogs\Traits;
 
 trait DiscogsTokenizer
 {
     /**
      * Name of attribute holding token
      */
-    protected string $tokenAttribute;
+    protected string $tokenAttribute = 'token';
 
     /**
      * Name of attribute holding token secret
      */
-    protected string $tokenSecretAttribute;
+    protected string $tokenSecretAttribute = 'token_secret';
 
     /**
      * Name of attribute holding username
      */
-    protected string $usernameAttribute;
+    protected string $usernameAttribute = 'username';
 
     public function getToken(): string
     {

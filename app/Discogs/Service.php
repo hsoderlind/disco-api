@@ -96,6 +96,15 @@ class Service
         return $this->attributes;
     }
 
+    public function fill(array $values)
+    {
+        foreach ($values as $key => $value) {
+            $this->setAttribute($key, $value);
+        }
+
+        return $this;
+    }
+
     public function __set($name, $value)
     {
         $this->setAttribute($name, $value);
