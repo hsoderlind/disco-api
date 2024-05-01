@@ -14,6 +14,7 @@ class AuthController extends Controller
     public function initAuth(Request $request)
     {
         $callbackUrl = route('discogs.auth.complete', ['shopId' => $request->shop->getKey()]);
+
         $result = Auth::requestToken($callbackUrl);
 
         session()->put('discogs', [

@@ -14,7 +14,7 @@ class Service
 
     protected array $attributes = [];
 
-    protected array $reservedAttributes = ['username'];
+    protected array $reservedAttributes = [];
 
     protected array $modelAttributes = [];
 
@@ -22,12 +22,11 @@ class Service
         protected readonly ServiceProvider $serviceProvider
     ) {
         $this->loadResourceDefs();
-        $this->loadAttributesFromModel();
     }
 
     protected function loadResourceDefs()
     {
-        $this->resourceDefs = new LoadResourceDefs($this->getServiceName());
+        $this->resourceDefs = (new LoadResourceDefs($this->getServiceName()))->definitions;
     }
 
     protected function loadAttributesFromModel()
@@ -42,10 +41,10 @@ class Service
 
     public function call(string $action)
     {
-        $method = 'use'.ucfirst($this->serviceName);
+        $method = 'use'.ucfirst($this->getServiceName());
 
         if (! method_exists($this->serviceProvider->client, $method)) {
-            throw new RuntimeException('A service with name '.$this->serviceName.' do not exist');
+            throw new RuntimeException('A service with name '.$this->getServiceName().' do not exist');
         }
 
         if (! array_key_exists($action, $this->resourceDefs)) {
@@ -53,14 +52,14 @@ class Service
         }
 
         $arguments = $this->pickAttributesForAction($action);
-        $response = $this->serviceProvider->client->$method->$action(...$arguments);
+        $response = $this->serviceProvider->client->$method()->$action(...$arguments);
 
         return $response;
     }
 
     protected function pickAttributesForAction(string $action): array
     {
-        $parameters = $this->resourceDefs[$action]['parameters'];
+        $parameters = isset($this->resourceDefs[$action]['parameters']) ? $this->resourceDefs[$action]['parameters'] : [];
         $actionAttributes = [];
 
         if (isset($parameters)) {
@@ -70,8 +69,10 @@ class Service
         }
 
         if (count($this->reservedAttributes)) {
+            $this->loadAttributesFromModel();
+
             foreach ($this->reservedAttributes as $resAttr) {
-                $actionAttributes[$resAttr] = $this->attributes[$resAttr];
+                $actionAttributes[$resAttr] = $this->modelAttributes[$resAttr] ?? $this->attributes[$resAttr];
             }
         }
 
