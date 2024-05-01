@@ -69,4 +69,11 @@ class AuthController extends Controller
 
         return redirect()->away(config('app.frontend_url').$refererUrl, HttpResponseCode::TEMP_REDIRECT, ['discogs_auth_complete' => 'failed']);
     }
+
+    public function checkAuthed(Request $request)
+    {
+        $model = DiscogsToken::forShop($request->shop->getKey());
+
+        return ['hasToken' => ! is_null($model)];
+    }
 }
