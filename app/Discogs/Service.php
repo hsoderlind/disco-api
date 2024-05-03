@@ -52,7 +52,7 @@ class Service
         }
 
         $arguments = $this->pickAttributesForAction($action);
-        $response = $this->serviceProvider->client->$method()->$action(...$arguments);
+        $response = $this->serviceProvider->client->$method()->$action($arguments);
 
         return $response;
     }
@@ -64,7 +64,9 @@ class Service
 
         if (isset($parameters)) {
             foreach ($parameters as $key => $value) {
-                $actionAttributes[$key] = $this->attributes[$key];
+                if (isset($this->attributes[$key])) {
+                    $actionAttributes[$key] = $this->attributes[$key];
+                }
             }
         }
 

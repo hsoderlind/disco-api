@@ -21,6 +21,9 @@ class SearchController extends Controller
     {
         $result = $this->service->fill($request->validated())->search();
 
-        return $result;
+        return [
+            'pagination' => $result->getPagination()->toArray(),
+            'results' => $result->all(),
+        ];
     }
 }
