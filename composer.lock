@@ -1087,7 +1087,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hsoderlind/discogs-api-php.git",
-                "reference": "4d3dcdc33241a7143dab8a8a1a9e53bb4b1e61b6"
+                "reference": "c9b5c9f7f1d674810d9b308c19c81b357e9ee3f3"
             },
             "require": {
                 "guzzlehttp/guzzle": "^6.5.5|^7.0.1",
@@ -1119,7 +1119,7 @@
                 "discogs",
                 "php"
             ],
-            "time": "2024-05-03T13:48:40+00:00"
+            "time": "2024-05-05T10:09:21+00:00"
         },
         {
             "name": "intervention/gif",

@@ -12,10 +12,10 @@ use App\Discogs\Service;
  * @property int $rating
  *
  * @method \Hsoderlind\Discogs\Api\Model\Collection listItems()
- * @method \Hsoderlind\Discogs\Api\Model\Collection addRelease()
+ * @method \Hsoderlind\Discogs\Api\Model\Model addRelease()
  * @method \Hsoderlind\Discogs\Api\Model\Response deleteRelease()
  */
 class Wantlist extends Service
 {
-    //
+    protected array $reservedAttributes = ['username'];
 }
