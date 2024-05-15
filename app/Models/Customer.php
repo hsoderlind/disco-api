@@ -97,7 +97,7 @@ class Customer extends Model
     // Relationships
     public function creditBalance(): HasOne
     {
-        return $this->hasOne(CreditBalance::class);
+        return $this->hasOne(CreditBalance::class)->latestOfMany();
     }
 
     public function account(): MorphOne

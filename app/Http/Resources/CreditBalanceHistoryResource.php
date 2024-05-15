@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CreditBalanceResource extends JsonResource
+class CreditBalanceHistoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,7 +18,10 @@ class CreditBalanceResource extends JsonResource
             'id' => $this->id,
             'customer_id' => $this->customer_id,
             'current_balance' => $this->current_balance,
-            'history' => CreditBalanceHistoryResource::collection($this->whenLoaded('history')),
+            'adjustment_type' => $this->adjustment_type,
+            'adjustment_balance' => $this->adjusted_balance,
+            'note' => $this->note,
+            'created_at' => $this->created_at,
         ];
     }
 }

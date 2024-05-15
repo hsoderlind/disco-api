@@ -21,10 +21,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
+ * @method \Illuminate\Database\Eloquent\Builder|static forCustomer(int $customerId)
+ * @method static \Illuminate\Database\Eloquent\Builder|static forCustomer(int $customerId)
  */
 class CreditBalance extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'customer_id',
+        'current_balance',
+        'adjusted_balance',
+        'adjustment_type',
+        'note',
+    ];
 
     protected static function boot()
     {
@@ -56,9 +66,19 @@ class CreditBalance extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    public function history(): BelongsTo
+    {
+        return $this->belongsTo(CreditBalance::class, 'customer_id');
+    }
+
     // Local Scopes
     public function scopeInShop(Builder $query, int $shopId)
     {
         return $query->where('shop_id', '=', $shopId);
+    }
+
+    public function scopeForCustomer(Builder $query, int $customerId)
+    {
+        return $query->where('customer_id', '=', $customerId);
     }
 }

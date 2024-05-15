@@ -33,7 +33,7 @@ class CustomerController extends Controller
 
     public function read(CustomerRequest $request, int $id)
     {
-        $model = $this->service->read($id)->get();
+        $model = $this->service->read($id, ['shippingAddress', 'billingAddress'])->get();
 
         return new CustomerResource($model);
     }
