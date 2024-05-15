@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eb2b5f98e32c4bbfb8d9b3167b856dfd",
+    "content-hash": "abb5fa3c1f26fb7d1867deb7a063c1fe",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2679,6 +2679,83 @@
             "time": "2023-02-08T01:06:31+00:00"
         },
         {
+            "name": "olssonm/swedish-entity",
+            "version": "v1.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/olssonm/swedish-entity.git",
+                "reference": "91328b03a3d938b2771e53e451e7ad80053c0489"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/olssonm/swedish-entity/zipball/91328b03a3d938b2771e53e451e7ad80053c0489",
+                "reference": "91328b03a3d938b2771e53e451e7ad80053c0489",
+                "shasum": ""
+            },
+            "require": {
+                "personnummer/personnummer": "^3.0.4",
+                "php": "^7.3|^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": ">=4.0",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "suggest": {
+                "laravel/framework": "For Laravel-integration"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Olssonm\\SwedishEntity\\SwedishEntityServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Olssonm\\SwedishEntity\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marcus Olsson",
+                    "email": "contact@marcusolsson.me",
+                    "homepage": "https://marcusolsson.me"
+                }
+            ],
+            "description": "Validator and formatter for Swedish personnummer and organisationsnummer. With Laravel validators.",
+            "homepage": "https://github.com/olssonm/swedish-entity",
+            "keywords": [
+                "Organisationsnummer",
+                "Personnummer",
+                "Social security number",
+                "Swedish",
+                "laravel",
+                "olssonm",
+                "organizational number",
+                "package",
+                "personal identity number"
+            ],
+            "support": {
+                "issues": "https://github.com/olssonm/swedish-entity/issues",
+                "source": "https://github.com/olssonm/swedish-entity/tree/v1.3.3"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/olssonm",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-02-15T07:40:29+00:00"
+        },
+        {
             "name": "paragonie/constant_time_encoding",
             "version": "v2.6.3",
             "source": {
@@ -2744,6 +2821,82 @@
                 "source": "https://github.com/paragonie/constant_time_encoding"
             },
             "time": "2022-06-14T06:56:20+00:00"
+        },
+        {
+            "name": "personnummer/personnummer",
+            "version": "v3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/personnummer/php.git",
+                "reference": "8c9453c18f2f28ee42e6cee5e45e106fdbe34278"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/personnummer/php/zipball/8c9453c18f2f28ee42e6cee5e45e106fdbe34278",
+                "reference": "8c9453c18f2f28ee42e6cee5e45e106fdbe34278",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
+                "ext-json": "*",
+                "jchook/phpunit-assert-throws": "^1.0",
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpunit/phpunit": "^10.5.5",
+                "roave/security-advisories": "dev-latest",
+                "squizlabs/php_codesniffer": "^3.8"
+            },
+            "type": "utility",
+            "autoload": {
+                "psr-4": {
+                    "Personnummer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fredrik Forsmo",
+                    "homepage": "https://github.com/frozzare"
+                },
+                {
+                    "name": "Rasmus Bengtsson",
+                    "homepage": "https://github.com/rasmusbe"
+                },
+                {
+                    "name": "Johannes Tegnér",
+                    "homepage": "https://github.com/johannestegner"
+                }
+            ],
+            "description": "Validate Swedish social security numbers",
+            "keywords": [
+                "Personal id",
+                "Personnummer",
+                "Social security number",
+                "Swedish",
+                "co-ordination",
+                "coordination",
+                "identify",
+                "personal identity number",
+                "samordningsnummer",
+                "security",
+                "utility"
+            ],
+            "support": {
+                "issues": "https://github.com/personnummer/php/issues",
+                "source": "https://github.com/personnummer/php/tree/v3.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://opencollective.com/sweidproject",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2024-01-21T16:31:44+00:00"
         },
         {
             "name": "phpoption/phpoption",

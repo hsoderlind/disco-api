@@ -23,4 +23,11 @@ class MarketplaceController extends Controller
 
         return $model;
     }
+
+    public function releaseStats(MarketplaceRequest $request)
+    {
+        $model = $this->service->fill($request->validated())->getReleaseStats();
+
+        return $model;
+    }
 }

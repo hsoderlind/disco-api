@@ -6,6 +6,7 @@ use App\Helpers\OrgNumberHelper;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Spatie\Permission\PermissionRegistrar;
@@ -26,6 +27,7 @@ use Spatie\Permission\PermissionRegistrar;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
  * @property-read \App\Models\User $owner
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Customer[] $customers
  */
 class Shop extends Model
 {
@@ -62,6 +64,7 @@ class Shop extends Model
         );
     }
 
+    // Relationships
     public function users()
     {
         return $this->belongsToMany(User::class);
@@ -75,5 +78,10 @@ class Shop extends Model
     public function roles()
     {
         return $this->hasMany(Role::class, PermissionRegistrar::$teamsKey);
+    }
+
+    public function customers(): BelongsToMany
+    {
+        return $this->belongsToMany(Customer::class);
     }
 }

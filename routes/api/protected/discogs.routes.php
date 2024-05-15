@@ -55,4 +55,6 @@ Route::controller(MarketplaceController::class)
     ->group(function () {
         Route::get('marketplace/price-suggestions', 'priceSuggestions')
             ->name('discogs.marketplace.price_suggestions');
+        Route::get('marketplace/release-stats', 'releaseStats')
+            ->name('discogs.marketplace.release_stats');
     });

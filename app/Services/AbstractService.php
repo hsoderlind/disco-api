@@ -6,8 +6,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 abstract class AbstractService
 {
-    protected static $instance = null;
-
     protected mixed $data;
 
     protected $resource;
@@ -19,11 +17,7 @@ abstract class AbstractService
 
     public static function factory(int $shopId)
     {
-        if (is_null(self::$instance)) {
-            static::$instance = new static($shopId);
-        }
-
-        return static::$instance;
+        return new static($shopId);
     }
 
     public function &get()
