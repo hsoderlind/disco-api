@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property-read int|null $id
@@ -66,9 +67,9 @@ class CreditBalance extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function history(): BelongsTo
+    public function history(): HasMany
     {
-        return $this->belongsTo(CreditBalance::class, 'customer_id');
+        return $this->hasMany(CreditBalance::class, 'customer_id');
     }
 
     // Local Scopes

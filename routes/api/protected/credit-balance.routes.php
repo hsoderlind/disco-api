@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::controller(CreditBalanceController::class)
     ->prefix('credit-balance')
+    ->middleware(['shop_id'])
     ->group(function () {
         Route::get('/customer/{customer_id}', 'index')
             ->name('credit-balance.index')

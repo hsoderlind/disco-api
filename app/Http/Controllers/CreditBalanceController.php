@@ -19,21 +19,21 @@ class CreditBalanceController extends Controller
 
     public function index(CreditBalanceRequest $request, int $customerId)
     {
-        $model = $this->service->readByCustomerId($customerId)->get();
+        $model = $this->service->readByCustomerId($customerId, ['history'])->get();
 
-        return new CreditBalanceResource($model);
+        return ! is_null($model) ? new CreditBalanceResource($model) : [];
     }
 
     public function create(CreditBalanceRequest $request)
     {
-        $model = $this->service->create($request->validated());
+        $model = $this->service->create($request->validated())->get();
 
         return new CreditBalanceResource($model);
     }
 
     public function read(CreditBalanceRequest $request, int $id)
     {
-        $model = $this->service->read($id)->get();
+        $model = $this->service->read($id, ['history'])->get();
 
         return new CreditBalanceResource($model);
     }

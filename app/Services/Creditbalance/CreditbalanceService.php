@@ -25,16 +25,24 @@ class CreditBalanceService extends AbstractService
         return $this;
     }
 
-    public function readByCustomerId(int $customerId)
+    public function readByCustomerId(int $customerId, ?array $relations = null)
     {
-        $this->data = CreditBalance::forCustomer($customerId)->latest()->get();
+        if (is_null($relations)) {
+            $this->data = CreditBalance::forCustomer($customerId)->latest()->first();
+        } else {
+            $this->data = CreditBalance::forCustomer($customerId)->with($relations)->latest()->first();
+        }
 
         return $this;
     }
 
-    public function read(int $id)
+    public function read(int $id, ?array $relations = null)
     {
-        $this->data = CreditBalance::findOrFail($id);
+        if (is_null($relations)) {
+            $this->data = CreditBalance::inShop($this->shopId)->findOrFail($id);
+        } else {
+            $this->data = CreditBalance::inShop($this->shopId)->with($relations)->findOrFail($id);
+        }
 
         return $this;
     }
