@@ -18,6 +18,7 @@ class CreditBalanceResource extends JsonResource
             'id' => $this->id,
             'customer_id' => $this->customer_id,
             'current_balance' => $this->current_balance,
+            'created_at' => $this->created_at,
             'history' => CreditBalanceHistoryResource::collection($this->whenLoaded('history')),
         ];
     }

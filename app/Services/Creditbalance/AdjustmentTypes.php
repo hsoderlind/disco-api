@@ -4,7 +4,7 @@ namespace App\Services\CreditBalance;
 
 use App\Traits\EnumValues;
 
-enum AdjustmentType: string
+enum AdjustmentTypes: string
 {
     use EnumValues;
 

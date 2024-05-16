@@ -10,6 +10,9 @@ Route::controller(CreditBalanceController::class)
         Route::get('/customer/{customer_id}', 'index')
             ->name('credit-balance.index')
             ->whereNumber('customer_id');
+        Route::get('/customer/{customerId}/history', 'list')
+            ->name('credit-balance.list')
+            ->whereNumber('id');
         Route::post('/', 'create')
             ->name('credit-balance.create');
         Route::get('/{id}', 'read')

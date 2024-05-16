@@ -22,7 +22,7 @@ class CreditbalanceRules extends Rules
         return [
             'customer_id' => 'required|exists:customers,id',
             'adjusted_balance' => 'required|numeric',
-            'adjustment_type' => Rule::in(AdjustmentType::values()),
+            'adjustment_type' => Rule::in(AdjustmentTypes::values()),
             'note' => 'nullable|string',
             'id' => 'sometimes|required|exists:credit_balances,id',
         ];

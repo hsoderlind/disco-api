@@ -19,7 +19,7 @@ class CreditBalanceHistoryResource extends JsonResource
             'customer_id' => $this->customer_id,
             'current_balance' => $this->current_balance,
             'adjustment_type' => $this->adjustment_type,
-            'adjustment_balance' => $this->adjusted_balance,
+            'adjusted_balance' => $this->adjusted_balance,
             'note' => $this->note,
             'created_at' => $this->created_at,
         ];

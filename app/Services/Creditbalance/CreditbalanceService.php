@@ -8,12 +8,22 @@ use Illuminate\Support\Facades\DB;
 
 class CreditBalanceService extends AbstractService
 {
+    public function listByCustomerId(int $customerId)
+    {
+        $this->data = CreditBalance::forCustomer($customerId)->orderBy('created_at', 'desc')->get();
+
+        return $this;
+    }
+
     public function create(array $data)
     {
-        $this->data = DB::transaction(function () use ($data) {
+        $model = $this->readByCustomerId($data['customer_id'])->get();
+        $currentBalance = $model->current_balance ?? 0;
+
+        $this->data = DB::transaction(function () use ($data, $currentBalance) {
             $model = CreditBalance::create([
                 'customer_id' => $data['customer_id'],
-                'current_balance' => $this->calcCurrentBalance($data['adjusted_balance'], $data['adjustment_type']),
+                'current_balance' => $this->calcCurrentBalance($currentBalance, $data['adjusted_balance'], $data['adjustment_type']),
                 'adjusted_balance' => $data['adjusted_balance'],
                 'adjustment_type' => $data['adjustment_type'],
                 'note' => $data['note'],
@@ -25,24 +35,16 @@ class CreditBalanceService extends AbstractService
         return $this;
     }
 
-    public function readByCustomerId(int $customerId, ?array $relations = null)
+    public function readByCustomerId(int $customerId)
     {
-        if (is_null($relations)) {
-            $this->data = CreditBalance::forCustomer($customerId)->latest()->first();
-        } else {
-            $this->data = CreditBalance::forCustomer($customerId)->with($relations)->latest()->first();
-        }
+        $this->data = CreditBalance::forCustomer($customerId)->latest()->first();
 
         return $this;
     }
 
-    public function read(int $id, ?array $relations = null)
+    public function read(int $id)
     {
-        if (is_null($relations)) {
-            $this->data = CreditBalance::inShop($this->shopId)->findOrFail($id);
-        } else {
-            $this->data = CreditBalance::inShop($this->shopId)->with($relations)->findOrFail($id);
-        }
+        $this->data = CreditBalance::inShop($this->shopId)->findOrFail($id);
 
         return $this;
     }
@@ -53,7 +55,7 @@ class CreditBalanceService extends AbstractService
         try {
             $model = $this->read($id)->get();
             $model->update([
-                'current_balance' => $this->calcCurrentBalance($data['adjusted_balance'], $data['adjustment_type']),
+                'current_balance' => $this->calcCurrentBalance($model->current_balance, $data['adjusted_balance'], $data['adjustment_type']),
                 'adjusted_balance' => $data['adjusted_balance'],
                 'adjustment_type' => $data['adjustment_type'],
                 'note' => $data['note'],
@@ -73,12 +75,12 @@ class CreditBalanceService extends AbstractService
         return $deleted;
     }
 
-    protected function calcCurrentBalance(int $adjustmentBalance, int $adjustmentType): int
+    protected function calcCurrentBalance(int $currentBalance, int $adjustmentBalance, string $adjustmentType): int
     {
-        if ($adjustmentType == AdjustmentType::Debet) {
-            return $this->data?->current_balance ?? 0 + $adjustmentBalance;
+        if ($adjustmentType == 'credit') {
+            return $currentBalance + $adjustmentBalance;
         } else {
-            return $this->data?->current_balance ?? 0 - $adjustmentBalance;
+            return $currentBalance - $adjustmentBalance;
         }
     }
 }
