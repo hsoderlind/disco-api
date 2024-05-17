@@ -17,19 +17,23 @@ class NoteService extends AbstractService
     {
         $providerClass = is_string($relationModelClass) && ! Str::startsWith($relationModelClass, '\\') ? config('note.providers.'.$relationModelClass) : null;
 
-        if (! class_exists($relationModelClass)) {
-            throw new InvalidArgumentException($relationModelClass.' does not exists');
-        }
-
-        if (is_string($relationModelClass) && is_null($relationModelId)) {
-            throw new InvalidArgumentException('$relationModelId must be set if $relationModelClass is string');
-        }
-
         if (! is_null($providerClass)) {
             $this->relationModel = $providerClass::findOrFail($relationModelId);
         } elseif (is_string($relationModelClass)) {
+            if (is_null($relationModelId)) {
+                throw new InvalidArgumentException('$relationModelId must be set if $relationModelClass is string');
+            }
+
             $this->relationModel = $relationModelClass::findOrFail($relationModelId);
-        } elseif ($relationModelClass instanceof Model) {
+        } else {
+            if (! class_exists($relationModelClass)) {
+                throw new InvalidArgumentException('Class '.$relationModelClass.' does not exists');
+            }
+
+            if (! ($relationModelClass instanceof Model)) {
+                throw new InvalidArgumentException('$relationModelClass must be an instance of \Illuminate\Database\Eloquent\Model');
+            }
+
             $this->relationModel = $relationModelClass;
         }
 
