@@ -35,6 +35,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property-read \App\Models\CreditBalance $creditBalance
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Shop[] $shops
  * @property-read \App\Models\Metadata $metadata
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Note[] $notes
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
@@ -123,6 +124,11 @@ class Customer extends Model
     public function metadata(): MorphMany
     {
         return $this->morphMany(Metadata::class, 'metadataable');
+    }
+
+    public function notes(): MorphMany
+    {
+        return $this->morphMany(Note::class, 'noteable');
     }
 
     // Scopes
