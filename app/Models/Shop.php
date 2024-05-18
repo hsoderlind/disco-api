@@ -6,7 +6,9 @@ use App\Helpers\OrgNumberHelper;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Spatie\Permission\PermissionRegistrar;
@@ -20,6 +22,12 @@ use Spatie\Permission\PermissionRegistrar;
  * @property string|null $address_street2
  * @property string $address_zip
  * @property string $address_city
+ * @property string|null $official_website
+ * @property string|null $support_website
+ * @property string|null $terms_of_agreement_url
+ * @property string|null $privacy_police_url
+ * @property string|null $support_phone
+ * @property string|null $support_email
  * @property int $account_owner
  * @property string|null $deleted_at
  * @property string $created_at
@@ -28,6 +36,8 @@ use Spatie\Permission\PermissionRegistrar;
  * @property-read \App\Models\User $owner
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Customer[] $customers
+ * @property-read \App\models\Company $company
+ * @property-read \App\Models\InvoiceSetting $invoiceSetting
  */
 class Shop extends Model
 {
@@ -50,6 +60,12 @@ class Shop extends Model
         'address_street2',
         'address_zip',
         'address_city',
+        'official_website',
+        'support_website',
+        'terms_of_agreement_url',
+        'privacy_police_url',
+        'support_phone',
+        'support_email',
     ];
 
     protected $casts = [
@@ -83,5 +99,15 @@ class Shop extends Model
     public function customers(): BelongsToMany
     {
         return $this->belongsToMany(Customer::class);
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function invoiceSettings(): HasOne
+    {
+        return $this->hasOne(InvoiceSetting::class);
     }
 }

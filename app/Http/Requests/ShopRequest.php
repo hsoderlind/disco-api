@@ -2,16 +2,24 @@
 
 namespace App\Http\Requests;
 
+use App\Services\Shop\ShopRules;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ShopRequest extends FormRequest
 {
+    protected ShopRules $rules;
+
+    protected function prepareForValidation()
+    {
+        $this->rules = new ShopRules($this);
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->rules->authorize();
     }
 
     /**
@@ -21,13 +29,6 @@ class ShopRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => 'required|string|max:255',
-            'orgnumber' => 'required|string|unique:shops|max:12',
-            'address_street1' => 'required|string|max:255',
-            'address_street2' => 'nullable|string|max:255',
-            'address_zip' => 'required|string|max:255',
-            'address_city' => 'required|string|max:255',
-        ];
+        return $this->rules->shouldValidate() ? $this->rules->getRules() : [];
     }
 }
