@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\MetadataController;
+use App\Http\Controllers\Api\MetadataController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(MetadataController::class)

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Helpers\HttpResponseCode;
 use App\Http\Requests\CreditBalanceRequest;
@@ -8,6 +8,7 @@ use App\Http\Resources\CreditBalanceHistoryResource;
 use App\Http\Resources\CreditBalanceResource;
 use App\Services\CreditBalance\CreditBalanceService;
 use App\Services\Shop\ShopSession;
+use App\Http\Controllers\Controller;
 
 class CreditBalanceController extends Controller
 {

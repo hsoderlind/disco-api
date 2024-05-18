@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\CreditBalanceController;
+use App\Http\Controllers\Api\CreditBalanceController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(CreditBalanceController::class)

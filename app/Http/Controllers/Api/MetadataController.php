@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Helpers\HttpResponseCode;
 use App\Http\Requests\MetadataRequest;
 use App\Http\Resources\MetadataResource;
 use App\Services\Metadata\MetadataService;
 use App\Services\Shop\ShopSession;
+use App\Http\Controllers\Controller;
 
 class MetadataController extends Controller
 {

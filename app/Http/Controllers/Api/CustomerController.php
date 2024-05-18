@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Helpers\HttpResponseCode;
 use App\Http\Requests\CustomerRequest;
 use App\Http\Resources\CustomerResource;
 use App\Services\Customer\CustomerService;
 use App\Services\Shop\ShopSession;
+use App\Http\Controllers\Controller;
 
 class CustomerController extends Controller
 {

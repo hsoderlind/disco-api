@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Helpers\HttpResponseCode;
 use App\Http\Requests\NoteRequest;
 use App\Http\Resources\NoteResource;
 use App\Services\Note\NoteService;
 use App\Services\Shop\ShopSession;
+use App\Http\Controllers\Controller;
 
 class NoteController extends Controller
 {
