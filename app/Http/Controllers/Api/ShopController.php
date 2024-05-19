@@ -7,7 +7,6 @@ use App\Http\Helpers\HttpResponseCode;
 use App\Http\Requests\ShopRequest;
 use App\Http\Resources\ShopResource;
 use App\Services\Shop\ShopService;
-use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
@@ -19,7 +18,7 @@ class ShopController extends Controller
         return new ShopResource($shop);
     }
 
-    public function readByUrlAlias(Request $request, string $urlAlias)
+    public function readByUrlAlias(ShopRequest $request, string $urlAlias)
     {
         $shop = ShopService::getByUrlAlias($urlAlias);
         $userBelongsToShop = ShopService::verifyUser($request->user(), $shop);
@@ -29,11 +28,18 @@ class ShopController extends Controller
         return new ShopResource($shop);
     }
 
-    public function listByUser(Request $request)
+    public function listByUser(ShopRequest $request)
     {
         $user = $request->user();
         $shops = ShopService::listByUser($user);
 
         return ShopResource::collection($shops);
+    }
+
+    public function update(ShopRequest $request, int $id)
+    {
+        $shop = ShopService::update($id, $request->validated());
+
+        return new ShopResource($shop);
     }
 }
