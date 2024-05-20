@@ -2,6 +2,7 @@
 
 namespace App\Services\File;
 
+use App\Services\Logotype\LogotypeRules;
 use App\Services\ProductFile\ProductFileRules;
 use App\Services\ProductImage\ProductImageRules;
 use Illuminate\Foundation\Http\FormRequest;
@@ -14,6 +15,7 @@ class FileValidationProvider
     protected $providers = [
         'product_image' => ProductImageRules::class,
         'product_file' => ProductFileRules::class,
+        'logotype' => LogotypeRules::class,
     ];
 
     public function resolve(FormRequest $request): IFileRules

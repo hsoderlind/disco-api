@@ -2,6 +2,7 @@
 
 namespace App\Services\File;
 
+use App\Services\Logotype\LogotypeStorageResolver;
 use App\Services\ProductFile\ProductFileStorageResolver;
 use App\Services\ProductImage\ProductImageStorageResolver;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ class StorageProvider
     protected $providers = [
         'product_image' => ProductImageStorageResolver::class,
         'product_file' => ProductFileStorageResolver::class,
+        'logotype' => LogotypeStorageResolver::class,
     ];
 
     public function __construct(?Request $request = null, ?string $inputName = null)
