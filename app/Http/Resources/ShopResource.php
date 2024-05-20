@@ -25,6 +25,8 @@ class ShopResource extends JsonResource
             'address_city' => $this->address_city,
             'account_owner' => $this->account_owner,
             'users' => UserResource::collection($this->whenLoaded('users')),
+            'default_logotype' => new LogotypeResource($this->whenLoaded('defaultLogotype')),
+            'mini_logotype' => new LogotypeResource($this->whenLoaded('miniLogotype')),
         ];
     }
 }

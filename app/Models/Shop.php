@@ -29,6 +29,8 @@ use Spatie\Permission\PermissionRegistrar;
  * @property string|null $support_phone
  * @property string|null $support_email
  * @property int $account_owner
+ * @property int|null $default_logotype_id
+ * @property int|null $mini_logotype_id
  * @property string|null $deleted_at
  * @property string $created_at
  * @property string $updated_at
@@ -38,6 +40,8 @@ use Spatie\Permission\PermissionRegistrar;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Customer[] $customers
  * @property-read \App\models\Company $company
  * @property-read \App\Models\InvoiceSetting $invoiceSetting
+ * @property-read \App\Models\Logotype $defaultLogotype
+ * @property-read \App\Models\Logotype $miniLogotype
  */
 class Shop extends Model
 {
@@ -109,5 +113,15 @@ class Shop extends Model
     public function invoiceSettings(): HasOne
     {
         return $this->hasOne(InvoiceSetting::class);
+    }
+
+    public function defaultLogotype(): BelongsTo
+    {
+        return $this->belongsTo(Logotype::class, 'default_logotype_id');
+    }
+
+    public function miniLogotype(): BelongsTo
+    {
+        return $this->belongsTo(Logotype::class, 'mini_logotype_id');
     }
 }

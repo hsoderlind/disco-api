@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\HttpResponseCode;
+use App\Http\Requests\LogotypeRequest;
 use App\Http\Requests\ShopRequest;
 use App\Http\Resources\ShopResource;
 use App\Services\Shop\ShopService;
@@ -39,6 +40,13 @@ class ShopController extends Controller
     public function update(ShopRequest $request, int $id)
     {
         $shop = ShopService::update($id, $request->validated());
+
+        return new ShopResource($shop);
+    }
+
+    public function logotype(LogotypeRequest $request, string $context, int $id)
+    {
+        $shop = ShopService::setLogotype($id, $context, $request->validated());
 
         return new ShopResource($shop);
     }

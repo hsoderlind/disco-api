@@ -27,7 +27,6 @@ class LogotypeRules extends Rules implements IFileRules
     {
         return [
             'id' => 'sometimes|exists:logotypes,id',
-            'context' => 'required|string|max:255',
             ...$this->merge('meta', new FileModelRules($this->request), 'required'),
         ];
     }

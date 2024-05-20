@@ -4,6 +4,7 @@ namespace App\Services\Shop;
 
 use App\Models\Shop;
 use App\Models\User;
+use App\Services\Logotype\LogotypeService;
 use App\Services\Permissions\PermissionsService;
 use Illuminate\Support\Facades\DB;
 
@@ -56,7 +57,7 @@ abstract class ShopService
 
     public static function getByUrlAlias(string $urlAlias): Shop
     {
-        return Shop::where('url_alias', $urlAlias)->firstOrFail();
+        return Shop::with(['defaultLogotype', 'miniLogotype'])->where('url_alias', $urlAlias)->firstOrFail();
     }
 
     public static function addUser(int $userId, ?Shop $shop = null): void
@@ -87,7 +88,7 @@ abstract class ShopService
 
     public static function listByUser(User $user)
     {
-        return $user->shops()->get();
+        return Shop::with(['defaultLogotype', 'miniLogotype'])->whereHas('users', fn ($query) => $query->where('user_id', $user->getKey()))->get();
     }
 
     public static function verifyUser(User $user, ?Shop $shop = null): bool
@@ -97,5 +98,23 @@ abstract class ShopService
         }
 
         return $shop->users()->where('user_id', $user->getKey())->exists();
+    }
+
+    public static function setLogotype(int $id, string $context, array $data): Shop
+    {
+        $shop = self::get($id);
+
+        $logotypeService = LogotypeService::factory($id);
+        $logotype = $logotypeService->create($data)->get();
+
+        if ($context == 'default') {
+            $shop->defaultLogotype()->associate($logotype);
+        } elseif ($context == 'mini') {
+            $shop->miniLogotype()->associate($logotype);
+        }
+
+        $shop->save();
+
+        return $shop;
     }
 }
