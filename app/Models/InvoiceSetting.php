@@ -39,6 +39,8 @@ class InvoiceSetting extends Model
 {
     use HasFactory;
 
+    protected $with = ['logotype'];
+
     protected $fillable = [
         'show_orgnumber',
         'show_company_name',
