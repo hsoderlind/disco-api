@@ -124,4 +124,18 @@ class Shop extends Model
     {
         return $this->belongsTo(Logotype::class, 'mini_logotype_id');
     }
+
+    // Methods
+    public function logotype(?bool $preferMini = false)
+    {
+        if ($preferMini) {
+            $this->load(['miniLogotype', 'defaultLogotype']);
+
+            return $this->miniLogotype ?: $this->defaultLogotype;
+        }
+
+        $this->load('defaultLogotype');
+
+        return $this->defaultLogotype;
+    }
 }

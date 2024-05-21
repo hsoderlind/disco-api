@@ -13,9 +13,8 @@ class LogotypeService extends AbstractService
     {
         $this->data = DB::transaction(function () use ($data) {
             $model = new Logotype();
-            $model->meta()->save(FileService::staticGet($this->shopId, $data['meta']['id']));
-
             $model->save();
+            $model->meta()->save(FileService::staticGet($this->shopId, $data['meta']['id']));
 
             return $model;
         });

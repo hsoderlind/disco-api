@@ -44,7 +44,7 @@ class ShopController extends Controller
         return new ShopResource($shop);
     }
 
-    public function logotype(LogotypeRequest $request, string $context, int $id)
+    public function logotype(LogotypeRequest $request, int $id, string $context)
     {
         $shop = ShopService::setLogotype($id, $context, $request->validated());
 
