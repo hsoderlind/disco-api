@@ -4,6 +4,7 @@ namespace App\Services\Permissions;
 
 use App\Models\Shop;
 use App\Services\Shop\ShopSession;
+use Illuminate\Database\Eloquent\Collection;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
@@ -92,7 +93,7 @@ abstract class PermissionsService
         $permissions['create order'] = Permission::findOrCreate('create order', $guardName);
         $permissions['read order'] = Permission::findOrCreate('read order', $guardName);
         $permissions['update order'] = Permission::findOrCreate('update order', $guardName);
-        $permissions['deleteOorder'] = Permission::findOrCreate('delete order', $guardName);
+        $permissions['delete order'] = Permission::findOrCreate('delete order', $guardName);
 
         // Shop profile
         $permissions['access shop profile'] = Permission::findOrCreate('access shop profile', $guardName);
@@ -149,6 +150,9 @@ abstract class PermissionsService
         $permissions['delete subscription'] = Permission::findOrCreate('delete subscription', $guardName);
 
         // Invoices
+        $permissions['access invoice settings'] = Permission::findOrCreate('access invoice settings', $guardName);
+        $permissions['read invoice settings'] = Permission::findOrCreate('read invoice settings', $guardName);
+        $permissions['update invoice settings'] = Permission::findOrCreate('update invoice settings', $guardName);
         $permissions['access invoices'] = Permission::findOrCreate('access invoices', $guardName);
         $permissions['read invoices'] = Permission::findOrCreate('read invoices', $guardName);
 
@@ -158,11 +162,19 @@ abstract class PermissionsService
     /**
      * Sync roles and permissions
      *
-     * @param  Role[]  $roles
-     * @param  Permission[]  $permissions
+     * @param  \Illuminate\Database\Eloquent\Collection|Role[]  $roles
+     * @param  \Illuminate\Database\Eloquent\Collection|Permission[]  $permissions
      */
-    public static function syncRolesAndPermissions(array $roles, array $permissions): void
+    public static function syncRolesAndPermissions(array|Collection $roles, array|Collection $permissions): void
     {
+        if ($roles instanceof Collection) {
+            $roles = $roles->all();
+        }
+
+        if ($permissions instanceof Collection) {
+            $permissions = $permissions->all();
+        }
+
         $roles[static::ROLE_SUPER_ADMIN]->syncPermissions(array_values($permissions));
 
         $roles[static::ROLE_ADMIN]->syncPermissions(array_values($permissions));
@@ -180,7 +192,7 @@ abstract class PermissionsService
             $permissions['create order'],
             $permissions['read order'],
             $permissions['update order'],
-            $permissions['deleteOorder'],
+            $permissions['delete order'],
             $permissions['access tax'],
             $permissions['read tax'],
         ]);
