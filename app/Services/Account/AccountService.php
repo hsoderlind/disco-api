@@ -11,12 +11,12 @@ class AccountService extends AbstractService
     {
         $this->data = Account::create([
             'name' => $data['name'],
-            'address1' => $data['address1'],
+            'address1' => $data['address1'] ?? null,
             'address2' => $data['address2'] ?? null,
-            'city' => $data['city'],
+            'city' => $data['city'] ?? null,
             'state' => $data['state'] ?? null,
-            'zip' => $data['zip'],
-            'country' => $data['country'],
+            'zip' => $data['zip'] ?? null,
+            'country' => $data['country'] ?? null,
             'phone' => $data['phone'] ?? null,
         ]);
 
@@ -33,12 +33,12 @@ class AccountService extends AbstractService
         $this->read($id);
         $this->data->update([
             'name' => $data['name'],
-            'address1' => $data['address1'],
+            'address1' => $data['address1'] ?? null,
             'address2' => $data['address2'] ?? null,
-            'city' => $data['city'],
+            'city' => $data['city'] ?? null,
             'state' => $data['state'] ?? null,
-            'zip' => $data['zip'],
-            'country' => $data['country'],
+            'zip' => $data['zip'] ?? null,
+            'country' => $data['country'] ?? null,
             'phone' => $data['phone'] ?? null,
         ]);
 

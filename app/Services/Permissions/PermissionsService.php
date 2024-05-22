@@ -100,6 +100,11 @@ abstract class PermissionsService
         $permissions['read shop profile'] = Permission::findOrCreate('read shop profile', $guardName);
         $permissions['update shop profile'] = Permission::findOrCreate('update shop profile', $guardName);
 
+        // Company profile
+        $permissions['access company profile'] = Permission::findOrCreate('access company profile', $guardName);
+        $permissions['read company profile'] = Permission::findOrCreate('read company profile', $guardName);
+        $permissions['update company profile'] = Permission::findOrCreate('update company profile', $guardName);
+
         // Settings
         $permissions['access shop settings'] = Permission::findOrCreate('access shop settings', $guardName);
 

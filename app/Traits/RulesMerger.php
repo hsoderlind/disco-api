@@ -7,16 +7,32 @@ use Illuminate\Support\Str;
 
 trait RulesMerger
 {
-    protected function merge(string $key, IRules $rulesClass, ?string $additionRules = '', bool $isArray = false): array
-    {
+    protected function merge(
+        string $key,
+        IRules $rulesClass,
+        ?string $additionRules = '',
+        bool $isArray = false,
+        bool $checkArrayKeys = true,
+        ?array $omitFields = []
+    ): array {
         $rules = $rulesClass->getRules();
+
+        if (count($omitFields)) {
+            $omitFieldsFlipped = array_flip($omitFields);
+            $rules = array_diff_key($rules, $omitFieldsFlipped);
+        }
+
         $joinedFields = implode(',', array_keys($rules));
 
         if ($additionRules !== '' && ! Str::endsWith($additionRules, '|')) {
             $additionRules .= '|';
         }
 
-        $array = [$key.($isArray ? '.*' : '') => $additionRules.'array:'.$joinedFields];
+        $array = [];
+
+        if ($checkArrayKeys) {
+            $array[$key.($isArray ? '.*' : '')] = $additionRules.'array:'.$joinedFields;
+        }
 
         foreach ($rules as $field => $rule) {
             $array[$key.'.'.($isArray ? '*.' : '').$field] = $rule;

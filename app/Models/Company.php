@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 /**
  * @property-read int $id
@@ -17,13 +17,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $privacy_police_url
  * @property string|null $support_phone
  * @property string|null $support_email
- * @property-read int|null $support_address_id
  * @property-read \App\Models\Account $supportAddress
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Shop[] $shops
  */
 class Company extends Model
 {
     use HasFactory;
+
+    protected $with = ['supportAddress'];
 
     protected $fillable = [
         'name',
@@ -38,9 +39,9 @@ class Company extends Model
     ];
 
     // Relationships
-    public function supportAddress(): BelongsTo
+    public function supportAddress(): MorphOne
     {
-        return $this->belongsTo(Account::class, 'account_id');
+        return $this->morphOne(Account::class, 'accountable');
     }
 
     public function shops(): HasMany
