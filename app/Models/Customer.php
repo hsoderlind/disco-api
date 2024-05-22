@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * @property-read int|null $id
@@ -42,7 +44,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  */
 class Customer extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $fillable = [
         'person_name',
@@ -135,5 +137,12 @@ class Customer extends Model
     public function scopeInShop(Builder $builder, int $shopId)
     {
         return $builder->whereHas('shops', fn ($query) => $query->where('shops.id', $shopId));
+    }
+
+    // Methods
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable();
     }
 }
