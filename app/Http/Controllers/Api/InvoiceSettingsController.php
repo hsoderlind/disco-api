@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\InvoiceSettingsRequest;
 use App\Http\Requests\LogotypeRequest;
 use App\Http\Resources\InvoiceSettingsResource;

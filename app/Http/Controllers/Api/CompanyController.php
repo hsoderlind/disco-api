@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\CompanyRequest;
 use App\Services\Company\CompanyService;
 use App\Services\Shop\ShopSession;
