@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Account;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,7 +21,6 @@ return new class extends Migration
             $table->string('privacy_police_url')->nullable();
             $table->string('support_phone')->nullable();
             $table->string('support_email')->nullable();
-            $table->foreignIdFor(Account::class, 'support_address_id')->nullable();
             $table->timestamps();
         });
     }
