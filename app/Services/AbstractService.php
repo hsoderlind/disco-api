@@ -16,6 +16,11 @@ abstract class AbstractService
 
     private function __construct(protected readonly int $shopId)
     {
+        $this->boot();
+    }
+
+    protected function boot()
+    {
         //
     }
 
