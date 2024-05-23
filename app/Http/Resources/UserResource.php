@@ -19,9 +19,11 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'email_verified_at' => optional($this->email_verified_at)->toIso8601String(),
+            'state' => $this->state,
             'created_at' => $this->created_at->toIso8601String(),
             'account' => new AccountResource($this->account),
             'shops' => ShopResource::collection($this->whenLoaded('shops')),
+            'roles' => RoleResource::collection($this->whenLoaded('roles')),
         ];
     }
 }

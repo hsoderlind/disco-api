@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\InvoiceSettingsController;
+use App\Http\Controllers\Api\InvoiceSettingsController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(InvoiceSettingsController::class)
