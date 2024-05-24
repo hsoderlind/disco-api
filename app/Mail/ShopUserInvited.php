@@ -42,6 +42,7 @@ class ShopUserInvited extends Mailable
         return new Content(
             view: 'mail.shop-user-invited',
             with: [
+                'title' => 'Inbjudan till '.config('app.name'),
                 'name' => $this->invited->name,
                 'inviterName' => $this->inviter->name,
                 'registerUrl' => Frontend::urlTo('/register'),
