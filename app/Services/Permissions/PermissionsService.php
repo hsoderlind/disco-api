@@ -2,11 +2,11 @@
 
 namespace App\Services\Permissions;
 
+use App\Models\Role;
 use App\Models\Shop;
 use App\Services\Shop\ShopSession;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 abstract class PermissionsService
@@ -266,8 +266,10 @@ abstract class PermissionsService
         return $role->save();
     }
 
-    public static function delete(int $id)
+    public static function delete(int $id): bool
     {
-        Role::find($id)->delete();
+        $deleted = Role::find($id)->delete();
+
+        return $deleted;
     }
 }

@@ -13,35 +13,27 @@ class {{ class }} extends Controller
 
     protected function beforeCallingAction($method, $parameters)
     {
-        $this->service = new Service(ShopSession::getId());
+        $this->service = Service::factory(ShopSession::getId());
     }
 
     public function index(FormRequest $request)
     {
-        $models = $this->service->list();
-
-        return Resource::collection($models);
+        return $this->service->list()->toResource();
     }
 
     public function create(FormRequest $request)
     {
-        $model = $this->service->create($request->validated());
-
-        return new Resource($model);
+        return $this->service->create($request->validated())->toResource();
     }
 
     public function read(FormRequest $request, int $id)
     {
-        $model = $this->service->get($id);
-
-        return new Resource($model);
+        return $this->service->read($id)->toResource();
     }
 
     public function update(FormRequest $request, int $id)
     {
-        $model = $this->service->update($id, $request->validated());
-
-        return new Resource($model);
+        return $this->service->update($id, $request->validated())->toResource();
     }
 
     public function delete(FormRequest $request, int $id)
