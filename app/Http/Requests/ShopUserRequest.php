@@ -3,12 +3,11 @@
 namespace App\Http\Requests;
 
 use App\Services\Shop\ShopUserRules;
-use App\Validation\Rules;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ShopUserRequest extends FormRequest
 {
-    protected ShopUserRequest $rules;
+    protected ShopUserRules $rules;
 
     protected function prepareForValidation()
     {

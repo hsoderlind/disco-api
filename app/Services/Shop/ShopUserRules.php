@@ -18,6 +18,11 @@ class ShopUserRules extends Rules
 
     public function getRules(): array
     {
-        return [];
+        return [
+            'id' => 'sometimes|required|exists:users,id',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'roles.*' => 'required|numeric|integer',
+        ];
     }
 }

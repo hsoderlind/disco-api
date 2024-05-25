@@ -101,29 +101,13 @@
                     Hej {{ $name }},
                   </h1>
                   <p style="margin: 0; line-height: 24px">
-                    {{ $inviterName }} har bjudit in dig att
-                    registrera ett konto på {{
-									config('app.name') }}
+                    Vi vill informera dig om att du har blivit
+                    borttagen från {{ $shopName }}.
                   </p>
-                  <div role="separator" style="line-height: 24px">&zwj;</div>
-                  <div>
-                    <a href="{{ $registerUrl }}" style="display: inline-block; border-radius: 4px; background-color: #0e7490; padding: 16px 24px; font-size: 16px; font-weight: 600; line-height: 1; color: #fff; text-decoration: none">
-                      <!--[if mso]>
-			<i style="mso-font-width: 150%; mso-text-raise: 30px" hidden>&emsp;</i>
-		<![endif]-->
-                      <span style="mso-text-raise: 16px">
-									Registrera dig &rarr;
-								</span>
-                      <!--[if mso]>
-			<i hidden style="mso-font-width: 150%;">&emsp;&#8203;</i>
-		<![endif]-->
-                    </a>
-                  </div>
                   <div role="separator" style="background-color: #e2e8f0; height: 1px; line-height: 1px; margin: 32px 0">&zwj;</div>
                   <p style="margin: 0;">
-                    Om du inte känner den som bjudit in dig
-                    eller inte vet vad detta berör kan du bortse
-                    från detta mejl.
+                    Om du inte känner till vad detta berör kan
+                    du bortse från detta mejl.
                     <br>
                     <br>
                     Vänligen, <br>{{ config('app.name') }}

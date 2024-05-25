@@ -1,15 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ShopController;
-use App\Http\Controllers\Api\ShopUserController;
 use Illuminate\Support\Facades\Route;
-
-Route::controller(ShopUserController::class)
-    ->prefix('shop/user')
-    ->middleware(['shop_id'])
-    ->group(function () {
-        Route::get('/', 'index')->name('shop_user.list');
-    });
 
 Route::controller(ShopController::class)
     ->prefix('shop')
