@@ -2,6 +2,8 @@
 
 namespace App\Services\Permissions;
 
+use App\Exceptions\RoleNotDeletableException;
+use App\Exceptions\RoleNotEditableException;
 use App\Models\Role;
 use App\Models\Shop;
 use App\Services\Shop\ShopSession;
@@ -27,10 +29,38 @@ abstract class PermissionsService
     public static function createDefaultRoles(int $shopId): array
     {
         $key = PermissionRegistrar::$teamsKey;
-        $superAdmin = Role::create(['name' => static::ROLE_SUPER_ADMIN, $key => $shopId]);
-        $admin = Role::create(['name' => static::ROLE_ADMIN, $key => $shopId]);
-        $cashier = Role::create(['name' => static::ROLE_CASHIER, $key => $shopId]);
-        $warehouseWorker = Role::create(['name' => static::ROLE_WAREHOUSE_WORKER, $key => $shopId]);
+        $superAdmin = Role::create(
+            [
+                'name' => static::ROLE_SUPER_ADMIN,
+                'editable' => false,
+                'deletable' => false,
+                $key => $shopId,
+            ]
+        );
+        $admin = Role::create(
+            [
+                'name' => static::ROLE_ADMIN,
+                'editable' => false,
+                'deletable' => false,
+                $key => $shopId,
+            ]
+        );
+        $cashier = Role::create(
+            [
+                'name' => static::ROLE_CASHIER,
+                'editable' => false,
+                'deletable' => false,
+                $key => $shopId,
+            ]
+        );
+        $warehouseWorker = Role::create(
+            [
+                'name' => static::ROLE_WAREHOUSE_WORKER,
+                'editable' => false,
+                'deletable' => false,
+                $key => $shopId,
+            ]
+        );
 
         return [
             static::ROLE_SUPER_ADMIN => $superAdmin,
@@ -229,7 +259,7 @@ abstract class PermissionsService
 
     public static function getRolesByShop(Shop $shop, array $relations = [])
     {
-        $query = $shop->roles()->get();
+        $query = $shop->roles()->orderBy('name')->get();
 
         if (count($relations)) {
             $query->load($relations);
@@ -255,20 +285,38 @@ abstract class PermissionsService
     {
         $key = PermissionRegistrar::$teamsKey;
 
-        return Role::create(['name' => $roleName, $key => ShopSession::getId()]);
+        return Role::create(
+            [
+                'name' => $roleName,
+                'editable' => true,
+                'deletable' => true,
+                $key => ShopSession::getId(),
+            ]
+        );
     }
 
-    public static function updateRoleName(int $roleId, string $roleName): bool
+    public static function updateRoleName(int $roleId, string $roleName)
     {
         $role = Role::findById($roleId);
-        $role->name = $roleName;
 
-        return $role->save();
+        if (! $role->editable) {
+            throw RoleNotEditableException::named($role->name);
+        }
+
+        $role->update(['name' => $roleName]);
+
+        return $role;
     }
 
     public static function delete(int $id): bool
     {
-        $deleted = Role::find($id)->delete();
+        $role = Role::find($id);
+
+        if (! $role->deletable) {
+            throw RoleNotDeletableException::named($role->name);
+        }
+
+        $deleted = $role->delete();
 
         return $deleted;
     }
