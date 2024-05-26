@@ -131,8 +131,9 @@ class ShopUserService extends AbstractService
         $updated = $this->shop->update(['account_owner' => $newOwner->getKey()]);
 
         if ($updated) {
-            $adminRole = $this->shop->roles[PermissionsService::ROLE_ADMIN];
-            $superAdminRole = $this->shop->roles[PermissionsService::ROLE_SUPER_ADMIN];
+            $roles = PermissionsService::getRolesByShop($this->shop);
+            $adminRole = $roles[PermissionsService::ROLE_ADMIN];
+            $superAdminRole = $roles[PermissionsService::ROLE_SUPER_ADMIN];
             $oldOwner->syncRoles([$adminRole]);
             $newOwner->syncRoles([$superAdminRole]);
         }

@@ -14,7 +14,7 @@ abstract class AbstractService
 
     protected $resource;
 
-    private function __construct(protected readonly int $shopId)
+    private function __construct(protected readonly ?int $shopId = null)
     {
         $this->boot();
     }
@@ -24,7 +24,7 @@ abstract class AbstractService
         //
     }
 
-    public static function factory(int $shopId)
+    public static function factory(?int $shopId = null)
     {
         return new static($shopId);
     }
