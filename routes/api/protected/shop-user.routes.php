@@ -18,4 +18,7 @@ Route::controller(ShopUserController::class)
         Route::delete('/{id}', 'delete')
             ->name('shop_user.delete')
             ->whereNumber('id');
+        Route::post('/transfer-ownership/{id}', 'transferOwnership')
+            ->name('shop_user.transfer_ownership')
+            ->whereNumber('id');
     });

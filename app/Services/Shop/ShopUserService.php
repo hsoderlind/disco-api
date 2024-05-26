@@ -55,6 +55,13 @@ class ShopUserService extends AbstractService
         return $this;
     }
 
+    public function readOwner()
+    {
+        $this->data = $this->shop->owner;
+
+        return $this;
+    }
+
     public function update(int $id, array $data)
     {
         /** @var \App\Models\User */
@@ -128,7 +135,8 @@ class ShopUserService extends AbstractService
             throw new RuntimeException('The new owner must be registered');
         }
 
-        $updated = $this->shop->update(['account_owner' => $newOwner->getKey()]);
+        $this->shop->account_owner = $newOwner->getKey();
+        $updated = $this->shop->save();
 
         if ($updated) {
             $roles = PermissionsService::getRolesByShop($this->shop);
@@ -137,6 +145,8 @@ class ShopUserService extends AbstractService
             $oldOwner->syncRoles([$adminRole]);
             $newOwner->syncRoles([$superAdminRole]);
         }
+
+        $this->data = $newOwner;
 
         return $this;
     }

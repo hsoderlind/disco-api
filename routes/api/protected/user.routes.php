@@ -11,7 +11,7 @@ Route::controller(UserController::class)
             ->middleware(['shop_id'])
             ->whereNumber('id')
             ->name('user.masquerade');
-        Route::delete('/{id}/masquerade', 'unmasquerade')
+        Route::post('/{id}/unmasquerade', 'unmasquerade')
             ->middleware(['shop_id'])
             ->whereNumber('id')
             ->name('user.unmasquerade');

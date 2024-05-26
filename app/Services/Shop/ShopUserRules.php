@@ -13,6 +13,10 @@ class ShopUserRules extends Rules
 
     public function shouldValidate(): bool
     {
+        if ($this->request->route()->getName() == 'shop_user.transfer_ownership') {
+            return false;
+        }
+
         return $this->request->getMethod() == 'POST' || $this->request->getMethod() == 'PUT';
     }
 

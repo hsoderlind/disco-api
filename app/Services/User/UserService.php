@@ -4,6 +4,7 @@ namespace App\Services\User;
 
 use App\Exceptions\InvalidUserException;
 use App\Exceptions\UserNotVerifiedException;
+use App\Http\Resources\UserResource;
 use App\Models\Shop;
 use App\Models\User;
 use App\Services\AbstractService;
@@ -11,6 +12,8 @@ use App\Services\Shop\ShopService;
 
 class UserService extends AbstractService
 {
+    protected $resource = UserResource::class;
+
     protected Shop $shop;
 
     public function inShop(int $id)
@@ -51,9 +54,9 @@ class UserService extends AbstractService
         /** @var \App\Models\User $oldUser */
         $oldUser = auth()->user();
 
-        auth()->logout();
+        auth('web')->logout();
 
-        auth()->login($user);
+        auth('web')->login($user);
 
         if (! session()->regenerate()) {
             return false;
@@ -61,7 +64,7 @@ class UserService extends AbstractService
 
         session()->put('oldUserId', $oldUser->getKey());
 
-        return true;
+        return $this;
     }
 
     public function unmasquerade()
@@ -76,10 +79,14 @@ class UserService extends AbstractService
 
         $user = $this->data;
 
-        auth()->logout();
+        auth('web')->logout();
 
-        auth()->login($user);
+        auth('web')->login($user);
 
-        return session()->regenerate();
+        if (! session()->regenerate()) {
+            return false;
+        }
+
+        return $this;
     }
 }

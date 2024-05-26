@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\UserNotVerifiedException;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\HttpResponseCode;
 use App\Http\Requests\LogotypeRequest;
@@ -15,6 +16,21 @@ class ShopController extends Controller
     {
         $user = $request->user();
         $shop = ShopService::create($request->validated(), $user);
+
+        return new ShopResource($shop);
+    }
+
+    public function read(ShopRequest $request, int $id)
+    {
+        $shop = ShopService::get($id);
+        $user = $request->user();
+        $verified = ShopService::verifyUser($user, $shop);
+
+        if (! $verified) {
+            throw UserNotVerifiedException::named($user->name);
+        }
+
+        $shop->load(['defaultLogotype', 'miniLogotype']);
 
         return new ShopResource($shop);
     }

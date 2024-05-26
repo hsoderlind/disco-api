@@ -29,7 +29,7 @@ class UserController extends Controller
 
         abort_if(! $masqueraded, HttpResponseCode::FORBIDDEN, 'Misslyckades att maskera');
 
-        return true;
+        return $this->service->toResource();
     }
 
     public function unmasquerade(Request $request)
@@ -38,6 +38,6 @@ class UserController extends Controller
 
         abort_if(! $success, HttpResponseCode::FORBIDDEN, 'Misslyckades att avmaskera');
 
-        return true;
+        return $this->service->toResource();
     }
 }

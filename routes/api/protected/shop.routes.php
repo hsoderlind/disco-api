@@ -11,7 +11,11 @@ Route::controller(ShopController::class)
         Route::post('/', 'create')
             ->name('shop.create');
         Route::get('/{urlAlias}', 'readByUrlAlias')
-            ->name('shop.readByUrlAlias');
+            ->name('shop.readByUrlAlias')
+            ->whereAlpha('urlAlias');
+        Route::get('/{id}', 'read')
+            ->name('shop.read')
+            ->whereNumber('id');
         Route::put('/{id}', 'update')
             ->name('shop.update')
             ->whereNumber('id');
@@ -20,5 +24,4 @@ Route::controller(ShopController::class)
             ->name('shop.logotype')
             ->whereNumber('id')
             ->whereIn('context', ['default', 'mini']);
-    })
-    ->name('shop.');
+    });

@@ -51,4 +51,12 @@ class ShopUserController extends Controller
 
         abort_if(! $deleted, HttpResponseCode::METHOD_NOT_ALLOWED, 'Användaren kunde inte tas bort.');
     }
+
+    public function transferOwnership(ShopUserRequest $request, int $id)
+    {
+        $newOwner = $this->service->read($id)->get();
+        $currentOwner = $this->service->readOwner()->get();
+
+        return $this->service->transferOwnership($currentOwner, $newOwner)->toResource();
+    }
 }
