@@ -26,7 +26,7 @@ class ShopUserService extends AbstractService
 
     public function list()
     {
-        $this->data = $this->shop->users()->with('roles')->get();
+        $this->data = $this->shop->users()->with('roles')->orderBy('name')->get();
 
         return $this;
     }
