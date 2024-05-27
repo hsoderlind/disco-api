@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PermissionRequest;
 use App\Services\Permissions\PermissionControllerService;
 use App\Services\Shop\ShopSession;
+use Illuminate\Http\Request;
 
 class PermissionController extends Controller
 {
@@ -18,6 +19,11 @@ class PermissionController extends Controller
     public function index(PermissionRequest $request)
     {
         return $this->service->list()->toResource();
+    }
+
+    public function userPermissions(Request $request)
+    {
+        return $this->service->userPermissions($request->user()->first())->toResource();
     }
 
     public function listByRole(PermissionRequest $request, int $roleId)

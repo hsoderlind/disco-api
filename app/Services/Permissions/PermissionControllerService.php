@@ -4,6 +4,7 @@ namespace App\Services\Permissions;
 
 use App\Http\Resources\PermissionResource;
 use App\Models\Role;
+use App\Models\User;
 use App\Services\AbstractService;
 
 class PermissionControllerService extends AbstractService
@@ -33,6 +34,13 @@ class PermissionControllerService extends AbstractService
     {
         $role = PermissionsService::syncRolesAndPermissions($role, $permissionIds);
         $this->data = $role->permissions;
+
+        return $this;
+    }
+
+    public function userPermissions(User $user)
+    {
+        $this->data = $user->getAllPermissions();
 
         return $this;
     }

@@ -15,4 +15,6 @@ Route::controller(PermissionController::class)
         Route::put('/{roleId}', 'update')
             ->name('permission.update')
             ->whereNumber('roleId');
+        Route::get('/user', 'userPermissions')
+            ->name('permission.user_permissions');
     });
