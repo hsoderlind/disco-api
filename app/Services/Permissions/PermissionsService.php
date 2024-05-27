@@ -4,11 +4,12 @@ namespace App\Services\Permissions;
 
 use App\Exceptions\RoleNotDeletableException;
 use App\Exceptions\RoleNotEditableException;
+use App\Models\Permission;
 use App\Models\Role;
 use App\Models\Shop;
 use App\Services\Shop\ShopSession;
 use Illuminate\Database\Eloquent\Collection;
-use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\PermissionRegistrar;
 
 abstract class PermissionsService
@@ -80,116 +81,116 @@ abstract class PermissionsService
         $permissions = [];
 
         // Catalog
-        $permissions['access catalog'] = Permission::findOrCreate('access catalog', $guardName);
+        $permissions['access catalog'] = Permission::findOrCreateWithGroup('access catalog', 'Tillgång till katalogen', 'catalog', $guardName);
 
         // Categories
-        $permissions['access category'] = Permission::findOrCreate('access categories', $guardName);
-        $permissions['create category'] = Permission::findOrCreate('create category', $guardName);
-        $permissions['read category'] = Permission::findOrCreate('read category', $guardName);
-        $permissions['update category'] = Permission::findOrCreate('update category', $guardName);
-        $permissions['delete category'] = Permission::findOrCreate('delete category', $guardName);
+        $permissions['access category'] = Permission::findOrCreateWithGroup('access categories', 'Tillgång till kategorier', 'category', $guardName);
+        $permissions['create category'] = Permission::findOrCreateWithGroup('create category', 'Skapa kategorier', 'category', $guardName);
+        $permissions['read category'] = Permission::findOrCreateWithGroup('read category', 'Läsa kategorier', 'category', $guardName);
+        $permissions['update category'] = Permission::findOrCreateWithGroup('update category', 'Uppdatera kategorier', 'category', $guardName);
+        $permissions['delete category'] = Permission::findOrCreateWithGroup('delete category', 'Radera kategorier', 'category', $guardName);
 
         // Products
-        $permissions['access product'] = Permission::findOrCreate('access product', $guardName);
-        $permissions['create product'] = Permission::findOrCreate('create product', $guardName);
-        $permissions['read product'] = Permission::findOrCreate('read product', $guardName);
-        $permissions['update product'] = Permission::findOrCreate('update product', $guardName);
-        $permissions['delete product'] = Permission::findOrCreate('delete product', $guardName);
+        $permissions['access product'] = Permission::findOrCreateWithGroup('access product', 'Tillgång till produkter', 'products', $guardName);
+        $permissions['create product'] = Permission::findOrCreateWithGroup('create product', 'Skapa produkter', 'products', $guardName);
+        $permissions['read product'] = Permission::findOrCreateWithGroup('read product', 'Läsa produkter', 'products', $guardName);
+        $permissions['update product'] = Permission::findOrCreateWithGroup('update product', 'Uppdatera produkter', 'products', $guardName);
+        $permissions['delete product'] = Permission::findOrCreateWithGroup('delete product', 'Radera produkter', 'products', $guardName);
 
         // Product type
-        $permissions['access product type'] = Permission::findOrCreate('access product type', $guardName);
-        $permissions['create product type'] = Permission::findOrCreate('create product type', $guardName);
-        $permissions['read product type'] = Permission::findOrCreate('read product type', $guardName);
-        $permissions['update product type'] = Permission::findOrCreate('update product type', $guardName);
-        $permissions['delete product type'] = Permission::findOrCreate('delete product type', $guardName);
+        $permissions['access product type'] = Permission::findOrCreateWithGroup('access product type', 'Tillgång till produkttyper', 'product type', $guardName);
+        $permissions['create product type'] = Permission::findOrCreateWithGroup('create product type', 'Skapa produkttyper', 'product type', $guardName);
+        $permissions['read product type'] = Permission::findOrCreateWithGroup('read product type', 'Läsa produkttyper', 'product type', $guardName);
+        $permissions['update product type'] = Permission::findOrCreateWithGroup('update product type', 'Uppdatera produkttyper', 'product type', $guardName);
+        $permissions['delete product type'] = Permission::findOrCreateWithGroup('delete product type', 'Radera produkttyper', 'product type', $guardName);
 
         // Stock
-        $permissions['access stock'] = Permission::findOrCreate('access stock', $guardName);
-        $permissions['update stock'] = Permission::findOrCreate('update stock', $guardName);
-        $permissions['read stock'] = Permission::findOrCreate('read stock', $guardName);
+        $permissions['access stock'] = Permission::findOrCreateWithGroup('access stock', 'Tillgång till lager', 'stock', $guardName);
+        $permissions['update stock'] = Permission::findOrCreateWithGroup('update stock', 'Uppdatera lager', 'stock', $guardName);
+        $permissions['read stock'] = Permission::findOrCreateWithGroup('read stock', 'Läsa lager', 'stock', $guardName);
 
         // Sales
-        $permissions['access sales'] = Permission::findOrCreate('access sales', $guardName);
+        $permissions['access sales'] = Permission::findOrCreateWithGroup('access sales', 'Tillgång till försäljning', 'sales', $guardName);
 
         // Customers
-        $permissions['access customer'] = Permission::findOrCreate('access customer', $guardName);
-        $permissions['create customer'] = Permission::findOrCreate('create customer', $guardName);
-        $permissions['read customer'] = Permission::findOrCreate('read customer', $guardName);
-        $permissions['update customer'] = Permission::findOrCreate('update customer', $guardName);
-        $permissions['delete customer'] = Permission::findOrCreate('delete customer', $guardName);
+        $permissions['access customer'] = Permission::findOrCreateWithGroup('access customer', 'Tillgång till kunder', 'customers', $guardName);
+        $permissions['create customer'] = Permission::findOrCreateWithGroup('create customer', 'Skapa kunder', 'customers', $guardName);
+        $permissions['read customer'] = Permission::findOrCreateWithGroup('read customer', 'Läsa kunder', 'customers', $guardName);
+        $permissions['update customer'] = Permission::findOrCreateWithGroup('update customer', 'Uppdatera kunder', 'customers', $guardName);
+        $permissions['delete customer'] = Permission::findOrCreateWithGroup('delete customer', 'Radera kunder', 'customers', $guardName);
 
         // Orders
-        $permissions['access order'] = Permission::findOrCreate('access order', $guardName);
-        $permissions['create order'] = Permission::findOrCreate('create order', $guardName);
-        $permissions['read order'] = Permission::findOrCreate('read order', $guardName);
-        $permissions['update order'] = Permission::findOrCreate('update order', $guardName);
-        $permissions['delete order'] = Permission::findOrCreate('delete order', $guardName);
+        $permissions['access order'] = Permission::findOrCreateWithGroup('access order', 'Tillgång till beställningar', 'orders', $guardName);
+        $permissions['create order'] = Permission::findOrCreateWithGroup('create order', 'Skapa beställningar', 'orders', $guardName);
+        $permissions['read order'] = Permission::findOrCreateWithGroup('read order', 'Läsa beställningar', 'orders', $guardName);
+        $permissions['update order'] = Permission::findOrCreateWithGroup('update order', 'Uppdatera beställningar', 'orders', $guardName);
+        $permissions['delete order'] = Permission::findOrCreateWithGroup('delete order', 'Radera beställningar', 'orders', $guardName);
 
         // Shop profile
-        $permissions['access shop profile'] = Permission::findOrCreate('access shop profile', $guardName);
-        $permissions['read shop profile'] = Permission::findOrCreate('read shop profile', $guardName);
-        $permissions['update shop profile'] = Permission::findOrCreate('update shop profile', $guardName);
+        $permissions['access shop profile'] = Permission::findOrCreateWithGroup('access shop profile', 'Tillgång till butiksprofilen', 'shop profile', $guardName);
+        $permissions['read shop profile'] = Permission::findOrCreateWithGroup('read shop profile', 'Läsa butiksprofilen', 'shop profile', $guardName);
+        $permissions['update shop profile'] = Permission::findOrCreateWithGroup('update shop profile', 'Uppdatera butiksprofilen', 'shop profile', $guardName);
 
         // Company profile
-        $permissions['access company profile'] = Permission::findOrCreate('access company profile', $guardName);
-        $permissions['read company profile'] = Permission::findOrCreate('read company profile', $guardName);
-        $permissions['update company profile'] = Permission::findOrCreate('update company profile', $guardName);
+        $permissions['access company profile'] = Permission::findOrCreateWithGroup('access company profile', 'Tillgång till bolagsprofilen', 'company profile', $guardName);
+        $permissions['read company profile'] = Permission::findOrCreateWithGroup('read company profile', 'Läsa bolagsprofilen', 'company profile', $guardName);
+        $permissions['update company profile'] = Permission::findOrCreateWithGroup('update company profile', 'Uppdatera bolagsprofilen', 'company profile', $guardName);
 
         // Settings
-        $permissions['access shop settings'] = Permission::findOrCreate('access shop settings', $guardName);
+        $permissions['access shop settings'] = Permission::findOrCreateWithGroup('access shop settings', 'Tillgång till butiksinställningar', 'shop settings', $guardName);
 
         // Taxes
-        $permissions['access tax'] = Permission::findOrCreate('access tax', $guardName);
-        $permissions['create tax'] = Permission::findOrCreate('create tax', $guardName);
-        $permissions['read tax'] = Permission::findOrCreate('read tax', $guardName);
-        $permissions['update tax'] = Permission::findOrCreate('update tax', $guardName);
-        $permissions['delete tax'] = Permission::findOrCreate('delete tax', $guardName);
+        $permissions['access tax'] = Permission::findOrCreateWithGroup('access tax', 'Tillgång till moms', 'tax', $guardName);
+        $permissions['create tax'] = Permission::findOrCreateWithGroup('create tax', 'Skapa moms', 'tax', $guardName);
+        $permissions['read tax'] = Permission::findOrCreateWithGroup('read tax', 'Läsa moms', 'tax', $guardName);
+        $permissions['update tax'] = Permission::findOrCreateWithGroup('update tax', 'Uppdatera tax', 'tax', $guardName);
+        $permissions['delete tax'] = Permission::findOrCreateWithGroup('delete tax', 'Radera moms', 'tax', $guardName);
 
         // Sales Channels
-        $permissions['access sales channels'] = Permission::findOrCreate('access sales channels', $guardName);
-        $permissions['update sales channels'] = Permission::findOrCreate('update sales channels', $guardName);
+        $permissions['access sales channels'] = Permission::findOrCreateWithGroup('access sales channels', 'Tillgång till försäljningskanaler', 'sales channels', $guardName);
+        $permissions['update sales channels'] = Permission::findOrCreateWithGroup('update sales channels', 'Uppdatera försäljningskanaler', 'sales channels', $guardName);
 
         // Tradera settings
-        $permissions['access tradera settings'] = Permission::findOrCreate('access tradera settings', $guardName);
+        $permissions['access tradera settings'] = Permission::findOrCreateWithGroup('access tradera settings', 'Tillgång till Tradera-inställningar', 'tradera', $guardName);
 
         // Discogs settings
-        $permissions['access discogs settings'] = Permission::findOrCreate('access discogs settings', $guardName);
+        $permissions['access discogs settings'] = Permission::findOrCreateWithGroup('access discogs settings', 'Tillgång till Discogs-inställningar', 'discogs', $guardName);
 
         // PoS settings
-        $permissions['access pos settings'] = Permission::findOrCreate('access pos settings', $guardName);
+        $permissions['access pos settings'] = Permission::findOrCreateWithGroup('access pos settings', 'Tillgång till kassan', 'checkout', $guardName);
 
         // Shop staff
-        $permissions['access shop staff'] = Permission::findOrCreate('access shop staff', $guardName);
-        $permissions['create shop staff'] = Permission::findOrCreate('create shop staff', $guardName);
-        $permissions['read shop staff'] = Permission::findOrCreate('read shop staff', $guardName);
-        $permissions['update shop staff'] = Permission::findOrCreate('update shop staff', $guardName);
-        $permissions['delete shop staff'] = Permission::findOrCreate('delete shop staff', $guardName);
+        $permissions['access shop staff'] = Permission::findOrCreateWithGroup('access shop staff', 'Tillgång till butiksanvändare', 'user management', $guardName);
+        $permissions['create shop staff'] = Permission::findOrCreateWithGroup('create shop staff', 'Skapa butiksanvändare', 'user management', $guardName);
+        $permissions['read shop staff'] = Permission::findOrCreateWithGroup('read shop staff', 'Läsa butiksanvändare', 'user management', $guardName);
+        $permissions['update shop staff'] = Permission::findOrCreateWithGroup('update shop staff', 'Uppdatera butiksanvändare', 'user management', $guardName);
+        $permissions['delete shop staff'] = Permission::findOrCreateWithGroup('delete shop staff', 'Radera butiksanvändare', 'user management', $guardName);
 
         // Shop team
-        $permissions['access shop team'] = Permission::findOrCreate('access shop team', $guardName);
-        $permissions['create shop team'] = Permission::findOrCreate('create shop team', $guardName);
-        $permissions['read shop team'] = Permission::findOrCreate('read shop team', $guardName);
-        $permissions['update shop team'] = Permission::findOrCreate('update shop team', $guardName);
-        $permissions['delete shop team'] = Permission::findOrCreate('delete shop team', $guardName);
+        $permissions['access shop team'] = Permission::findOrCreateWithGroup('access shop team', 'Tillgång till roller', 'user management', $guardName);
+        $permissions['create shop team'] = Permission::findOrCreateWithGroup('create shop team', 'Skapa roller', 'user management', $guardName);
+        $permissions['read shop team'] = Permission::findOrCreateWithGroup('read shop team', 'Läsa roller', 'user management', $guardName);
+        $permissions['update shop team'] = Permission::findOrCreateWithGroup('update shop team', 'Uppdatera roller', 'user management', $guardName);
+        $permissions['delete shop team'] = Permission::findOrCreateWithGroup('delete shop team', 'Radera roller', 'user management', $guardName);
 
         // Shop permission
-        $permissions['access shop permission'] = Permission::findOrCreate('access shop permission', $guardName);
-        $permissions['read shop permission'] = Permission::findOrCreate('read shop permission', $guardName);
-        $permissions['update shopp ermission'] = Permission::findOrCreate('update shop permission', $guardName);
+        $permissions['access shop permission'] = Permission::findOrCreateWithGroup('access shop permission', 'Tillgång till behörigheter', 'user management', $guardName);
+        $permissions['read shop permission'] = Permission::findOrCreateWithGroup('read shop permission', 'Läsa behörigheter', 'user management', $guardName);
+        $permissions['update shopp ermission'] = Permission::findOrCreateWithGroup('update shop permission', 'Uppdatera behörigheter', 'user management', $guardName);
 
         // Subscription
-        $permissions['access subscription'] = Permission::findOrCreate('access subscription', $guardName);
-        $permissions['create subscription'] = Permission::findOrCreate('create subscription', $guardName);
-        $permissions['read subscription'] = Permission::findOrCreate('read subscription', $guardName);
-        $permissions['update subscription'] = Permission::findOrCreate('update subscription', $guardName);
-        $permissions['delete subscription'] = Permission::findOrCreate('delete subscription', $guardName);
+        $permissions['access subscription'] = Permission::findOrCreateWithGroup('access subscription', 'Tillgång till prenumerationen', 'subscription', $guardName);
+        $permissions['create subscription'] = Permission::findOrCreateWithGroup('create subscription', 'Skapa prenumerationen', 'subscription', $guardName);
+        $permissions['read subscription'] = Permission::findOrCreateWithGroup('read subscription', 'Läsa prenumerationen', 'subscription', $guardName);
+        $permissions['update subscription'] = Permission::findOrCreateWithGroup('update subscription', 'Uppdatera prenumerationen', 'subscription', $guardName);
+        $permissions['delete subscription'] = Permission::findOrCreateWithGroup('delete subscription', 'Avsluta prenumerationen', 'subscription', $guardName);
 
         // Invoices
-        $permissions['access invoice settings'] = Permission::findOrCreate('access invoice settings', $guardName);
-        $permissions['read invoice settings'] = Permission::findOrCreate('read invoice settings', $guardName);
-        $permissions['update invoice settings'] = Permission::findOrCreate('update invoice settings', $guardName);
-        $permissions['access invoices'] = Permission::findOrCreate('access invoices', $guardName);
-        $permissions['read invoices'] = Permission::findOrCreate('read invoices', $guardName);
+        $permissions['access invoice settings'] = Permission::findOrCreateWithGroup('access invoice settings', 'Tillgång till fakturainställningar', 'invoicing', $guardName);
+        $permissions['read invoice settings'] = Permission::findOrCreateWithGroup('read invoice settings', 'Läsa fakturainställningar', 'invoicing', $guardName);
+        $permissions['update invoice settings'] = Permission::findOrCreateWithGroup('update invoice settings', 'Uppdatera fakturainställningar', 'invoicing', $guardName);
+        $permissions['access invoices'] = Permission::findOrCreateWithGroup('access invoices', 'Tillgång till fakturor', 'invoicing', $guardName);
+        $permissions['read invoices'] = Permission::findOrCreateWithGroup('read invoices', 'Läsa fakturor', 'invoicing', $guardName);
 
         return $permissions;
     }
@@ -200,7 +201,7 @@ abstract class PermissionsService
      * @param  \Illuminate\Database\Eloquent\Collection|Role[]  $roles
      * @param  \Illuminate\Database\Eloquent\Collection|Permission[]  $permissions
      */
-    public static function syncRolesAndPermissions(array|Collection $roles, array|Collection $permissions): void
+    public static function syncRDefaultRolesAndPermissions(array|Collection $roles, array|Collection $permissions): void
     {
         if ($roles instanceof Collection) {
             $roles = $roles->all();
@@ -255,6 +256,26 @@ abstract class PermissionsService
             $permissions['access tax'],
             $permissions['read tax'],
         ]);
+    }
+
+    /**
+     * Sync roles with permissions
+     *
+     * @param  int[]  $permissionIds
+     * @return Role
+     */
+    public static function syncRolesAndPermissions(int|Role $role, array $permissionIds)
+    {
+        return DB::transaction(function () use ($role, $permissionIds) {
+            if (is_int($role)) {
+                $role = Role::findById($role);
+            }
+
+            /** @var \App\Models\Role $role */
+            $role->syncPermissions($permissionIds);
+
+            return $role;
+        });
     }
 
     public static function getRolesByShop(Shop $shop, array $relations = [])

@@ -22,7 +22,7 @@ abstract class ShopService
 
             $roles = PermissionsService::createDefaultRoles($shop->id);
             $permissions = PermissionsService::findOrCreatePermissions();
-            PermissionsService::syncRolesAndPermissions($roles, $permissions);
+            PermissionsService::syncRDefaultRolesAndPermissions($roles, $permissions);
 
             self::addUser($user->id, $shop);
             $user->assignRole(PermissionsService::ROLE_SUPER_ADMIN);

@@ -31,7 +31,7 @@ class SyncPermissions extends Command
 
         $this->withProgressBar(Shop::all(), function (Shop $shop) use ($permissions) {
             $roles = $shop->roles->keyBy('name');
-            PermissionsService::syncRolesAndPermissions($roles, $permissions);
+            PermissionsService::syncRDefaultRolesAndPermissions($roles, $permissions);
         });
     }
 }
