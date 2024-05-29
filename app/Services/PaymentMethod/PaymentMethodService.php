@@ -46,9 +46,9 @@ class PaymentMethodService extends AbstractService
             $module = $modules->where('name', $data['name'])->first();
 
             /** @var \App\Services\PaymentMethod\Interfaces\PaymentMethod $controlClass */
-            $controlClass = new $data['control_class']();
+            $controlClass = new $module['control_class']();
 
-            $model->control_class = $data['control_class'];
+            $model->control_class = $module['control_class'];
 
             $model->version = $controlClass->getVersion();
 
@@ -82,7 +82,7 @@ class PaymentMethodService extends AbstractService
 
             $model->update(
                 collect($data)
-                    ->except(['control_class'])
+                    ->except(['control_class', 'name'])
                     ->toArray()
             );
 

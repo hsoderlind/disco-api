@@ -27,19 +27,19 @@ class PaymentMethodController extends Controller
         return $this->service->install($request->validated())->toResource();
     }
 
-    public function read(PaymentMethodRequest $request, int $id)
+    public function read(PaymentMethodRequest $request, string $name)
     {
-        return $this->service->read($id)->toResource();
+        return $this->service->read($name)->toResource();
     }
 
-    public function update(PaymentMethodRequest $request, int $id)
+    public function update(PaymentMethodRequest $request, string $name)
     {
-        return $this->service->update($id, $request->validated())->toResource();
+        return $this->service->update($name, $request->validated())->toResource();
     }
 
-    public function uninstall(PaymentMethodRequest $request, int $id)
+    public function uninstall(PaymentMethodRequest $request, string $name)
     {
-        $deleted = $this->service->uninstall($id);
+        $deleted = $this->service->uninstall($name);
 
         abort_if(! $deleted, HttpResponseCode::METHOD_NOT_ALLOWED, 'Betalningsmetoden kunde inte avinstalleras');
     }

@@ -11,6 +11,13 @@ use Illuminate\Support\Str;
 
 class Module implements PaymentMethod
 {
+    protected ?PaymentMethodModel $model;
+
+    public function __construct()
+    {
+        $this->model = PaymentMethodModel::inShop(ShopSession::getId())->where('name', $this->getName())->first();
+    }
+
     public function onCreating(PaymentMethodModel $model): PaymentMethodModel
     {
         return $model;
@@ -128,7 +135,17 @@ class Module implements PaymentMethod
 
     final public function isInstalled(): bool
     {
-        return PaymentMethodModel::inShop(ShopSession::getId())->where('name', $this->getName())->exists();
+        return ! is_null($this->model);
+    }
+
+    final public function updateAvailable(): int
+    {
+        return is_null($this->model) ? -1 : (version_compare($this->model->version, $this->getVersion(), '<') ? 1 : 0);
+    }
+
+    public function getChangeLog(): ?string
+    {
+        return null;
     }
 
     public function jsonSerialize(): mixed
@@ -147,6 +164,7 @@ class Module implements PaymentMethod
             'published_at' => $this->getPublishedAt(),
             'updated_at' => $this->getUpdatedAt(),
             'version' => $this->getVersion(),
+            'update_available' => $this->updateAvailable(),
         ];
     }
 

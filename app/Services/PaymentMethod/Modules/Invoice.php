@@ -4,40 +4,45 @@ namespace App\Services\PaymentMethod\Modules;
 
 use App\Services\PaymentMethod\Module;
 
-class Cash extends Module
+class Invoice extends Module
 {
     public function getTitle(): string
     {
-        return 'Kontant betalning';
+        return 'Faktura';
     }
 
     public function getDescription(): ?string
     {
-        return 'Kunder kan betala med kontanter i kassan.';
+        return 'Fakturera kund med Disco Faktura';
     }
 
     public function getCheckoutComponent(): string
     {
-        return 'components/payment-methods/modules/cash/checkout';
+        return 'components/payment-methods/modules/invoice/checkout';
     }
 
     public function getPresentationComponent(): string
     {
-        return 'components/payment-methods/modules/cash/presentation';
+        return 'components/payment-methods/modules/invoice/presentation';
     }
 
     public function getAdminComponent(): string
     {
-        return 'components/payment-methods/modules/cash/admin';
+        return 'components/payment-methods/modules/invoice/admin';
     }
 
     public function getVersion(): string
     {
-        return '0.0.1';
+        return '0.0.2';
     }
 
     public function getPublishedAt(): string
     {
         return '2024-05-27';
+    }
+
+    public function getUpdatedAt(): ?string
+    {
+        return '2024-05-28';
     }
 }

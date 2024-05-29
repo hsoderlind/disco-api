@@ -55,4 +55,8 @@ interface PaymentMethod extends JsonSerializable
     public function getUpdatedAt(): ?string;
 
     public function isInstalled(): bool;
+
+    public function updateAvailable(): int;
+
+    public function getChangeLog(): ?string;
 }
