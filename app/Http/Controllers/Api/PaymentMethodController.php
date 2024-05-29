@@ -37,6 +37,11 @@ class PaymentMethodController extends Controller
         return $this->service->update($name, $request->validated())->toResource();
     }
 
+    public function updateCore(PaymentMethodRequest $request, string $name)
+    {
+        return $this->service->updateCore($name)->toResource();
+    }
+
     public function uninstall(PaymentMethodRequest $request, string $name)
     {
         $deleted = $this->service->uninstall($name);

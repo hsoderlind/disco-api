@@ -20,6 +20,9 @@ Route::controller(PaymentMethodController::class)
         Route::put('/{name}', 'update')
             ->name('payment_method.update')
             ->whereAlpha('name');
+        Route::put('/{name}/core', 'updateCore')
+            ->name('payment_method.update_core')
+            ->whereAlpha('name');
         Route::delete('/{name}/uninstall', 'uninstall')
             ->name('payment_method.uninstall')
             ->whereAlpha('name');

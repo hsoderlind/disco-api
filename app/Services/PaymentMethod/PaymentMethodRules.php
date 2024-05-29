@@ -13,6 +13,10 @@ class PaymentMethodRules extends Rules
 
     public function shouldValidate(): bool
     {
+        if ($this->request->route()->getName() == 'payment_method.update_core') {
+            return false;
+        }
+
         return $this->request->getMethod() === 'POST' || $this->request->getMethod() === 'PUT';
     }
 

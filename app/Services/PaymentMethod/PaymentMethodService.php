@@ -97,6 +97,28 @@ class PaymentMethodService extends AbstractService
         return $this;
     }
 
+    public function updateCore(string $name)
+    {
+        /** @var \Illuminate\Support\Collection $modules */
+        $modules = PaymentModulesService::factory($this->shopId)->list()->get();
+
+        $module = $modules->where('name', $name)->first();
+
+        /** @var \App\Models\PaymentMethod */
+        $model = $this->read($name)->get();
+
+        $model->configuration = ! is_null($module['configuration']) ? [...($model->configuration ?? []), ...$module['configuration']] : $model->configuration;
+        $model->component = $module['component'];
+        $model->admin_component = $module['admin_component'];
+        $model->version = $module['version'];
+
+        $model->save();
+
+        $this->data = $model;
+
+        return $this;
+    }
+
     public function uninstall(string $name)
     {
         return DB::transaction(function () use ($name) {
