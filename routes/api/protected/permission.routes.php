@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\Api\PermissionController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(PermissionController::class)

@@ -192,6 +192,13 @@ abstract class PermissionsService
         $permissions['access invoices'] = Permission::findOrCreateWithGroup('access invoices', 'Tillgång till fakturor', 'invoicing', $guardName);
         $permissions['read invoices'] = Permission::findOrCreateWithGroup('read invoices', 'Läsa fakturor', 'invoicing', $guardName);
 
+        // Payment methods
+        $permissions['access payment methods'] = Permission::findOrCreateWithGroup('access payment methods', 'Tillgång till betalningsmetoder', 'payment methods', $guardName);
+        $permissions['create payment methods'] = Permission::findOrCreateWithGroup('create payment methods', 'Installera betalningsmetoder', 'payment methods', $guardName);
+        $permissions['read payment methods'] = Permission::findOrCreateWithGroup('read payment methods', 'Använda betalningsmetoder', 'payment methods', $guardName);
+        $permissions['update payment methods'] = Permission::findOrCreateWithGroup('update payment methods', 'Konfigurera betalningsmetoder', 'payment methods', $guardName);
+        $permissions['delete payment methods'] = Permission::findOrCreateWithGroup('delete payment methods', 'Avinstallera betalningsmetoder', 'payment methods', $guardName);
+
         return $permissions;
     }
 
@@ -231,6 +238,8 @@ abstract class PermissionsService
             $permissions['delete order'],
             $permissions['access tax'],
             $permissions['read tax'],
+            $permissions['access payment methods'],
+            $permissions['read payment methods'],
         ]);
 
         $roles[static::ROLE_WAREHOUSE_WORKER]->syncPermissions([

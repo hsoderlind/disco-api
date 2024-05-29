@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\PermissionRequest;
 use App\Services\Permissions\PermissionControllerService;
 use App\Services\Shop\ShopSession;

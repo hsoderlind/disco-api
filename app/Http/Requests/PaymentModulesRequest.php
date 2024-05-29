@@ -1,14 +1,15 @@
 <?php
 
-namespace {{ namespace }};
+namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Services\PaymentMethod\PaymentModulesRules;
 use App\Validation\Rules;
+use Illuminate\Foundation\Http\FormRequest;
 
-class {{ class }} extends FormRequest
+class PaymentModulesRequest extends FormRequest
 {
-    protected string $rulesClass; // Class name of the rules class
-    
+    protected string $rulesClass = PaymentModulesRules::class; // Class name of the rules class
+
     protected $rules;
 
     protected function prepareForValidation()

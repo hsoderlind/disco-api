@@ -30,8 +30,13 @@ class SyncPermissions extends Command
         $permissions = PermissionsService::findOrCreatePermissions();
 
         $this->withProgressBar(Shop::all(), function (Shop $shop) use ($permissions) {
-            $roles = $shop->roles->keyBy('name');
-            PermissionsService::syncRDefaultRolesAndPermissions($roles, $permissions);
+            $defaultRoles = $shop->roles->whereIn('name', [
+                PermissionsService::ROLE_ADMIN,
+                PermissionsService::ROLE_CASHIER,
+                PermissionsService::ROLE_SUPER_ADMIN,
+                PermissionsService::ROLE_WAREHOUSE_WORKER,
+            ])->keyBy('name');
+            PermissionsService::syncRDefaultRolesAndPermissions($defaultRoles, $permissions);
         });
     }
 }
