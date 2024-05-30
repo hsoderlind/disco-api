@@ -23,7 +23,7 @@ return new class extends Migration
             $table->bigInteger('fee')->nullable();
             $table->string('control_class');
             $table->string('component');
-            $table->string('admin_component');
+            $table->string('admin_component')->nullable();
             $table->json('configuration')->nullable();
             $table->string('version');
             $table->timestamps();

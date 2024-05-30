@@ -48,12 +48,22 @@ class Module implements PaymentMethod
         return $model;
     }
 
-    public function onUsing(PaymentMethodModel $model): mixed
+    public function onIniting(PaymentMethodModel $model): PaymentMethodModel
     {
         return $model;
     }
 
-    public function onUsed(PaymentMethodModel $model): mixed
+    public function onInited(PaymentMethodModel $model): PaymentMethodModel
+    {
+        return $model;
+    }
+
+    public function onProcessing(PaymentMethodModel $model): PaymentMethodModel
+    {
+        return $model;
+    }
+
+    public function onProcessed(PaymentMethodModel $model): PaymentMethodModel
     {
         return $model;
     }
@@ -103,14 +113,14 @@ class Module implements PaymentMethod
         throw MethodNotImplementedException::withMethodName(__FUNCTION__);
     }
 
-    public function getPresentationComponent(): string
+    public function getPresentationComponent(): ?string
     {
-        throw MethodNotImplementedException::withMethodName(__FUNCTION__);
+        return null;
     }
 
-    public function getAdminComponent(): string
+    public function getAdminComponent(): ?string
     {
-        throw MethodNotImplementedException::withMethodName(__FUNCTION__);
+        return null;
     }
 
     public function getLogotype(): ?Logotype

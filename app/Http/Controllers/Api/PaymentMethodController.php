@@ -19,7 +19,7 @@ class PaymentMethodController extends Controller
 
     public function index(PaymentMethodRequest $request)
     {
-        return $this->service->list()->toResource();
+        return $this->service->list($request->query('includeInactive') === 'true')->toResource();
     }
 
     public function install(PaymentMethodRequest $request)

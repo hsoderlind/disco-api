@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property int $fee
  * @property class $control_class
  * @property string $component
- * @property string $admin_component
+ * @property string|null $admin_component
  * @property array|null $configuration
  * @property string $version
  * @property \App\Models\Logotype|null $logotype

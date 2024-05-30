@@ -21,16 +21,6 @@ class Cash extends Module
         return 'components/payment-methods/modules/cash/checkout';
     }
 
-    public function getPresentationComponent(): string
-    {
-        return 'components/payment-methods/modules/cash/presentation';
-    }
-
-    public function getAdminComponent(): string
-    {
-        return 'components/payment-methods/modules/cash/admin';
-    }
-
     public function getVersion(): string
     {
         return '0.0.1';

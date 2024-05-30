@@ -23,7 +23,10 @@ class PaymentMethodService extends AbstractService
             $query->where('active', true);
         }
 
-        $this->data = $query->get();
+        $this->data = $query
+            ->orderBy('sort_order')
+            ->orderBy('title')
+            ->get();
 
         return $this;
     }

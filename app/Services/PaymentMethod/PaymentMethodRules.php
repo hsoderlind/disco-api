@@ -31,7 +31,7 @@ class PaymentMethodRules extends Rules
             'fee' => 'sometimes|nullable|numeric|integer',
             'control_class' => 'sometimes|required|string|max:255',
             'component' => 'required|string|max:255',
-            'admin_component' => 'required|string|max:255',
+            'admin_component' => 'sometimes|nullable|string|max:255',
             'configuration' => 'sometimes|nullable|array',
         ];
     }

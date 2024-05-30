@@ -20,9 +20,13 @@ interface PaymentMethod extends JsonSerializable
 
     public function onUpdated(PaymentMethodModel $model): PaymentMethodModel;
 
-    public function onUsing(PaymentMethodModel $model): mixed;
+    public function onIniting(PaymentMethodModel $model): PaymentMethodModel;
 
-    public function onUsed(PaymentMethodModel $model): mixed;
+    public function onInited(PaymentMethodModel $model): PaymentMethodModel;
+
+    public function onProcessing(PaymentMethodModel $model): PaymentMethodModel;
+
+    public function onProcessed(PaymentMethodModel $model): PaymentMethodModel;
 
     public function onInstalling(PaymentMethodModel $model): PaymentMethodModel;
 
@@ -42,9 +46,9 @@ interface PaymentMethod extends JsonSerializable
 
     public function getCheckoutComponent(): string;
 
-    public function getPresentationComponent(): string;
+    public function getPresentationComponent(): ?string;
 
-    public function getAdminComponent(): string;
+    public function getAdminComponent(): ?string;
 
     public function getLogotype(): ?Logotype;
 

@@ -21,16 +21,6 @@ class Invoice extends Module
         return 'components/payment-methods/modules/invoice/checkout';
     }
 
-    public function getPresentationComponent(): string
-    {
-        return 'components/payment-methods/modules/invoice/presentation';
-    }
-
-    public function getAdminComponent(): string
-    {
-        return 'components/payment-methods/modules/invoice/admin';
-    }
-
     public function getVersion(): string
     {
         return '0.0.2';
