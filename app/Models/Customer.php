@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -36,8 +37,9 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property-read \App\Models\Account $billingAddress
  * @property-read \App\Models\CreditBalance $creditBalance
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Shop[] $shops
- * @property-read \App\Models\Metadata $metadata
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Metadata[] $metadata
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Note[] $notes
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
@@ -131,6 +133,11 @@ class Customer extends Model
     public function notes(): MorphMany
     {
         return $this->morphMany(Note::class, 'noteable');
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 
     // Scopes

@@ -4,12 +4,11 @@ namespace App\Services\PaymentMethod;
 
 use App\Models\Logotype;
 use App\Models\PaymentMethod as PaymentMethodModel;
-use App\Services\PaymentMethod\Exceptions\MethodNotImplementedException;
 use App\Services\PaymentMethod\Interfaces\PaymentMethod;
 use App\Services\Shop\ShopSession;
 use Illuminate\Support\Str;
 
-class Module implements PaymentMethod
+abstract class Module implements PaymentMethod
 {
     protected ?PaymentMethodModel $model;
 
@@ -93,10 +92,7 @@ class Module implements PaymentMethod
         return Str::lower(class_basename($this));
     }
 
-    public function getTitle(): string
-    {
-        throw MethodNotImplementedException::withMethodName(__FUNCTION__);
-    }
+    abstract public function getTitle(): string;
 
     public function getDescription(): ?string
     {
@@ -108,10 +104,7 @@ class Module implements PaymentMethod
         return null;
     }
 
-    public function getCheckoutComponent(): string
-    {
-        throw MethodNotImplementedException::withMethodName(__FUNCTION__);
-    }
+    abstract public function getCheckoutComponent(): string;
 
     public function getPresentationComponent(): ?string
     {
@@ -128,15 +121,9 @@ class Module implements PaymentMethod
         return null;
     }
 
-    public function getVersion(): string
-    {
-        throw MethodNotImplementedException::withMethodName(__FUNCTION__);
-    }
+    abstract public function getVersion(): string;
 
-    public function getPublishedAt(): string
-    {
-        return '-';
-    }
+    abstract public function getPublishedAt(): string;
 
     public function getUpdatedAt(): ?string
     {
