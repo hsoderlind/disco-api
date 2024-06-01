@@ -199,6 +199,13 @@ abstract class PermissionsService
         $permissions['update payment methods'] = Permission::findOrCreateWithGroup('update payment methods', 'Konfigurera betalningsmetoder', 'payment methods', $guardName);
         $permissions['delete payment methods'] = Permission::findOrCreateWithGroup('delete payment methods', 'Avinstallera betalningsmetoder', 'payment methods', $guardName);
 
+        // Payment methods
+        $permissions['access order total modules'] = Permission::findOrCreateWithGroup('access order total modules', 'Tillgång till order total-moduler', 'order total modules', $guardName);
+        $permissions['create order total modules'] = Permission::findOrCreateWithGroup('create order total modules', 'Installera order total-moduler', 'order total modules', $guardName);
+        $permissions['read order total modules'] = Permission::findOrCreateWithGroup('read order total modules', 'Använda order total-moduler', 'order total modules', $guardName);
+        $permissions['update order total modules'] = Permission::findOrCreateWithGroup('update order total modules', 'Konfigurera order total-moduler', 'order total modules', $guardName);
+        $permissions['delete order total modules'] = Permission::findOrCreateWithGroup('delete order total modules', 'Avinstallera order total-moduler', 'order total modules', $guardName);
+
         return $permissions;
     }
 
