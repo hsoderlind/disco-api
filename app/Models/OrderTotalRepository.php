@@ -44,6 +44,7 @@ class OrderTotalRepository extends Model
 
     protected $casts = [
         'configuration' => 'array',
+        'active' => 'boolean',
     ];
 
     /**
