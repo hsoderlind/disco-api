@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MinorQuantity;
 use App\Services\Shop\ShopSession;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -43,6 +44,9 @@ class AttributeStock extends Model
         'allow_order_out_of_stock' => 'boolean',
         'sku' => 'string',
         'stock_unit' => 'string',
+        'initial_quantity' => MinorQuantity::class,
+        'reserved_quantity' => MinorQuantity::class,
+        'sold_quantity' => MinorQuantity::class,
     ];
 
     protected static function boot()

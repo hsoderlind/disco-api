@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MinorCurrency;
 use App\Services\Product\ProductCondition;
 use App\Services\Product\ProductState;
 use App\Services\Shop\ShopSession;
@@ -90,6 +91,9 @@ class Product extends Model
         'condition' => ProductCondition::class,
         'available_at' => 'date:Y-m-d',
         'state' => ProductState::class,
+        'price' => MinorCurrency::class,
+        'cost_price' => MinorCurrency::class,
+        'available_for_order' => 'boolean',
     ];
 
     protected static function boot()

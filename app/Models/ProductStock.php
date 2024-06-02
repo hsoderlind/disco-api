@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MinorQuantity;
 use App\Services\Shop\ShopSession;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -47,6 +48,9 @@ class ProductStock extends Model
         'available_at' => 'datetime',
         'allow_order_out_of_stock' => 'boolean',
         'send_email_out_of_stock' => 'boolean',
+        'initial_quantity' => MinorQuantity::class,
+        'reserved_quantity' => MinorQuantity::class,
+        'sold_quantity' => MinorQuantity::class,
     ];
 
     protected static function boot()
