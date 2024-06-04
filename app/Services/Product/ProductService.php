@@ -4,6 +4,7 @@ namespace App\Services\Product;
 
 use App\Models\Product;
 use App\Services\Barcode\BarcodeService;
+use App\Services\Category\CategoryService;
 use App\Services\ProductAttribute\ProductAttributeService;
 use App\Services\ProductFile\ProductFileService;
 use App\Services\ProductImage\ProductImageService;
@@ -54,6 +55,32 @@ class ProductService
                 ->whereHas('categories', fn ($query) => $query->where('categories.id', $category))
                 ->get();
         }
+    }
+
+    public function listAsSummary(?int $category = null, bool $includeSubcategories = false, ?string $state = null)
+    {
+        $products = Product::inShop($this->shopId)->withOnly(['stock', 'tax', 'currentSpecialPrice', 'barcodes']);
+
+        if (! is_null($category) && $category > 0) {
+            $categoryService = new CategoryService($this->shopId);
+
+            if ($includeSubcategories) {
+                $categoryIds = $categoryService->getAllChildrenOf($category)->pluck('id');
+                $products->inCategories($categoryIds);
+            } else {
+                $products->inCategory($category);
+            }
+        }
+
+        if (! is_null($state)) {
+            if ($state === ProductState::Published->value) {
+                $products->isPublished();
+            } else {
+                $products->isDraft();
+            }
+        }
+
+        return $products->get();
     }
 
     /**

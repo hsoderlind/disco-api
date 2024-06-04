@@ -46,9 +46,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductImage[] $images
  * @property-read \App\Models\ProductStock $stock
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ProductSpecialPrice[] $specialPrices
+ * @property-read \App\Models\ProductSpecialPrice $currentSpecialPrice
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
+ * @method \Illuminate\Database\Eloquent\Builder|static inCategory(int $categoryId)
+ * @method static \Illuminate\Database\Eloquent\Builder|static inCategory(int $categoryId)
  * @method \Illuminate\Database\Eloquent\Builder|static inCategories(array $categoryIds)
  * @method static \Illuminate\Database\Eloquent\Builder|static inCategories(array $categoryIds)
  * @method \Illuminate\Database\Eloquent\Builder|static isPublished()
@@ -144,6 +147,11 @@ class Product extends Model
         return $this->hasMany(ProductSpecialPrice::class);
     }
 
+    public function currentSpecialPrice(): HasOne
+    {
+        return $this->hasOne(ProductSpecialPrice::class)->latestOfMany();
+    }
+
     public function files(): HasMany
     {
         return $this->hasMany(ProductFile::class);
@@ -165,9 +173,14 @@ class Product extends Model
         return $query->where('shop_id', '=', $shopId);
     }
 
+    public function scopeInCategory(Builder $query, int $categoryId)
+    {
+        return $query->whereHas('categories', fn ($q) => $q->where('id', $categoryId));
+    }
+
     public function scopeInCategories(Builder $query, array $categoryIds)
     {
-        return $query->whereHas('categories', fn ($query) => $query->whereIn('id', $categoryIds));
+        return $query->whereHas('categories', fn ($q) => $q->whereIn('id', $categoryIds));
     }
 
     public function scopeIsPublished(Builder $query)

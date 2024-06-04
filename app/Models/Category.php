@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Collection as SupportCollection;
+use Illuminate\Support\Collection;
 
 /**
  * @property-read int $id
@@ -74,9 +74,13 @@ class Category extends Model
     }
 
     // Methods
-    public function getAllChildren(): SupportCollection
+    public function getAllChildren(?bool $includeSelf = false): Collection
     {
-        $children = new SupportCollection();
+        $children = collect();
+
+        if ($includeSelf) {
+            $children->merge($this);
+        }
 
         foreach ($this->children as $child) {
             $children->push($child);

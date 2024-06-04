@@ -1,25 +1,25 @@
 <?php
 
 use App\Http\Controllers\Api\ProductController;
-use App\Services\Product\ProductState;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(ProductController::class)
     ->prefix('product')
     ->middleware(['shop_id'])
     ->group(function () {
-        Route::get('/{state?}', 'index')
-            ->name('list')
-            ->whereIn('state', ProductState::values());
-        Route::post('/', 'create')->name('create');
+        Route::get('/', 'index')
+            ->name('product.list');
+        Route::get('/summary', 'listAsSummary')
+            ->name('product.list_as_summary');
+        Route::post('/', 'create')
+            ->name('product.create');
         Route::get('/{id}', 'show')
-            ->name('show')
+            ->name('product.show')
             ->whereNumber('id');
         Route::put('/{id}', 'update')
-            ->name('update')
+            ->name('product.update')
             ->whereNumber('id');
         Route::delete('/{id}', 'destroy')
-            ->name('destroy')
+            ->name('product.destroy')
             ->whereNumber('id');
-    })
-    ->name('product.');
+    });

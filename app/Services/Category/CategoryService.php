@@ -27,11 +27,15 @@ class CategoryService
         return $category;
     }
 
+    public function read(int $id): Category
+    {
+        return Category::inShop($this->shopId)->findOrFail($id);
+    }
+
     public function update(int $id, array $data): Category
     {
-        $category = Category::findOrFail($id);
-        $category->fill($data);
-        $category->save();
+        $category = $this->read($id);
+        $category->update($data);
 
         return $category;
     }
@@ -41,5 +45,12 @@ class CategoryService
         $category = Category::findOrFail($id);
 
         return $category->delete();
+    }
+
+    public function getAllChildrenOf(int $id, bool $includeParent = true)
+    {
+        $category = $this->read($id);
+
+        return $category->getAllChildren(true);
     }
 }

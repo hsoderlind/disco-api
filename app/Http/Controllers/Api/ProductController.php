@@ -9,7 +9,6 @@ use App\Http\Resources\ProductResource;
 use App\Services\Product\ProductService;
 use App\Services\Product\ProductState;
 use App\Services\Shop\ShopSession;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -20,15 +19,26 @@ class ProductController extends Controller
         $this->service = new ProductService(ShopSession::getId());
     }
 
-    public function index(Request $request, ?string $state = null)
+    public function index(ProductRequest $request)
     {
-        if (! is_null($state)) {
-            $products = $state === ProductState::Published
+        if ($request->query('state')) {
+            $products = $request->query('state') == ProductState::Published->value
                 ? $this->service->listPublished((int) $request->query('category'))
                 : $this->service->listDraft((int) $request->query('category'));
         } else {
             $products = $this->service->list((int) $request->query('category'));
         }
+
+        return ProductResource::collection($products);
+    }
+
+    public function listAsSummary(ProductRequest $request)
+    {
+        $products = $this->service->listAsSummary(
+            (int) $request->query('category'),
+            $request->query('includeSubcategories') === 'true',
+            $request->query('state')
+        );
 
         return ProductResource::collection($products);
     }
