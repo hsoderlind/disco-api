@@ -192,4 +192,16 @@ class Product extends Model
     {
         return $query->where('state', '=', ProductState::Draft);
     }
+
+    // Methods
+    public function sellingPrice()
+    {
+        $currentSpecialPrice = $this->currentSpecialPrice()->first();
+
+        if (! is_null($currentSpecialPrice)) {
+            return $currentSpecialPrice->special_price;
+        }
+
+        return $this->price;
+    }
 }

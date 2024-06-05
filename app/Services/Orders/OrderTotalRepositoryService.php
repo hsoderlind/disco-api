@@ -47,6 +47,7 @@ class OrderTotalRepositoryService extends AbstractService
                 'description' => $data['description'],
                 'sort_order' => $data['sort_order'],
                 'active' => $data['active'],
+                'component' => $data['component'],
                 'admin_component' => $data['admin_component'],
                 'configuration' => $data['configuration'],
             ]);

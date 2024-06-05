@@ -51,6 +51,7 @@ class ModulesService extends AbstractService
                 'description' => $module->getDescription(),
                 'sort_order' => 0,
                 'active' => true,
+                'component' => $module->getCheckoutComponent(),
                 'admin_component' => $module->getAdminComponent(),
                 'configuration' => $module->getConfiguration(),
                 'version' => $module->getVersion(),
@@ -81,6 +82,7 @@ class ModulesService extends AbstractService
             $module->onUpdating($model);
 
             $model->fill([
+                'component' => $module->getCheckoutComponent(),
                 'admin_component' => $module->getAdminComponent(),
                 'configuration' => [...($model->configuration ?? []), ...($module->getConfiguration() ?? [])],
             ]);

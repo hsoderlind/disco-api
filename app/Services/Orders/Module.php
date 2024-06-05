@@ -119,6 +119,7 @@ abstract class Module implements OrderTotal
             'title' => $this->getTitle(),
             'description' => $this->getDescription(),
             'control_class' => get_class($this),
+            'component' => $this->getCheckoutComponent(),
             'admin_component' => $this->getAdminComponent(),
             'configuration' => $this->getConfiguration(),
             'installed' => $this->isInstalled(),

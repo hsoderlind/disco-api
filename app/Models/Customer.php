@@ -48,6 +48,8 @@ class Customer extends Model
 {
     use HasFactory, LogsActivity;
 
+    protected $with = ['shippingAddress', 'billingAddress'];
+
     protected $fillable = [
         'person_name',
         'company_name',

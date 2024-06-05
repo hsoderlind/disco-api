@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $sort_order
  * @property bool $active
  * @property string $control_class
+ * @property string $component
  * @property string $admin_component
  * @property array $configuration
  * @property string $version
@@ -38,6 +39,7 @@ class OrderTotalRepository extends Model
         'description',
         'sort_order',
         'active',
+        'component',
         'admin_component',
         'configuration',
     ];

@@ -16,6 +16,11 @@ class Total extends Module
         return 'Summering av beloppet att betala inklusive moms.';
     }
 
+    public function getCheckoutComponent(): string
+    {
+        return 'components/order-totals/modules/total/checkout';
+    }
+
     public function getPresentationComponent(): ?string
     {
         return null;

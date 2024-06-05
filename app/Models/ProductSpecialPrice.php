@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MinorCurrency;
 use App\Services\Shop\ShopSession;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,6 +34,7 @@ class ProductSpecialPrice extends Model
     protected $casts = [
         'entry_date' => 'datetime',
         'expiration_date' => 'datetime',
+        'special_price' => MinorCurrency::class,
     ];
 
     protected static function boot()

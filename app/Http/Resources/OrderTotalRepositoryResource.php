@@ -20,6 +20,7 @@ class OrderTotalRepositoryResource extends JsonResource
             'description' => $this->description,
             'sort_order' => $this->sort_order,
             'active' => $this->active,
+            'component' => $this->component,
             'admin_component' => $this->admin_component,
             'configuration' => $this->configuration,
             'version' => $this->version,

@@ -24,6 +24,7 @@ class OrderTotalRepositoryRules extends Rules
             'description' => 'nullable|string|max:255',
             'sort_order' => 'required|integer',
             'active' => 'required|boolean',
+            'component' => 'required|string|max:255',
             'admin_component' => 'nullable|string|max:255',
             'configuration' => 'nullable|array',
         ];

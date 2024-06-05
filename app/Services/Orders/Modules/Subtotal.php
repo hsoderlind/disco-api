@@ -16,6 +16,11 @@ class Subtotal extends Module
         return 'Summering av beloppet att betala exklusive moms.';
     }
 
+    public function getCheckoutComponent(): string
+    {
+        return 'components/order-totals/modules/sub-total/checkout';
+    }
+
     public function getPresentationComponent(): ?string
     {
         return null;

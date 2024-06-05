@@ -15,7 +15,7 @@ class CustomerService extends AbstractService
 
     public function list()
     {
-        $this->data = Customer::inShop($this->shopId)->get();
+        $this->data = Customer::inShop($this->shopId)->orderBy('person_name')->orderBy('company_name')->get();
 
         return $this;
     }

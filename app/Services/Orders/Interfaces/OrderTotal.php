@@ -40,6 +40,8 @@ interface OrderTotal extends JsonSerializable
 
     public function getConfiguration(): ?array;
 
+    public function getCheckoutComponent(): string;
+
     public function getPresentationComponent(): ?string;
 
     public function getAdminComponent(): ?string;

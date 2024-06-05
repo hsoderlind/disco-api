@@ -16,6 +16,11 @@ class Tax extends Module
         return 'Summering av moms i valuta.';
     }
 
+    public function getCheckoutComponent(): string
+    {
+        return 'components/order-totals/modules/tax/checkout';
+    }
+
     public function getPresentationComponent(): ?string
     {
         return null;
