@@ -3,6 +3,7 @@
 namespace App\Services\PaymentMethod\Interfaces;
 
 use App\Models\Logotype;
+use App\Models\Order;
 use App\Models\PaymentMethod as PaymentMethodModel;
 use JsonSerializable;
 
@@ -20,13 +21,17 @@ interface PaymentMethod extends JsonSerializable
 
     public function onUpdated(PaymentMethodModel $model): PaymentMethodModel;
 
-    public function onIniting(PaymentMethodModel $model): PaymentMethodModel;
+    public function onInitializing(Order $model, array $data): bool|string|null;
 
-    public function onInited(PaymentMethodModel $model): PaymentMethodModel;
+    public function onInitialized(Order $model, array $data): bool|string|null;
 
-    public function onProcessing(PaymentMethodModel $model): PaymentMethodModel;
+    public function onProcessing(Order $model): bool|string|null;
 
-    public function onProcessed(PaymentMethodModel $model): PaymentMethodModel;
+    public function onProcessed(Order $model): bool|string|null;
+
+    public function onComplete(Order $model): bool|string|null;
+
+    public function onCompleted(Order $model): bool|string|null;
 
     public function onInstalling(PaymentMethodModel $model): PaymentMethodModel;
 
@@ -63,4 +68,6 @@ interface PaymentMethod extends JsonSerializable
     public function updateAvailable(): int;
 
     public function getChangeLog(): ?string;
+
+    public function toArray(): array;
 }

@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
+use App\Http\Helpers\HttpResponseCode;
+use App\Services\Orders\Exceptions\OrderPaymentException;
+use App\Services\Shop\ShopSession;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -23,8 +25,19 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->reportable(function (OrderPaymentException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'payment_name' => $e->getPaymentName(),
+                'reason' => $e->getReason(),
+            ], HttpResponseCode::BAD_REQUEST);
         });
+    }
+
+    public function context(): array
+    {
+        return array_merge(parent::context(), [
+            'shop_id' => ShopSession::getId(),
+        ]);
     }
 }

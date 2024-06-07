@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
+ * @method \Illuminate\Database\Eloquent\Builder|static isDefault(bool $isDefault = true)
+ * @method static \Illuminate\Database\Eloquent\Builder|static isDefault(bool $isDefault = true)
  */
 class OrderStatus extends Model
 {
@@ -66,6 +68,11 @@ class OrderStatus extends Model
     public function scopeInShop(Builder $query, int $shopId)
     {
         return $query->where('shop_id', '=', $shopId);
+    }
+
+    public function scopeIsDefault(Builder $query, $isDefault = true)
+    {
+        return $query->where('is_default', $isDefault);
     }
 
     /**

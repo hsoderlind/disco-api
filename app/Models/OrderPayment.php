@@ -29,6 +29,7 @@ class OrderPayment extends Model
     use HasFactory, SoftDeletes, LogsActivity;
 
     protected $fillable = [
+        'payment_method_name',
         'transaction_id',
     ];
 

@@ -32,6 +32,8 @@ class OrderItem extends Model
     use HasFactory, SoftDeletes, LogsActivity;
 
     protected $fillable = [
+        'product_id',
+        'tax_id',
         'product_name',
         'price',
         'total',

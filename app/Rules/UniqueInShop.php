@@ -47,7 +47,7 @@ class UniqueInShop implements DataAwareRule, ValidationRule
         $exists = $query->exists();
 
         if (! $this->ignore && $exists) {
-            $fail('unique')->translate();
+            $fail('validation.unique')->translate();
         }
     }
 

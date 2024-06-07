@@ -3,6 +3,7 @@
 namespace App\Services\PaymentMethod;
 
 use App\Models\Logotype;
+use App\Models\Order;
 use App\Models\PaymentMethod as PaymentMethodModel;
 use App\Services\PaymentMethod\Interfaces\PaymentMethod;
 use App\Services\Shop\ShopSession;
@@ -47,24 +48,34 @@ abstract class Module implements PaymentMethod
         return $model;
     }
 
-    public function onIniting(PaymentMethodModel $model): PaymentMethodModel
+    public function onInitializing(Order $model, array $data): bool|string|null
     {
-        return $model;
+        return true;
     }
 
-    public function onInited(PaymentMethodModel $model): PaymentMethodModel
+    public function onInitialized(Order $model, array $data): bool|string|null
     {
-        return $model;
+        return true;
     }
 
-    public function onProcessing(PaymentMethodModel $model): PaymentMethodModel
+    public function onProcessing(Order $model): bool|string|null
     {
-        return $model;
+        return true;
     }
 
-    public function onProcessed(PaymentMethodModel $model): PaymentMethodModel
+    public function onProcessed(Order $model): bool|string|null
     {
-        return $model;
+        return true;
+    }
+
+    public function onComplete(Order $model): bool|string|null
+    {
+        return true;
+    }
+
+    public function onCompleted(Order $model): bool|string|null
+    {
+        return true;
     }
 
     public function onInstalling(PaymentMethodModel $model): PaymentMethodModel
@@ -147,6 +158,11 @@ abstract class Module implements PaymentMethod
 
     public function jsonSerialize(): mixed
     {
+        return json_encode($this->toArray());
+    }
+
+    public function toArray(): array
+    {
         return [
             'name' => $this->getName(),
             'title' => $this->getTitle(),
@@ -163,10 +179,5 @@ abstract class Module implements PaymentMethod
             'version' => $this->getVersion(),
             'update_available' => $this->updateAvailable(),
         ];
-    }
-
-    public function toArray()
-    {
-        return $this->jsonSerialize();
     }
 }

@@ -13,8 +13,8 @@ use Spatie\Activitylog\Traits\LogsActivity;
 /**
  * @property-read int $id
  * @property-read int $order_id
- * @property string $old_status
- * @property string $new_status
+ * @property-read \App\Models\OrderStatus $oldStatus
+ * @property-read \App\Models\OrderStatus $newStatus
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Note[] $notes
  */
 class OrderStatusHistory extends Model
@@ -30,7 +30,7 @@ class OrderStatusHistory extends Model
     {
         parent::boot();
 
-        static::updating(fn (OrderStatusHistory $instance) => $instance->old_status = $instance->original['new_status']);
+        static::updating(fn (OrderStatusHistory $instance) => $instance->old_status_id = $instance->original['new_status_id']);
     }
 
     /**
@@ -43,6 +43,16 @@ class OrderStatusHistory extends Model
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function oldStatus(): BelongsTo
+    {
+        return $this->belongsTo(OrderStatus::class);
+    }
+
+    public function newStatus(): BelongsTo
+    {
+        return $this->belongsTo(OrderStatus::class);
     }
 
     public function notes(): MorphMany

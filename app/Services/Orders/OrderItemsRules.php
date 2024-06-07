@@ -2,6 +2,7 @@
 
 namespace App\Services\Orders;
 
+use App\Rules\ExistsInShop;
 use App\Traits\RulesMerger;
 use App\Validation\Rules;
 
@@ -22,15 +23,15 @@ class OrderItemsRules extends Rules
     public function getRules(): array
     {
         return [
-            'product_id' => 'required|integer|exists:products,id',
-            'tax_id' => 'required|integer|exists:taxes,id',
+            'product_id' => ['required', new ExistsInShop('products', 'id')],
+            'tax_id' => ['required', new ExistsInShop('taxes', 'id')],
             'product_name' => 'required|string|max:255',
             'price' => 'required|integer',
             'total' => 'required|integer',
             'vat' => 'required|integer',
             'tax_value' => 'required|integer',
             'quantity' => 'required|integer',
-            ...$this->merge('attributes', new OrderAttributesRules($this->request), 'sometimes', true),
+            ...$this->merge('itemAttributes', new OrderAttributesRules($this->request), 'sometimes', true),
         ];
     }
 }

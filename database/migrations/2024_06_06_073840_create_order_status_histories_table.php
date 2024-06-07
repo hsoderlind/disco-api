@@ -15,10 +15,13 @@ return new class extends Migration
         Schema::create('order_status_histories', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Order::class);
-            $table->string('old_status')->nullable();
-            $table->string('new_status');
+            $table->unsignedBigInteger('old_status_id')->nullable();
+            $table->unsignedBigInteger('new_status_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('old_status_id')->references('id')->on('order_statuses')->cascadeOnDelete();
+            $table->foreign('new_status_id')->references('id')->on('order_statuses')->cascadeOnDelete();
         });
     }
 

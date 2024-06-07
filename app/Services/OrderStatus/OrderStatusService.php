@@ -24,7 +24,15 @@ class OrderStatusService extends AbstractService
     public function create(array $data)
     {
         $this->data = DB::transaction(function () use ($data) {
-            return OrderStatus::create($data);
+            $orderStatus = OrderStatus::create($data);
+
+            $count = OrderStatus::inShop($this->shopId)->count();
+
+            if ($count === 1) {
+                $orderStatus->update(['is_default' => true]);
+            }
+
+            return $orderStatus;
         });
 
         return $this;
@@ -33,6 +41,13 @@ class OrderStatusService extends AbstractService
     public function read(int $id)
     {
         $this->data = OrderStatus::inShop($this->shopId)->findOrFail($id);
+
+        return $this;
+    }
+
+    public function readDefault()
+    {
+        $this->data = OrderStatus::inShop($this->shopId)->isDefault()->firstOrFail();
 
         return $this;
     }

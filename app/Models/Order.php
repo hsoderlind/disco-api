@@ -26,7 +26,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Note[] $notes
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderTotal[] $totals
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderItem[] $items
- * @property-read \App\Models\OrderPayment $orderPayment
+ * @property-read \App\Models\OrderPayment $payment
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderStatusHistory $statusHistory
  * @property-read \App\Models\OrderStatusHistory $currentStatus
  *
@@ -79,7 +79,7 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function orderPayment(): HasOne
+    public function payment(): HasOne
     {
         return $this->hasOne(OrderPayment::class);
     }
