@@ -26,7 +26,7 @@ class CustomerRules extends Rules
             'id' => 'sometimes|required|exists:customers,id',
             'person_name' => 'sometimes|nullable|string|max:255',
             'company_name' => 'sometimes|nullable|string|max:255',
-            'email' => 'required|email|max:255',
+            'email' => 'nullable|email|max:255',
             'password' => 'sometimes|nullable|string|max:255',
             'ssn' => 'sometimes|required_with:person_name',
             'orgno' => 'sometimes|required_with:company_name',

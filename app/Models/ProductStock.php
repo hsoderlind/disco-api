@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 /**
  * @property-read int $id
@@ -23,8 +25,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $send_email_out_of_stock
  * @property string $in_stock_message
  * @property string $available_at
- * @property-read int $disposable_quantity
- * @property-read int $approx_disposable_quantity
+ * @property-read int $available_quantity
+ * @property-read int $approx_available_quantity
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
@@ -33,7 +35,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class ProductStock extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $fillable = [
         'sku',
@@ -61,17 +63,17 @@ class ProductStock extends Model
     }
 
     // Accessors & Mutators
-    protected function disposableQuantity(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->initial_quantity - $this->sold_quantity
-        );
-    }
-
-    protected function approxDisposableQuantity(): Attribute
+    protected function availableQuantity(): Attribute
     {
         return Attribute::make(
             get: fn () => $this->initial_quantity - $this->sold_quantity - $this->reserved_quantity
+        );
+    }
+
+    protected function approxAvailableQuantity(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->initial_quantity - $this->sold_quantity
         );
     }
 
@@ -90,5 +92,12 @@ class ProductStock extends Model
     public function scopeForProduct(Builder $query, int $productId)
     {
         return $query->where('product_id', '=', $productId);
+    }
+
+    // Methods
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable();
     }
 }

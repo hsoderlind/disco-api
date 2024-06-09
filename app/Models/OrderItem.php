@@ -4,11 +4,13 @@ namespace App\Models;
 
 use App\Casts\MinorCurrency;
 use App\Casts\MinorQuantity;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Number;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -18,7 +20,11 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property-read int $tax_id
  * @property string $product_name
  * @property int $price
+ * @property-read int $price_incl_vat
+ * @property-read int $price_incl_vat_formatted
  * @property int $total
+ * @property-read int $total_incl_vat
+ * @property-read int $total_incl_vat_formatted
  * @property int $vat
  * @property int $tax_value
  * @property int $quantity
@@ -56,6 +62,33 @@ class OrderItem extends Model
     /**
      * Attributes
      */
+    public function priceInclVat(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->calcPriceIncVat()
+        );
+    }
+
+    public function totalInclVat(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->calcTotalInclVat()
+        );
+    }
+
+    public function priceInclVatFormatted(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => Number::currency($this->calcPriceIncVat(), in: config('disco.currency'))
+        );
+    }
+
+    public function totalInclVatFormatted(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => Number::currency($this->calcTotalInclVat(), in: config('disco.currency'))
+        );
+    }
 
     /**
      * Relationships
@@ -91,5 +124,15 @@ class OrderItem extends Model
     {
         return LogOptions::defaults()
             ->logFillable();
+    }
+
+    protected function calcPriceIncVat()
+    {
+        return $this->price + $this->vat;
+    }
+
+    protected function calcTotalInclVat(): int
+    {
+        return $this->total + ($this->vat * $this->quantity);
     }
 }

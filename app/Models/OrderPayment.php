@@ -14,7 +14,8 @@ use Spatie\Activitylog\Traits\LogsActivity;
 /**
  * @property-read int $id
  * @property-read int $order_id
- * @property-read string $payment_method_name
+ * @property string $payment_method_name
+ * @property string $title
  * @property string $transaction_id
  * @property string $deleted_at
  * @property string $created_at
@@ -30,6 +31,7 @@ class OrderPayment extends Model
 
     protected $fillable = [
         'payment_method_name',
+        'title',
         'transaction_id',
     ];
 

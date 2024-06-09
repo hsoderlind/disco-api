@@ -1,0 +1,85 @@
+<x-main>
+	<div class="bg-slate-50 sm:px-4 font-sans">
+		<table align="center">
+			<tr>
+				<td class="w-[552px] max-w-full">
+					<table
+						class="w-full border-solid border-t-cyan-800 border-t-8 border-r-transparent border-b-transparent border-l-transparent"
+					>
+						<tr>
+							<td class="p-12 sm:px-6 text-base text-slate-700 bg-white rounded shadow-sm">
+								<p
+									class="mb-3 py-3 border-solid border-r-0 border-l-0 border-t-2 border-b-2 border-t-cyan-800 border-b-cyan-800 text-lg uppercase"
+								>
+									Kvitto från @{{ $order->shop->name }} - Order nr. @{{ $order->order_number }}.
+								</p>
+
+								<p class="mb-3">
+									<b>Hej @{{ $order->customer->name }}</b>
+									<br />
+									Tack för att du handlar hos @{{ $order->shop->name }}.
+								</p>
+
+								<p class="mb-3 mt-8">
+									<b class="uppercase">Ordersammanfattning</b>
+									<br />
+									Ordernummer: @{{ $order->order_number }}<br />
+									Kvittonummer: @{{ $order->receipt->receipt_number }}<br />
+									Datum: @{{ $order->created_at->format('Y-m-d H:i') }}<br />
+									Namn: @{{ $order->customer->name }}<br />
+									@if (isset($order->customer->email)) E-postadress: @{{ $order->customer->email }}<br />
+									@endif @if (isset($order->customer->phone)) Telefon: @{{ $order->customer->phone
+									}}<br />
+									@endif Betalningssätt @{{ $order->payment->title }}
+								</p>
+
+								<div class="mt-8">
+									<p class="mb-2"><b class="uppercase">Produktinformation</b></p>
+									<table
+										class="w-full border-solid border-r-0 border-b-0 border-l-0 border-t-2 border-t-cyan-800 mb-4"
+									>
+										@foreach ($order->items as $item)
+										<tr>
+											<td class="w-[100px] p-3">&nbsp;</td>
+											<td class="p-3">
+												<b class="uppercase">@{{ $item->product_name }}</b><br />
+												Antal: @{{ $item->quantity }}<br />
+												Art.nr: @{{ $item->item_number }}
+											</td>
+										</tr>
+										<tr>
+											<td
+												colspan="2"
+												class="text-right p-3 border-solid border-t-0 border-r-0 border-l-0 border-b-2 border-b-cyan-800"
+											>
+												á pris @{{ $item->price_incl_vat_formatted }}<br />
+												Delsumma @{{ $item->total_incl_vat_formatted }}
+											</td>
+										</tr>
+										@endforeach
+									</table>
+									<table
+										class="w-full border-solid border-t-0 border-r-0 border-l-0 border-b-2 border-b-cyan-800"
+									>
+										@foreach ($order->totals as $total)
+										<tr>
+											<td class="text-right pb-2">@{{ $total->label }}</td>
+											<td class="text-right pr-3 pb-2">@{{ $total->value_formatted }}</td>
+										</tr>
+										@endforeach
+									</table>
+								</div>
+
+								<p class="mt-10">Vänligen, <br />@{{ $order->shop->name }}</p>
+								<x-footer />
+							</td>
+						</tr>
+						<tr role="separator">
+							<td class="leading-12">&zwj;</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>
+</x-main>

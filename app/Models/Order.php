@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -18,6 +19,10 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property-read int $id
  * @property-read int $shop_id
  * @property-read int $customer_id
+ * @property string $order_number
+ * @property int $order_number_serial
+ * @property string|null $order_number_prefix
+ * @property string|null $order_number_suffix
  * @property-read string $deleted_at
  * @property-read string $created_at
  * @property-read string $updated_at
@@ -29,6 +34,8 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property-read \App\Models\OrderPayment $payment
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderStatusHistory $statusHistory
  * @property-read \App\Models\OrderStatusHistory $currentStatus
+ * @property-read \App\Models\Shop $shop
+ * @property-read \App\Models\Receipt $receipt
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
@@ -44,7 +51,22 @@ class Order extends Model
     {
         parent::boot();
 
-        static::creating(fn ($instance) => $instance->shop_id = ShopSession::getId());
+        static::creating(function ($instance) {
+            $instance->shop_id = ShopSession::getId();
+
+            $prevOrder = static::inShop($instance->shop_id)->latest()->first();
+
+            if (is_null($prevOrder)) {
+                $instance->order_number_serial = 1;
+            } else {
+                $instance->order_number_serial = $prevOrder->order_number_serial + 1;
+            }
+
+            $orderSettings = OrderSetting::forShop($instance->shop_id)->first();
+            $instance->order_number = $orderSettings->generateOrderNumber($instance->order_number_serial);
+            $instance->order_number_prefix = $orderSettings->order_number_prefix;
+            $instance->order_number_suffix = $orderSettings->order_number_suffix;
+        });
     }
 
     /**
@@ -54,6 +76,11 @@ class Order extends Model
     /**
      * Relationships
      */
+    public function shop(): BelongsTo
+    {
+        return $this->belongsTo(Shop::class);
+    }
+
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
@@ -71,7 +98,7 @@ class Order extends Model
 
     public function totals(): HasMany
     {
-        return $this->hasMany(OrderTotal::class);
+        return $this->hasMany(OrderTotal::class)->orderBy('sort_order');
     }
 
     public function items(): HasMany
@@ -92,6 +119,11 @@ class Order extends Model
     public function currentStatus()
     {
         return $this->statusHistory()->latestOfMany();
+    }
+
+    public function receipt(): MorphOne
+    {
+        return $this->morphOne(Receipt::class, 'receiptable');
     }
 
     /**

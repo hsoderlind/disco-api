@@ -28,6 +28,7 @@ class OrdersRules extends Rules
             'payment_name' => ['required', 'string', new ExistsInShop('payment_methods', 'name')],
             ...$this->merge('items', new OrderItemsRules($this->request), 'required', true, checkArrayKeys: false),
             'totals' => 'required|array',
+            'totals.*.name' => 'required|string|max:255',
             'totals.*.entries.*.label' => 'required|string|max:255',
             'totals.*.entries.*.value' => 'required|numeric|integer',
             'totals.*.entries.*.sort_order' => 'required|numeric|integer',

@@ -4,20 +4,17 @@ namespace App\Services\Orders\Exceptions;
 
 use Exception;
 
-class OrderPaymentException extends Exception
+class OrderPaymentException extends OrderException
 {
-    protected int $orderId;
-
     protected string $paymentName;
 
     protected ?string $reason = null;
 
     public function __construct(int $orderId, string $paymentName, ?string $reason = null, string $message = 'Betalningen misslyckades')
     {
-        $this->orderId = $orderId;
         $this->paymentName = $paymentName;
         $this->reason = $reason;
-        parent::__construct($message);
+        parent::__construct($orderId, $reason ?? $message);
     }
 
     /**
@@ -36,12 +33,12 @@ class OrderPaymentException extends Exception
         return $this->reason;
     }
 
-    /**
-     * Get the value of orderId
-     */
-    public function getOrderId()
+    public function toArray(): array
     {
-        return $this->orderId;
+        return array_merge(parent::toArray(), [
+            'payment_name' => $this->paymentName,
+            'reason' => $this->reason,
+        ]);
     }
 
     /**
@@ -49,10 +46,6 @@ class OrderPaymentException extends Exception
      */
     public function context(): array
     {
-        return [
-            'order_id' => $this->orderId,
-            'payment_name' => $this->paymentName,
-            'reason' => $this->reason,
-        ];
+        return array_merge(parent::context(), ['payment_name' => $this->paymentName]);
     }
 }

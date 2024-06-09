@@ -1,0 +1,6 @@
+<div class="mt-6 pt-6 border-solid border-r-0 border-b-0 border-l-0 border-t-2 border-t-cyan-800">
+	@{{ $company->name }}<br />
+	@if ($company->supportAddress->address1) @{{ $company->supportAddress->address1 }}<br />
+	@endif @if ($company->supportAddress->address2) @{{ $company->supportAddress->address2 }}<br />
+	@endif @{{ $company->supportAddress->zip }} @{{ $company->supportAddress->city }}
+</div>

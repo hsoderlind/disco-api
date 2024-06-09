@@ -27,7 +27,7 @@ class CustomerService extends AbstractService
             $model = new Customer([
                 'person_name' => $data['person_name'] ?? null,
                 'company_name' => $data['company_name'] ?? null,
-                'email' => $data['email'],
+                'email' => $data['email'] ?? null,
                 'password' => isset($data['password']) && ! is_null($data['password']) ? Hash::make($data['password']) : null,
                 'ssn' => $data['ssn'] ?? null,
                 'orgno' => $data['orgno'] ?? null,

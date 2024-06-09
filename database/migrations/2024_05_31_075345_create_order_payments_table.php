@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Order::class);
             $table->foreignIdFor(PaymentMethod::class);
-            $table->string('transaction_id')->unique();
+            $table->string('transaction_id')->unique()->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

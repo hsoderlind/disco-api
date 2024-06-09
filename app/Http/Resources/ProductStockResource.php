@@ -26,8 +26,8 @@ class ProductStockResource extends JsonResource
             'send_email_out_of_stock' => $this->send_email_out_of_stock,
             'in_stock_message' => $this->in_stock_message,
             'available_at' => $this->available_at,
-            'disposable_quantity' => $this->disposable_quantity,
-            'approx_disposable_quantity' => $this->approx_disposable_quantity,
+            'available_quantity' => $this->available_quantity,
+            'approx_available_quantity' => $this->approx_available_quantity,
         ];
     }
 }

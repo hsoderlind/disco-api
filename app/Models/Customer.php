@@ -24,7 +24,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property string|null $person_name
  * @property string|null $company_name
  * @property-read string $name
- * @property string $email
+ * @property string|null $email
  * @property string|null $password
  * @property string|null $ssn
  * @property string|null $orgno
