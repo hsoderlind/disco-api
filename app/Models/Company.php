@@ -15,6 +15,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property-read int $id
  * @property string $name
  * @property string $orgnumber
+ * @property string $vat_number
  * @property string|null $official_website
  * @property string|null $support_website
  * @property string|null $terms_of_agreement_url
@@ -33,6 +34,7 @@ class Company extends Model
     protected $fillable = [
         'name',
         'orgnumber',
+        'vat_number',
         'official_website',
         'support_website',
         'terms_of_agreement_url',

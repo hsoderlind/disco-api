@@ -36,6 +36,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property-read \App\Models\OrderStatusHistory $currentStatus
  * @property-read \App\Models\Shop $shop
  * @property-read \App\Models\Receipt $receipt
+ * @property-read \App\Models\OrderSetting $settings
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
@@ -124,6 +125,11 @@ class Order extends Model
     public function receipt(): MorphOne
     {
         return $this->morphOne(Receipt::class, 'receiptable');
+    }
+
+    public function settings(): HasOne
+    {
+        return $this->hasOne(OrderSetting::class, 'shop_id', 'shop_id');
     }
 
     /**

@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
  * @property int $order_number_start
  * @property int $order_number_serial_length
  * @property string $order_number_pattern
+ * @property string $purchase_information
  *
  * @method \Illuminate\Database\Eloquent\Builder|static forShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static forShop(int $shopId)

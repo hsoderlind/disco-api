@@ -3,4 +3,5 @@
 	@if ($company->supportAddress->address1) @{{ $company->supportAddress->address1 }}<br />
 	@endif @if ($company->supportAddress->address2) @{{ $company->supportAddress->address2 }}<br />
 	@endif @{{ $company->supportAddress->zip }} @{{ $company->supportAddress->city }}
+	<div class="mt-4">Momsregistreringsnummer @{{ $company->vat_number }}</div>
 </div>

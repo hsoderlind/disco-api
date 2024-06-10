@@ -142,13 +142,16 @@
                       </tr>
                       @endforeach
                     </table>
-                  </div>
-                  <p style="margin-top: 40px">Vänligen, <br>{{ $order->shop->name }}</p>
+                  </div> @if ($order->settings->purchase_information)
+                  <p style="margin-top: 32px;">{{ nl2br($order->settings->purchase_information) }}</p>
+                  @endif
+                  <p style="margin-top: 32px;">Vänligen, <br>{{ $order->shop->name }}</p>
                   <div style="margin-top: 24px; border-width: 0px; border-top: 2px #155e75; border-style: solid; padding-top: 24px">
                     {{ $company->name }}<br>
                     @if ($company->supportAddress->address1) {{ $company->supportAddress->address1 }}<br>
                     @endif @if ($company->supportAddress->address2) {{ $company->supportAddress->address2 }}<br>
                     @endif {{ $company->supportAddress->zip }} {{ $company->supportAddress->city }}
+                    <div style="margin-top: 16px">Momsregistreringsnummer {{ $company->vat_number }}</div>
                   </div>
                 </td>
               </tr>

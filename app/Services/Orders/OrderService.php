@@ -198,6 +198,7 @@ class OrderService extends AbstractService implements JsonSerializable
 
         $order->save();
 
+        // TODO send order confirmation
         Mail::to($order->customer)->queue(new OrderReceipt($order));
 
         $this->controlClass->onCompleted($order);

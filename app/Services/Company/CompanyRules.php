@@ -26,6 +26,7 @@ class CompanyRules extends Rules
             'id' => 'sometimes|required|exists:companies,id',
             'name' => 'required|string|max:255',
             'orgnumber' => 'required|entity:organization',
+            'vat_number' => 'required|string|max:255',
             'official_website' => 'sometimes|nullable|url|max:255',
             'support_website' => 'sometimes|nullable|url|max:255',
             'terms_of_agreement_url' => 'sometimes|nullable|url|max:255',

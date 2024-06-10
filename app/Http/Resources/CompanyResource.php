@@ -18,6 +18,7 @@ class CompanyResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'orgnumber' => $this->orgnumber,
+            'vat_number' => $this->vat_number,
             'official_website' => $this->official_website,
             'support_website' => $this->support_website,
             'terms_of_agreement_url' => $this->terms_of_agreement_url,
