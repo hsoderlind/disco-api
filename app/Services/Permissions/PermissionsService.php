@@ -213,6 +213,13 @@ abstract class PermissionsService
         $permissions['update order status'] = Permission::findOrCreateWithGroup('update order status', 'Redigera order status', 'order statuses', $guardName);
         $permissions['delete order status'] = Permission::findOrCreateWithGroup('delete order status', 'Radera order status', 'order statuses', $guardName);
 
+        // Shipping methods
+        $permissions['access shipping method'] = Permission::findOrCreateWithGroup('access shipping method', 'Tillgång till leveranssätt', 'shipping methods', $guardName);
+        $permissions['create shipping method'] = Permission::findOrCreateWithGroup('create shipping method', 'Skapa leveranssätt', 'shipping methods', $guardName);
+        $permissions['read shipping method'] = Permission::findOrCreateWithGroup('read shipping method', 'Använda leveranssätt', 'shipping methods', $guardName);
+        $permissions['update shipping method'] = Permission::findOrCreateWithGroup('update shipping method', 'Redigera leveranssätt', 'shipping methods', $guardName);
+        $permissions['delete shipping method'] = Permission::findOrCreateWithGroup('delete shipping method', 'Radera leveranssätt', 'shipping methods', $guardName);
+
         return $permissions;
     }
 
@@ -254,6 +261,10 @@ abstract class PermissionsService
             $permissions['read tax'],
             $permissions['access payment methods'],
             $permissions['read payment methods'],
+            $permissions['access shipping method'],
+            $permissions['read shipping method'],
+            $permissions['access order total modules'],
+            $permissions['read order total modules'],
         ]);
 
         $roles[static::ROLE_WAREHOUSE_WORKER]->syncPermissions([

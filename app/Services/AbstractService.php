@@ -8,7 +8,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use JsonSerializable;
 use RuntimeException;
 
 abstract class AbstractService
@@ -49,12 +48,12 @@ abstract class AbstractService
             return new $this->resource($this->data);
         } elseif ($this->data instanceof Collection) {
             return ! is_null($this->collectionResource) && $this->collectionResource instanceof ResourceCollection ? new $this->collectionResource($this->data) : $this->resource::collection($this->data);
-        } elseif ($this->data instanceof JsonSerializable) {
-            $json = $this->data->jsonSerialize();
-            if (is_array($json) && Arr::isList($json)) {
-                return ! is_null($this->collectionResource) && $this->collectionResource instanceof ResourceCollection ? new $this->collectionResource($json) : $this->resource::collection($json);
-            } elseif (is_array($json) && Arr::isAssoc($json)) {
-                return new $this->resource($json);
+        } elseif (get_class($this->data) && method_exists($this->data, 'toArray')) {
+            $array = $this->data->toArray();
+            if (is_array($array) && Arr::isList($array)) {
+                return ! is_null($this->collectionResource) && $this->collectionResource instanceof ResourceCollection ? new $this->collectionResource($array) : $this->resource::collection($array);
+            } elseif (is_array($array) && Arr::isAssoc($array)) {
+                return new $this->resource($array);
             }
         } elseif (is_array($this->data) && Arr::isList($this->data)) {
             return ! is_null($this->collectionResource) && $this->collectionResource instanceof ResourceCollection ? new $this->collectionResource($this->data) : $this->resource::collection($this->data);

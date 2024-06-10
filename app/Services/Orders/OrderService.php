@@ -21,7 +21,7 @@ class OrderService extends AbstractService implements JsonSerializable
 {
     protected $resource = OrderResource::class;
 
-    protected ?\App\Services\PaymentMethod\Interfaces\PaymentMethod $controlClass = null;
+    protected ?\App\Services\PaymentMethod\Interfaces\PaymentMethod $paymentControlClass = null;
 
     protected array $inputs = [];
 
@@ -34,7 +34,7 @@ class OrderService extends AbstractService implements JsonSerializable
     {
         return [
             'data' => ! is_null($this->data) && method_exists($this->data, 'toArray') ? $this->data->toArray() : serialize($this->data),
-            'controlClass' => ! is_null($this->controlClass) ? get_class($this->controlClass) : null,
+            'paymentControlClass' => ! is_null($this->paymentControlClass) ? get_class($this->paymentControlClass) : null,
         ];
     }
 
@@ -56,7 +56,7 @@ class OrderService extends AbstractService implements JsonSerializable
         /** @var \App\Models\PaymentMethod $paymentMethod */
         $paymentMethod = PaymentMethodService::factory($this->shopId)->read($data['payment_name'])->get();
 
-        $this->controlClass = new $paymentMethod->control_class();
+        $this->paymentControlClass = new $paymentMethod->control_class();
 
         $this->data = DB::transaction(function () use ($data) {
             $customer = CustomerService::factory($this->shopId)->read($data['customer_id'])->get();
@@ -64,20 +64,20 @@ class OrderService extends AbstractService implements JsonSerializable
             /** @var \App\Models\Order $order */
             $order = $customer->orders()->create([]);
 
-            $result = $this->controlClass->onInitializing($order, $data);
+            $result = $this->paymentControlClass->onInitializing($order, $data);
 
             if (isset($result) && $result !== true) {
-                throw new OrderPaymentException($order->getKey(), $this->controlClass->getName(), is_string($result) ? $result : null);
+                throw new OrderPaymentException($order->getKey(), $this->paymentControlClass->getName(), is_string($result) ? $result : null);
             }
 
             return $order;
         });
 
-        $result = $this->controlClass->onInitialized($this->data, $data);
+        $result = $this->paymentControlClass->onInitialized($this->data, $data);
 
         if (isset($result) && $result !== true) {
             $this->data->delete();
-            throw new OrderPaymentException($this->data->getKey(), $this->controlClass->getName(), is_string($result) ? $result : null);
+            throw new OrderPaymentException($this->data->getKey(), $this->paymentControlClass->getName(), is_string($result) ? $result : null);
         }
 
         return $this;
@@ -117,15 +117,11 @@ class OrderService extends AbstractService implements JsonSerializable
             throw $e;
         }
 
-        if (! isset($this->controlClass)) {
-            $this->controlClass = new $order->paymentMethod->control_class();
-        }
-
-        $result = $this->controlClass->onProcessing($order);
+        $result = $this->paymentControlClass->onProcessing($order);
 
         if (isset($result) && $result !== true) {
             // TODO: set order status to failed
-            throw new OrderPaymentException($order->getKey(), $this->controlClass->getName(), is_string($result) ? $result : null);
+            throw new OrderPaymentException($order->getKey(), $this->paymentControlClass->getName(), is_string($result) ? $result : null);
         }
 
         $this->data = DB::transaction(function () use ($order) {
@@ -156,8 +152,8 @@ class OrderService extends AbstractService implements JsonSerializable
             $order->statusHistory()->create(['new_status_id' => $orderStatus->getKey()]);
 
             $order->payment()->create([
-                'payment_method_name' => $this->controlClass->getName(),
-                'title' => $this->controlClass->getTitle(),
+                'payment_method_name' => $this->paymentControlClass->getName(),
+                'title' => $this->paymentControlClass->getTitle(),
             ]);
 
             if (isset($this->inputs['note'])) {
@@ -166,10 +162,10 @@ class OrderService extends AbstractService implements JsonSerializable
 
             $order->save();
 
-            $result = $this->controlClass->onProcessed($order);
+            $result = $this->paymentControlClass->onProcessed($order);
 
             if (isset($result) && $result !== true) {
-                throw new OrderPaymentException($order->getKey(), $this->controlClass->getName(), is_string($result) ? $result : null);
+                throw new OrderPaymentException($order->getKey(), $this->paymentControlClass->getName(), is_string($result) ? $result : null);
             }
 
             return $order;
@@ -184,14 +180,14 @@ class OrderService extends AbstractService implements JsonSerializable
             $order = Order::inShop($this->shopId)->findOrFail($order);
         }
 
-        if (! isset($this->controlClass)) {
-            $this->controlClass = new $order->paymentMethod->control_class();
+        if (! isset($this->paymentControlClass)) {
+            $this->paymentControlClass = new $order->paymentMethod->control_class();
         }
 
-        $result = $this->controlClass->onComplete($order);
+        $result = $this->paymentControlClass->onComplete($order);
 
         if (isset($result) && $result !== true) {
-            throw new OrderPaymentException($order->getKey(), $this->controlClass->getName(), is_string($result) ? $result : null);
+            throw new OrderPaymentException($order->getKey(), $this->paymentControlClass->getName(), is_string($result) ? $result : null);
         }
 
         $order->receipt()->create([]);
@@ -201,7 +197,7 @@ class OrderService extends AbstractService implements JsonSerializable
         // TODO send order confirmation
         Mail::to($order->customer)->queue(new OrderReceipt($order));
 
-        $this->controlClass->onCompleted($order);
+        $this->paymentControlClass->onCompleted($order);
 
         $this->data = $order;
 

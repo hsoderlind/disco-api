@@ -72,7 +72,7 @@ class PaymentMethodService extends AbstractService
 
     public function read(string $name)
     {
-        $this->data = PaymentMethod::findOrFail($name);
+        $this->data = PaymentMethod::inShop($this->shopId)->where('name', $name)->firstOrFail();
 
         return $this;
     }

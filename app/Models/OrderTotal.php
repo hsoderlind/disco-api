@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Casts\MinorCurrency;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -37,15 +36,11 @@ class OrderTotal extends Model
     /**
      * Boot
      */
-
-    /**
-     * Attributes
-     */
-    public function valueFormatted(): Attribute
+    protected static function boot()
     {
-        return Attribute::make(
-            get: fn () => Number::currency($this->value, in: config('disco.currency'))
-        );
+        parent::boot();
+
+        static::creating(fn ($instance) => $instance->value_formatted = Number::currency($instance->value, in: config('disco.currency')));
     }
 
     /**

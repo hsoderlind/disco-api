@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Services\Orders;
+namespace App\Services\ShippingMethod;
 
 use App\Exceptions\ShopContextRequiredException;
-use App\Http\Resources\OrderTotalModulesCollection;
-use App\Http\Resources\OrderTotalModulesResource;
-use App\Models\OrderTotalRepository;
+use App\Http\Resources\ShippingModulesCollection;
+use App\Http\Resources\ShippingModulesResource;
+use App\Models\ShippingMethodRepository;
 use App\Services\AbstractService;
 use Illuminate\Support\Facades\DB;
 
-class ModulesService extends AbstractService
+class ModuleRepositoryService extends AbstractService
 {
-    protected $resource = OrderTotalModulesResource::class;
+    protected $resource = ShippingModulesResource::class;
 
-    protected $collectionResource = OrderTotalModulesCollection::class;
+    protected $collectionResource = ShippingModulesCollection::class;
 
     protected function boot()
     {
@@ -39,10 +39,10 @@ class ModulesService extends AbstractService
     public function install(string $name)
     {
         $this->data = DB::transaction(function () use ($name) {
-            /** @var \App\Services\Orders\Interfaces\OrderTotal $module */
+            /** @var \App\Services\ShippingMethod\Interfaces\ShippingMethod */
             $module = $this->read($name)->get();
 
-            $model = new OrderTotalRepository();
+            $model = new ShippingMethodRepository();
 
             $module->onInstalling($model);
 
@@ -59,7 +59,6 @@ class ModulesService extends AbstractService
 
             $model->control_class = get_class($module);
             $model->name = $module->getName();
-            $model->version = $module->getVersion();
 
             $model->save();
 
@@ -74,16 +73,16 @@ class ModulesService extends AbstractService
     public function update(string $name)
     {
         $this->data = DB::transaction(function () use ($name) {
-            /** @var \App\Services\Orders\Interfaces\OrderTotal $module */
+            /** @var \App\Services\ShippingMethod\Interfaces\ShippingMethod */
             $module = $this->read($name)->get();
 
-            $model = OrderTotalRepository::inShop($this->shopId)->where('name', $name)->firstOrFail();
+            $model = ShippingMethodRepository::inShop($this->shopId)->where('name', $name)->firstOrFail();
 
             $module->onUpdating($model);
 
             $model->fill([
                 'component' => $module->getCheckoutComponent(),
-                'admin_component' => $module->getAdminComponent(),
+                'admin_component' => $module->getCheckoutComponent(),
                 'configuration' => [...($model->configuration ?? []), ...($module->getConfiguration() ?? [])],
             ]);
 
@@ -96,8 +95,6 @@ class ModulesService extends AbstractService
             $model->save();
 
             $module->onUpdated($model);
-
-            return $model;
         });
 
         return $this;
@@ -106,10 +103,10 @@ class ModulesService extends AbstractService
     public function uninstall(string $name)
     {
         $this->data = DB::transaction(function () use ($name) {
-            /** @var \App\Services\Orders\Interfaces\OrderTotal $module */
+            /** @var \App\Services\ShippingMethod\Interfaces\ShippingMethod */
             $module = $this->read($name)->get();
 
-            $model = OrderTotalRepository::inShop($this->shopId)->where('name', $name)->firstOrFail();
+            $model = ShippingMethodRepository::inShop($this->shopId)->where('name', $name)->firstOrFail();
 
             $module->onUninstalling($model);
 

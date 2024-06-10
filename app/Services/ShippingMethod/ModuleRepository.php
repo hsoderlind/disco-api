@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Orders;
+namespace App\Services\ShippingMethod;
 
 use Illuminate\Support\Collection;
 use JsonSerializable;
@@ -15,7 +15,7 @@ class ModuleRepository implements JsonSerializable
 
     private static $instance = null;
 
-    public static function make(): ModuleRepository
+    public static function make()
     {
         if (is_null(static::$instance)) {
             static::$instance = new static();
@@ -26,7 +26,7 @@ class ModuleRepository implements JsonSerializable
 
     private function __construct()
     {
-        $this->modules = $this->collect(config('order_total.modules'));
+        $this->modules = $this->collect(config('shipping_method.modules'));
     }
 
     public function collect(array $modules)

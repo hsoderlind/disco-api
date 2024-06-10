@@ -11,8 +11,7 @@ Route::controller(ShopController::class)
         Route::post('/', 'create')
             ->name('shop.create');
         Route::get('/{urlAlias}', 'readByUrlAlias')
-            ->name('shop.readByUrlAlias')
-            ->whereAlpha('urlAlias');
+            ->name('shop.readByUrlAlias');
         Route::get('/{id}', 'read')
             ->name('shop.read')
             ->whereNumber('id');

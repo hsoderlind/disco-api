@@ -31,7 +31,7 @@ class OrderTotalRepositoryService extends AbstractService
 
     public function read(string $name)
     {
-        $this->data = OrderTotalRepository::inShop($this->shopId)->findOrFail($name);
+        $this->data = OrderTotalRepository::inShop($this->shopId)->where('name', $name)->firstOrFail();
 
         return $this;
     }

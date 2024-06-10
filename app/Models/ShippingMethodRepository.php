@@ -11,17 +11,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 /**
+ * @property-read int $id
  * @property string $name
  * @property-read int $shop_id
  * @property string $title
  * @property string|null $description
- * @property int $sort_order
- * @property bool $active
+ * @property array|null $configuration
  * @property int $fee
- * @property class $control_class
  * @property string $component
  * @property string|null $admin_component
- * @property array|null $configuration
+ * @property int $sort_order
+ * @property bool $active
+ * @property string $control_class
  * @property string $version
  * @property-read \App\Models\Logotype|null $logotype
  * @property-read \App\Models\Shop $shop
@@ -29,34 +30,28 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  */
-class PaymentMethod extends Model
+class ShippingMethodRepository extends Model
 {
     use HasFactory;
-
-    protected $primaryKey = 'name';
-
-    protected $keyType = 'string';
-
-    public $incrementing = false;
-
-    protected $with = ['logotype'];
 
     protected $fillable = [
         'title',
         'description',
+        'configuration',
+        'fee',
         'sort_order',
         'active',
-        'fee',
-        'component',
-        'admin_component',
-        'configuration',
     ];
 
     protected $casts = [
         'fee' => MinorCurrency::class,
         'configuration' => 'array',
+        'active' => 'boolean',
     ];
 
+    /**
+     * Boot
+     */
     protected static function boot()
     {
         parent::boot();
@@ -64,7 +59,13 @@ class PaymentMethod extends Model
         static::creating(fn ($instance) => $instance->shop_id = ShopSession::getId());
     }
 
-    // Relationships
+    /**
+     * Attributes
+     */
+
+    /**
+     * Relationships
+     */
     public function shop(): BelongsTo
     {
         return $this->belongsTo(Shop::class);
@@ -75,7 +76,9 @@ class PaymentMethod extends Model
         return $this->morphOne(Logotype::class, 'logotypeable');
     }
 
-    // Scopes
+    /**
+     * Scopes
+     */
     public function scopeInShop(Builder $query, int $shopId)
     {
         return $query->where('shop_id', '=', $shopId);

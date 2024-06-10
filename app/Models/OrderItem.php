@@ -58,6 +58,15 @@ class OrderItem extends Model
     /**
      * Boot
      */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($instance) {
+            $instance->price_incl_vat_formatted = Number::currency($instance->calcPriceIncVat(), in: config('disco.currency'));
+            $instance->total_incl_vat_formatted = Number::currency($instance->calcTotalInclVat(), in: config('disco.currency'));
+        });
+    }
 
     /**
      * Attributes
@@ -73,20 +82,6 @@ class OrderItem extends Model
     {
         return Attribute::make(
             get: fn () => $this->calcTotalInclVat()
-        );
-    }
-
-    public function priceInclVatFormatted(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => Number::currency($this->calcPriceIncVat(), in: config('disco.currency'))
-        );
-    }
-
-    public function totalInclVatFormatted(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => Number::currency($this->calcTotalInclVat(), in: config('disco.currency'))
         );
     }
 
