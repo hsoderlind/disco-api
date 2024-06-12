@@ -49,6 +49,7 @@ class ModuleRepositoryService extends AbstractService
             $model->fill([
                 'title' => $module->getTitle(),
                 'description' => $module->getDescription(),
+                'fee' => 0,
                 'sort_order' => 0,
                 'active' => true,
                 'component' => $module->getCheckoutComponent(),

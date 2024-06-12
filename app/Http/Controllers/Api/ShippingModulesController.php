@@ -23,7 +23,7 @@ class ShippingModulesController extends Controller
 
     public function install(ShippingModulesRequest $request)
     {
-        return $this->service->install($request->validated())->toResource();
+        return $this->service->install($request->validated('name'))->toResource();
     }
 
     public function read(ShippingModulesRequest $request, string $name)

@@ -41,6 +41,9 @@ class ShippingMethodRepository extends Model
         'fee',
         'sort_order',
         'active',
+        'component',
+        'admin_component',
+        'version',
     ];
 
     protected $casts = [
