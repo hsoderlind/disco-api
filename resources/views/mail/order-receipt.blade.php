@@ -112,7 +112,8 @@
                     @if (isset($order->customer->email)) E-postadress: {{ $order->customer->email }}<br>
                     @endif @if (isset($order->customer->phone)) Telefon: {{ $order->customer->phone
 									}}<br>
-                    @endif Betalningssätt {{ $order->payment->title }}
+                    @endif Betalningssätt {{ $order->payment->title }}<br>
+                    Leveranssätt: {{ $order->shipping?->title }}
                   </p>
                   <div style="margin-top: 32px;">
                     <p style="margin-bottom: 8px"><b style="text-transform: uppercase;">Produktinformation</b></p>

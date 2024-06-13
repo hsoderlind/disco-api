@@ -26,6 +26,7 @@ class OrdersRules extends Rules
             'id' => ['sometimes', 'required', new ExistsInShop('orders')],
             'customer_id' => 'required|exists:customers,id',
             'payment_name' => ['required', 'string', new ExistsInShop('payment_methods', 'name')],
+            'shipping_name' => ['required', 'string', new ExistsInShop('shipping_method_repositories', 'name')],
             ...$this->merge('items', new OrderItemsRules($this->request), 'required', true, checkArrayKeys: false),
             'totals' => 'required|array',
             'totals.*.name' => 'required|string|max:255',

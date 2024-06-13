@@ -30,7 +30,8 @@
 									@if (isset($order->customer->email)) E-postadress: @{{ $order->customer->email }}<br />
 									@endif @if (isset($order->customer->phone)) Telefon: @{{ $order->customer->phone
 									}}<br />
-									@endif Betalningssätt @{{ $order->payment->title }}
+									@endif Betalningssätt @{{ $order->payment->title }}<br />
+									Leveranssätt: @{{ $order->shipping?->title }}
 								</p>
 
 								<x-order-items />

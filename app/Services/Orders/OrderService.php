@@ -10,9 +10,12 @@ use App\Services\Customer\CustomerService;
 use App\Services\Note\NoteService;
 use App\Services\Orders\Exceptions\OrderItemException;
 use App\Services\Orders\Exceptions\OrderPaymentException;
+use App\Services\Orders\Exceptions\OrderShippingException;
 use App\Services\OrderStatus\OrderStatusService;
 use App\Services\PaymentMethod\PaymentMethodService;
 use App\Services\ProductStock\ProductStockService;
+use App\Services\ShippingMethod\Interfaces\ShippingMethod;
+use App\Services\ShippingMethod\ShippingMethodService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use JsonSerializable;
@@ -22,6 +25,8 @@ class OrderService extends AbstractService implements JsonSerializable
     protected $resource = OrderResource::class;
 
     protected ?\App\Services\PaymentMethod\Interfaces\PaymentMethod $paymentControlClass = null;
+
+    protected ?ShippingMethod $shippingControlClass = null;
 
     protected array $inputs = [];
 
@@ -35,6 +40,7 @@ class OrderService extends AbstractService implements JsonSerializable
         return [
             'data' => ! is_null($this->data) && method_exists($this->data, 'toArray') ? $this->data->toArray() : serialize($this->data),
             'paymentControlClass' => ! is_null($this->paymentControlClass) ? get_class($this->paymentControlClass) : null,
+            'shippingControlClass' => ! is_null($this->shippingControlClass) ? get_class($this->shippingControlClass) : null,
         ];
     }
 
@@ -53,10 +59,15 @@ class OrderService extends AbstractService implements JsonSerializable
     {
         $this->inputs = $data;
 
-        /** @var \App\Models\PaymentMethod $paymentMethod */
+        /** @var \App\Models\PaymentMethod */
         $paymentMethod = PaymentMethodService::factory($this->shopId)->read($data['payment_name'])->get();
 
         $this->paymentControlClass = new $paymentMethod->control_class();
+
+        /** @var \App\Models\ShippingMethodRepository */
+        $shippingMethod = ShippingMethodService::factory($this->shopId)->read($data['shipping_name'])->get();
+
+        $this->shippingControlClass = new $shippingMethod->control_class();
 
         $this->data = DB::transaction(function () use ($data) {
             $customer = CustomerService::factory($this->shopId)->read($data['customer_id'])->get();
@@ -67,7 +78,13 @@ class OrderService extends AbstractService implements JsonSerializable
             $result = $this->paymentControlClass->onInitializing($order, $data);
 
             if (isset($result) && $result !== true) {
-                throw new OrderPaymentException($order->getKey(), $this->paymentControlClass->getName(), is_string($result) ? $result : null);
+                throw $this->orderPaymentException($order, $result);
+            }
+
+            $result = $this->shippingControlClass->onInitializing($order, $data);
+
+            if (isset($result) && $result !== true) {
+                throw $this->orderShippingException($order, $result);
             }
 
             return $order;
@@ -77,31 +94,17 @@ class OrderService extends AbstractService implements JsonSerializable
 
         if (isset($result) && $result !== true) {
             $this->data->delete();
-            throw new OrderPaymentException($this->data->getKey(), $this->paymentControlClass->getName(), is_string($result) ? $result : null);
+            throw $this->orderPaymentException($this->data, $result);
+        }
+
+        $result = $this->shippingControlClass->onInitialized($this->data, $data);
+
+        if (isset($result) && $result !== true) {
+            $this->data->delete();
+            throw $this->orderShippingException($this->data, $result);
         }
 
         return $this;
-    }
-
-    public function validateItems(Order $order)
-    {
-        $productStockService = ProductStockService::factory($this->shopId);
-
-        foreach ($this->inputs['items'] as $item) {
-            if (! $productStockService->canReserveItem($item['product_id'], $item['quantity'])) {
-                $productStockService->sendOutOfStockMail($item['product_id'], $item['quantity']);
-                throw new OrderItemException($order->getKey(), $item['product_id'], 'Inte tillräckligt stort lagerantal för att kunna reservera produkterna.');
-            }
-        }
-    }
-
-    public function updateStock()
-    {
-        $productStockService = ProductStockService::factory($this->shopId);
-
-        foreach ($this->inputs['items'] as $item) {
-            $productStockService->reserveItem($item['product_id'], $item['quantity']);
-        }
     }
 
     public function processOrder(int|Order $order)
@@ -121,7 +124,14 @@ class OrderService extends AbstractService implements JsonSerializable
 
         if (isset($result) && $result !== true) {
             // TODO: set order status to failed
-            throw new OrderPaymentException($order->getKey(), $this->paymentControlClass->getName(), is_string($result) ? $result : null);
+            throw $this->orderPaymentException($order, $result);
+        }
+
+        $result = $this->shippingControlClass->onProcessing($order);
+
+        if (isset($result) && $result !== true) {
+            // TODO: set order status to failed
+            throw $this->orderShippingException($order, $result);
         }
 
         $this->data = DB::transaction(function () use ($order) {
@@ -157,6 +167,11 @@ class OrderService extends AbstractService implements JsonSerializable
                 'title' => $this->paymentControlClass->getTitle(),
             ]);
 
+            $order->shipping()->create([
+                'shipping_method_name' => $this->shippingControlClass->getName(),
+                'title' => $this->shippingControlClass->getTitle(),
+            ]);
+
             if (isset($this->inputs['note'])) {
                 NoteService::factory($this->shopId)->setRelationModel($order)->create(['content' => $this->inputs['note']]);
             }
@@ -166,7 +181,13 @@ class OrderService extends AbstractService implements JsonSerializable
             $result = $this->paymentControlClass->onProcessed($order);
 
             if (isset($result) && $result !== true) {
-                throw new OrderPaymentException($order->getKey(), $this->paymentControlClass->getName(), is_string($result) ? $result : null);
+                throw $this->orderPaymentException($order, $result);
+            }
+
+            $result = $this->shippingControlClass->onProcessed($order);
+
+            if (isset($result) && $result !== true) {
+                throw $this->orderShippingException($order, $result);
             }
 
             return $order;
@@ -181,14 +202,16 @@ class OrderService extends AbstractService implements JsonSerializable
             $order = Order::inShop($this->shopId)->findOrFail($order);
         }
 
-        if (! isset($this->paymentControlClass)) {
-            $this->paymentControlClass = new $order->paymentMethod->control_class();
-        }
-
         $result = $this->paymentControlClass->onComplete($order);
 
         if (isset($result) && $result !== true) {
-            throw new OrderPaymentException($order->getKey(), $this->paymentControlClass->getName(), is_string($result) ? $result : null);
+            throw $this->orderPaymentException($order, $result);
+        }
+
+        $result = $this->shippingControlClass->onComplete($order);
+
+        if (isset($result) && $result !== true) {
+            throw $this->orderShippingException($order, $result);
         }
 
         $order->receipt()->create([]);
@@ -199,6 +222,8 @@ class OrderService extends AbstractService implements JsonSerializable
         Mail::to($order->customer)->queue(new OrderReceipt($order));
 
         $this->paymentControlClass->onCompleted($order);
+
+        $this->shippingControlClass->onCompleted($order);
 
         $this->data = $order;
 
@@ -243,5 +268,36 @@ class OrderService extends AbstractService implements JsonSerializable
         }
 
         return $this;
+    }
+
+    protected function validateItems(Order $order)
+    {
+        $productStockService = ProductStockService::factory($this->shopId);
+
+        foreach ($this->inputs['items'] as $item) {
+            if (! $productStockService->canReserveItem($item['product_id'], $item['quantity'])) {
+                $productStockService->sendOutOfStockMail($item['product_id'], $item['quantity']);
+                throw new OrderItemException($order->getKey(), $item['product_id'], 'Inte tillräckligt stort lagerantal för att kunna reservera produkterna.');
+            }
+        }
+    }
+
+    protected function updateStock()
+    {
+        $productStockService = ProductStockService::factory($this->shopId);
+
+        foreach ($this->inputs['items'] as $item) {
+            $productStockService->reserveItem($item['product_id'], $item['quantity']);
+        }
+    }
+
+    protected function orderPaymentException(Order $order, mixed $reason = null)
+    {
+        new OrderPaymentException($order->getKey(), $this->paymentControlClass->getName(), is_string($reason) ? $reason : null);
+    }
+
+    protected function orderShippingException(Order $order, mixed $reason = null)
+    {
+        new OrderShippingException($order->getKey(), $this->shippingControlClass->getName(), is_string($reason) ? $reason : null);
     }
 }

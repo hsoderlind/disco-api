@@ -32,6 +32,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderTotal[] $totals
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderItem[] $items
  * @property-read \App\Models\OrderPayment $payment
+ * @property-read \App\Models\OrderShipping $shipping
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderStatusHistory $statusHistory
  * @property-read \App\Models\OrderStatusHistory $currentStatus
  * @property-read \App\Models\Shop $shop
@@ -110,6 +111,11 @@ class Order extends Model
     public function payment(): HasOne
     {
         return $this->hasOne(OrderPayment::class);
+    }
+
+    public function shipping(): HasOne
+    {
+        return $this->hasOne(OrderShipping::class);
     }
 
     public function statusHistory(): HasMany
