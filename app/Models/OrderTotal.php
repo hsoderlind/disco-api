@@ -17,6 +17,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property string $label
  * @property int $value
  * @property-read int $value_formatted
+ * @property int $vat
  * @property int $sort_order
  */
 class OrderTotal extends Model
@@ -27,10 +28,12 @@ class OrderTotal extends Model
         'name',
         'label',
         'value',
+        'vat',
     ];
 
     protected $casts = [
         'value' => MinorCurrency::class,
+        'vat' => MinorCurrency::class,
     ];
 
     /**

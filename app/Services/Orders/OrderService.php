@@ -141,6 +141,7 @@ class OrderService extends AbstractService implements JsonSerializable
                         'name' => $value['name'],
                         'label' => $entry['label'],
                         'value' => $entry['value'],
+                        'vat' => $entry['vat'] ?? null,
                         'sort_order' => $nextSortOrder,
                     ];
                 }
