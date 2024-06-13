@@ -3,17 +3,14 @@
 	<table class="w-full border-solid border-r-0 border-b-0 border-l-0 border-t-2 border-t-cyan-800 mb-4">
 		@foreach ($order->items as $item)
 		<tr>
-			<td class="w-[100px] p-3">&nbsp;</td>
-			<td class="p-3">
+			<td class="py-3 border-solid border-t-0 border-r-0 border-l-0 border-b-2 border-b-cyan-800">
 				<b class="uppercase">@{{ $item->product_name }}</b><br />
 				Antal: @{{ $item->quantity }}<br />
 				Art.nr: @{{ $item->item_number }}
 			</td>
-		</tr>
-		<tr>
 			<td
 				colspan="2"
-				class="text-right p-3 border-solid border-t-0 border-r-0 border-l-0 border-b-2 border-b-cyan-800"
+				class="text-right py-3 border-solid border-t-0 border-r-0 border-l-0 border-b-2 border-b-cyan-800 align-bottom"
 			>
 				á pris @{{ $item->price_incl_vat_formatted }}<br />
 				Delsumma @{{ $item->total_incl_vat_formatted }}

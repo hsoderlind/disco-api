@@ -66,8 +66,6 @@ class Account extends Model
             'address2' => $this->address2,
             'zip' => $this->zip,
             'city' => $this->city,
-            'state' => $this->state,
-            'country' => $this->country,
         ])->filter(fn ($value) => ! is_null($value));
 
         if ($skipName) {

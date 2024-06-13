@@ -11,34 +11,34 @@
 								<p
 									class="mb-3 py-3 border-solid border-r-0 border-l-0 border-t-2 border-b-2 border-t-cyan-800 border-b-cyan-800 text-lg uppercase"
 								>
-									Kvitto från @{{ $order->shop->name }} - Order nr. @{{ $order->order_number }}.
+									Orderbekräftelse från @{{ $order->shop->name }} - Order nr. @{{ $order->order_number
+									}}.
 								</p>
 
 								<p class="mb-3">
 									<b>Hej @{{ $order->customer->name }}</b>
 									<br />
-									Tack för att du handlar hos @{{ $order->shop->name }}! Din beställning är nu på väg
-									från oss till dig.
+									Tack för din beställning! Vi har mottagit din beställning och kommer skicka dig ett
+									kvitto när ditt paket har skickats.
 								</p>
 
 								<p class="mb-3 mt-8">
 									<b class="uppercase">Ordersammanfattning</b>
 									<br />
 									Ordernummer: @{{ $order->order_number }}<br />
-									Kvittonummer: @{{ $order->receipt->receipt_number }}<br />
 									Datum: @{{ $order->created_at->format('Y-m-d H:i') }}<br />
 									Namn: @{{ $order->customer->name }}<br />
 									@if (isset($order->customer->email)) E-postadress: @{{ $order->customer->email }}<br />
 									@endif @if (isset($order->customer->phone)) Telefon: @{{ $order->customer->phone
 									}}<br />
-									@endif Faktureringsadress: @{{ $order->customer->billingAddress->inline(true) }}<br />
-									Betalningssätt @{{ $order->payment->title }}<br />
+									@endif Faktureringsadress: @{{ $billingAddress }}<br />
+									Betalningssätt @{{ $order->payment?->title }}<br />
 								</p>
 
 								<p class="mb-3 mt-8">
 									<b class="uppercase">Leverans</b><br />
-									Frakt: @{{ $order->shipping->title }}<br />
-									Leveransadress: @{{ $order->customer->shippingAddress->inline(true) }}<br />
+									Frakt: @{{ $order->shipping?->title }}<br />
+									Leveransadress: @{{ $shippingAddress }}<br />
 								</p>
 
 								<x-order-items />

@@ -3,7 +3,7 @@
 namespace App\Services\Orders;
 
 use App\Http\Resources\OrderResource;
-use App\Mail\OrderReceipt;
+use App\Mail\OrderConfirmation;
 use App\Models\Order;
 use App\Services\AbstractService;
 use App\Services\Customer\CustomerService;
@@ -214,12 +214,9 @@ class OrderService extends AbstractService implements JsonSerializable
             throw $this->orderShippingException($order, $result);
         }
 
-        $order->receipt()->create([]);
-
         $order->save();
 
-        // TODO send order confirmation
-        Mail::to($order->customer)->queue(new OrderReceipt($order));
+        Mail::to($order->customer)->queue(new OrderConfirmation($order));
 
         $this->paymentControlClass->onCompleted($order);
 

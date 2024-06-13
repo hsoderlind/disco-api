@@ -95,31 +95,31 @@
               <tr>
                 <td class="sm-px-6" style="border-radius: 4px; background-color: #fff; padding: 48px; font-size: 16px; color: #334155; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05)">
                   <p style="margin-bottom: 12px; border-left-width: 0px; border-right-width: 0px; border-left-style: solid; border-right-style: solid; border-bottom: 2px solid #155e75; border-top: 2px solid #155e75; padding-top: 12px; padding-bottom: 12px; font-size: 18px; text-transform: uppercase">
-                    Kvitto från {{ $order->shop->name }} - Order nr. {{ $order->order_number }}.
+                    Orderbekräftelse från {{ $order->shop->name }} - Order nr. {{ $order->order_number
+									}}.
                   </p>
                   <p style="margin-bottom: 12px;">
                     <b>Hej {{ $order->customer->name }}</b>
                     <br>
-                    Tack för att du handlar hos {{ $order->shop->name }}! Din beställning är nu på väg
-                    från oss till dig.
+                    Tack för din beställning! Vi har mottagit din beställning och kommer skicka dig ett
+                    kvitto när ditt paket har skickats.
                   </p>
                   <p style="margin-bottom: 12px; margin-top: 32px">
                     <b style="text-transform: uppercase;">Ordersammanfattning</b>
                     <br>
                     Ordernummer: {{ $order->order_number }}<br>
-                    Kvittonummer: {{ $order->receipt->receipt_number }}<br>
                     Datum: {{ $order->created_at->format('Y-m-d H:i') }}<br>
                     Namn: {{ $order->customer->name }}<br>
                     @if (isset($order->customer->email)) E-postadress: {{ $order->customer->email }}<br>
                     @endif @if (isset($order->customer->phone)) Telefon: {{ $order->customer->phone
 									}}<br>
-                    @endif Faktureringsadress: {{ $order->customer->billingAddress->inline(true) }}<br>
-                    Betalningssätt {{ $order->payment->title }}<br>
+                    @endif Faktureringsadress: {{ $billingAddress }}<br>
+                    Betalningssätt {{ $order->payment?->title }}<br>
                   </p>
                   <p style="margin-bottom: 12px; margin-top: 32px;">
                     <b style="text-transform: uppercase;">Leverans</b><br>
-                    Frakt: {{ $order->shipping->title }}<br>
-                    Leveransadress: {{ $order->customer->shippingAddress->inline(true) }}<br>
+                    Frakt: {{ $order->shipping?->title }}<br>
+                    Leveransadress: {{ $shippingAddress }}<br>
                   </p>
                   <div style="margin-top: 32px;">
                     <p style="margin-bottom: 8px"><b style="text-transform: uppercase;">Produktinformation</b></p>
