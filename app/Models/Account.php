@@ -54,4 +54,26 @@ class Account extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * Methods
+     */
+    public function inline(bool $skipName = false)
+    {
+        $result = collect([
+            'name' => $this->name,
+            'address1' => $this->address1,
+            'address2' => $this->address2,
+            'zip' => $this->zip,
+            'city' => $this->city,
+            'state' => $this->state,
+            'country' => $this->country,
+        ])->filter(fn ($value) => ! is_null($value));
+
+        if ($skipName) {
+            $result = $result->except(['name']);
+        }
+
+        return $result->join(', ');
+    }
 }

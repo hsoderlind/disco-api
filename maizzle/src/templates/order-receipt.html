@@ -30,8 +30,14 @@
 									@if (isset($order->customer->email)) E-postadress: @{{ $order->customer->email }}<br />
 									@endif @if (isset($order->customer->phone)) Telefon: @{{ $order->customer->phone
 									}}<br />
-									@endif Betalningssätt @{{ $order->payment->title }}<br />
-									Leveranssätt: @{{ $order->shipping?->title }}
+									@endif Faktureringsadress: @{{ $order->customer->billingAddress->inline(true) }}<br />
+									Betalningssätt @{{ $order->payment->title }}<br />
+								</p>
+
+								<p class="mb-3 mt-8">
+									<b class="uppercase">Leverans</b><br />
+									Frakt: @{{ $order->shipping->title }}<br />
+									Leveransadress: @{{ $order->customer->shippingAddress->inline(true) }}<br />
 								</p>
 
 								<x-order-items />
