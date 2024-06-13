@@ -20,7 +20,7 @@ class ShippingMethodRules extends Rules
     public function getRules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', new ExistsInShop('shipping_methods')],
+            'name' => ['required', 'string', 'max:255', new ExistsInShop('shipping_method_repositories')],
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'configuration' => 'nullable|array',

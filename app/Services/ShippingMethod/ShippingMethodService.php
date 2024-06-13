@@ -6,6 +6,7 @@ use App\Http\Resources\ShippingMethodResource;
 use App\Models\ShippingMethodRepository;
 use App\Services\AbstractService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ShippingMethodService extends AbstractService
 {
@@ -32,6 +33,7 @@ class ShippingMethodService extends AbstractService
 
     public function update(string $name, array $data)
     {
+        Log::info('DATA: '.json_encode($data));
         $this->data = DB::transaction(function () use ($name, $data) {
             /** @var \App\Models\ShippingMethodRepository */
             $model = $this->read($name)->get();

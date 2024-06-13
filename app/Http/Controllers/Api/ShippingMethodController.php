@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ShippingMethodRequest;
 use App\Services\ShippingMethod\ShippingMethodService;
 use App\Services\Shop\ShopSession;
-use Illuminate\Foundation\Http\FormRequest;
 
 class ShippingMethodController extends Controller
 {
@@ -16,17 +16,17 @@ class ShippingMethodController extends Controller
         $this->service = ShippingMethodService::factory(ShopSession::getId());
     }
 
-    public function index(FormRequest $request)
+    public function index(ShippingMethodRequest $request)
     {
         return $this->service->list()->toResource();
     }
 
-    public function read(FormRequest $request, string $name)
+    public function read(ShippingMethodRequest $request, string $name)
     {
         return $this->service->read($name)->toResource();
     }
 
-    public function update(FormRequest $request, string $name)
+    public function update(ShippingMethodRequest $request, string $name)
     {
         return $this->service->update($name, $request->validated())->toResource();
     }
