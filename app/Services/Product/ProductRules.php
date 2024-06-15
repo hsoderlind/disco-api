@@ -32,6 +32,7 @@ class ProductRules extends Rules
             'tax_id' => 'integer',
             'supplier_id' => 'integer',
             'manufacturer_id' => 'integer',
+            'item_number' => 'nullable|string|max:255',
             'price' => 'required|numeric|integer',
             'cost_price' => 'sometimes|required|numeric|integer',
             'reference' => 'nullable|string|max:255',

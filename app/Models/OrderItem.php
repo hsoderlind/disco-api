@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Number;
 use Spatie\Activitylog\LogOptions;
@@ -31,7 +30,6 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property-read \App\Models\Order $order
  * @property-read \App\Models\Product $product
  * @property-read \App\Models\Tax $tax
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderAttribute[] $itemAttributes
  */
 class OrderItem extends Model
 {
@@ -101,11 +99,6 @@ class OrderItem extends Model
     public function tax(): BelongsTo
     {
         return $this->belongsTo(Tax::class);
-    }
-
-    public function itemAttributes(): HasMany
-    {
-        return $this->hasMany(OrderAttribute::class);
     }
 
     /**
