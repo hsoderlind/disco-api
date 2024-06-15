@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $tax_id
  * @property int $supplier_id
  * @property int $manufacturer_id
+ * @property string $item_number
  * @property int $price
  * @property int $cost_price
  * @property string|null $reference
@@ -68,6 +69,7 @@ class Product extends Model
         'tax_id',
         'supplier_id',
         'manufacturer_id',
+        'item_number',
         'price',
         'cost_price',
         'reference',

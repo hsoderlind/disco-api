@@ -2,6 +2,7 @@
 
 namespace App\Services\Product;
 
+use App\Rules\ExistsInShop;
 use App\Services\Barcode\BarcodeRules;
 use App\Services\ProductAttribute\ProductAttributeRules;
 use App\Services\ProductFile\ProductFileRules;
@@ -29,7 +30,7 @@ class ProductRules extends Rules
     public function getRules(): array
     {
         $rules = [
-            'tax_id' => 'integer',
+            'tax_id' => ['required', 'integer', new ExistsInShop('taxes', 'id')],
             'supplier_id' => 'integer',
             'manufacturer_id' => 'integer',
             'item_number' => 'nullable|string|max:255',

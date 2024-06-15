@@ -13,7 +13,6 @@ use App\Services\ProductStock\ProductStockService;
 use App\Services\Tax\TaxService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class ProductService
 {
@@ -108,6 +107,7 @@ class ProductService
             $product = new Product(
                 collect($data)->only([
                     'state',
+                    'item_number',
                     'price',
                     'cost_price',
                     'reference',
@@ -158,17 +158,18 @@ class ProductService
             return $product;
         } catch (\Exception $e) {
             DB::rollBack();
+            throw $e;
         }
     }
 
     public function update(int $id, array $data): Product
     {
-        Log::info('JSON: '.json_encode($data));
         DB::beginTransaction();
         try {
             $product = Product::inShop($this->shopId)->findOrFail($id);
             $product->update(collect($data)->only([
                 'state',
+                'item_number',
                 'price',
                 'cost_price',
                 'reference',
@@ -227,6 +228,7 @@ class ProductService
             return $product;
         } catch (\Exception $e) {
             DB::rollBack();
+            throw $e;
         }
     }
 
