@@ -4,7 +4,6 @@ namespace App\Services\ProductAttribute;
 
 use App\Models\AttributeProduct;
 use App\Models\Product;
-use App\Services\ProductAttributeStock\ProductAttributeStockService;
 use Illuminate\Support\Facades\DB;
 
 class ProductAttributeService
@@ -49,11 +48,6 @@ class ProductAttributeService
             $productAttribute->product()->associate($product->getKey());
 
             $productAttribute->save();
-
-            if (isset($data['stock'])) {
-                $attributeStock = (new ProductAttributeStockService($this->shopId))->create($productAttribute, $data['stock']);
-                $productAttribute->stock()->save($attributeStock);
-            }
 
             return $productAttribute;
         });

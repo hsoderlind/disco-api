@@ -22,7 +22,6 @@ class ProductAttributeResource extends JsonResource
             'attribute_value_id' => $this->attribute_value_id,
             'attribute_type' => new AttributeTypeResource($this->attributeType),
             'attribute_value' => new AttributeValueResource($this->attributeValue),
-            'stock' => new AttributeStockResource($this->stock),
         ];
     }
 }

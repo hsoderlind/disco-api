@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property-read int $id
@@ -20,7 +19,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property-read \App\Models\Product $product
  * @property-read \App\Models\AttributeType $attribute_type
  * @property-read \App\Models\AttributeValue $attribute_value
- * @property-read \App\Models\AttributeStock $stock
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
@@ -37,7 +35,6 @@ class AttributeProduct extends Model
     protected $with = [
         'attributeValue',
         'attributeType',
-        'stock',
     ];
 
     protected $casts = [
@@ -65,11 +62,6 @@ class AttributeProduct extends Model
     public function attributeType(): BelongsTo
     {
         return $this->belongsTo(AttributeType::class);
-    }
-
-    public function stock(): HasOne
-    {
-        return $this->hasOne(AttributeStock::class);
     }
 
     // Local Scopes
