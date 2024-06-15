@@ -18,6 +18,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property-read int $product_id
  * @property-read int $tax_id
  * @property string $product_name
+ * @property string $item_number
  * @property int $price
  * @property-read int $price_incl_vat
  * @property-read int $price_incl_vat_formatted
@@ -39,6 +40,7 @@ class OrderItem extends Model
         'product_id',
         'tax_id',
         'product_name',
+        'item_number',
         'price',
         'total',
         'vat',

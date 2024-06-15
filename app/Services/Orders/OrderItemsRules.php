@@ -26,6 +26,7 @@ class OrderItemsRules extends Rules
             'product_id' => ['required', new ExistsInShop('products', 'id')],
             'tax_id' => ['required', new ExistsInShop('taxes', 'id')],
             'product_name' => 'required|string|max:255',
+            'item_number' => 'nullable|string|max:255',
             'price' => 'required|integer',
             'total' => 'required|integer',
             'vat' => 'required|integer',
