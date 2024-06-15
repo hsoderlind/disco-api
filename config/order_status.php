@@ -16,6 +16,12 @@ return [
             'description' => 'Skicka mejl med orderkvitto till kunden.',
             'handler' => '', // The action to perform on the order
         ],
+        'order_partial_shipped' => [
+            'name' => 'order_partial_shipped',
+            'title' => 'Skicka kvitto på delleverans',
+            'description' => 'Skicka mejl med orderkvitto på delleverans',
+            'handler' => '', // The action to perform on the order
+        ],
         'order_cancellation' => [
             'name' => 'order_cancellation',
             'title' => 'Skicka orderavslag',
