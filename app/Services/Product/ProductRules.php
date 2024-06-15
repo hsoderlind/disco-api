@@ -30,6 +30,7 @@ class ProductRules extends Rules
     public function getRules(): array
     {
         $rules = [
+            'state' => 'required|string|max:255',
             'tax_id' => ['required', 'integer', new ExistsInShop('taxes', 'id')],
             'supplier_id' => 'integer',
             'manufacturer_id' => 'integer',
