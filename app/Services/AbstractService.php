@@ -48,7 +48,7 @@ abstract class AbstractService
             return new $this->resource($this->data);
         } elseif ($this->data instanceof Collection) {
             return ! is_null($this->collectionResource) && $this->collectionResource instanceof ResourceCollection ? new $this->collectionResource($this->data) : $this->resource::collection($this->data);
-        } elseif (get_class($this->data) && method_exists($this->data, 'toArray')) {
+        } elseif (is_object($this->data) && get_class($this->data) && method_exists($this->data, 'toArray')) {
             $array = $this->data->toArray();
             if (is_array($array) && Arr::isList($array)) {
                 return ! is_null($this->collectionResource) && $this->collectionResource instanceof ResourceCollection ? new $this->collectionResource($array) : $this->resource::collection($array);

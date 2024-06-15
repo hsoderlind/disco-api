@@ -21,7 +21,7 @@ class OrderStatusHistory extends Model
 {
     use HasFactory, LogsActivity, SoftDeletes;
 
-    protected $fillable = ['new_status'];
+    protected $fillable = ['new_status_id'];
 
     /**
      * Boot

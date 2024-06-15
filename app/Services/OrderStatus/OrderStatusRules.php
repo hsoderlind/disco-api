@@ -24,6 +24,9 @@ class OrderStatusRules extends Rules
             'name' => ['required', 'string', 'max:255', new UniqueInShop('order_statuses', except: 'id')],
             'sort_order' => 'required|numeric|integer|min:0',
             'is_default' => 'required|boolean',
+            'actions' => 'required|array',
+            'actions.*.action' => 'required|string|max:255',
+            'actions.*.sort_order' => 'required|numeric|integer|min:0',
         ];
     }
 }

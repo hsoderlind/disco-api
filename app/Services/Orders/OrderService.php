@@ -3,7 +3,6 @@
 namespace App\Services\Orders;
 
 use App\Http\Resources\OrderResource;
-use App\Mail\OrderConfirmation;
 use App\Models\Order;
 use App\Services\AbstractService;
 use App\Services\Customer\CustomerService;
@@ -11,13 +10,13 @@ use App\Services\Note\NoteService;
 use App\Services\Orders\Exceptions\OrderItemException;
 use App\Services\Orders\Exceptions\OrderPaymentException;
 use App\Services\Orders\Exceptions\OrderShippingException;
+use App\Services\OrderStatus\OrderStatusActionService;
 use App\Services\OrderStatus\OrderStatusService;
 use App\Services\PaymentMethod\PaymentMethodService;
 use App\Services\ProductStock\ProductStockService;
 use App\Services\ShippingMethod\Interfaces\ShippingMethod;
 use App\Services\ShippingMethod\ShippingMethodService;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use JsonSerializable;
 
 class OrderService extends AbstractService implements JsonSerializable
@@ -123,14 +122,14 @@ class OrderService extends AbstractService implements JsonSerializable
         $result = $this->paymentControlClass->onProcessing($order);
 
         if (isset($result) && $result !== true) {
-            // TODO: set order status to failed
+            $this->failOrder($order);
             throw $this->orderPaymentException($order, $result);
         }
 
         $result = $this->shippingControlClass->onProcessing($order);
 
         if (isset($result) && $result !== true) {
-            // TODO: set order status to failed
+            $this->failOrder($order);
             throw $this->orderShippingException($order, $result);
         }
 
@@ -216,7 +215,7 @@ class OrderService extends AbstractService implements JsonSerializable
 
         $order->save();
 
-        Mail::to($order->customer)->queue(new OrderConfirmation($order));
+        OrderStatusActionService::factory()->runForOrder($order);
 
         $this->paymentControlClass->onCompleted($order);
 
@@ -249,9 +248,7 @@ class OrderService extends AbstractService implements JsonSerializable
         $order = $this->read($orderId)->get();
 
         $orderStatus = OrderStatusService::factory($this->shopId)->read($orderStatusId)->get();
-        /** @var \App\Models\OrderStatusHistory $orderStatusHistory */
-        $orderStatusHistory = $order->statusHistory()->create([]);
-        $orderStatusHistory->newStatus()->associate($orderStatus);
+        $order->statusHistory()->create(['new_status_id' => $orderStatus->getKey()]);
 
         if (! is_null($note)) {
             $order->notes()->create([
@@ -260,11 +257,16 @@ class OrderService extends AbstractService implements JsonSerializable
             ]);
         }
 
-        if (! is_null($mailContent)) {
-            // TODO: Send mail
-        }
+        // TODO: run order status actions
 
         return $this;
+    }
+
+    protected function failOrder(Order $order)
+    {
+        $orderStatus = OrderStatusService::factory($this->shopId)->readFailed()->get();
+
+        $order->statusHistory()->create(['new_status_id' => $orderStatus->getKey()]);
     }
 
     protected function validateItems(Order $order)

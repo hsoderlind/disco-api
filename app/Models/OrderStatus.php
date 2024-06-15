@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $sort_order
  * @property string $name
  * @property bool $is_default
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderStatusAction $actions
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
@@ -24,6 +25,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class OrderStatus extends Model
 {
     use HasFactory;
+
+    protected $with = [
+        'actions',
+    ];
 
     protected $fillable = [
         'sort_order',
@@ -62,6 +67,11 @@ class OrderStatus extends Model
         return $this->hasMany(OrderStatusTransition::class, 'from_status_id');
     }
 
+    public function actions(): HasMany
+    {
+        return $this->hasMany(OrderStatusAction::class)->orderBy('sort_order');
+    }
+
     /**
      * Scopes
      */
@@ -81,5 +91,38 @@ class OrderStatus extends Model
     public function canTransitionTo(OrderStatus $toStatus)
     {
         return $this->validTransitions()->where('to_status_id', $toStatus->getKey())->exists();
+    }
+
+    public function syncActions(array $actions)
+    {
+        $actionsCollection = collect($actions);
+        $actionsToDetach = [];
+        $actionsToAttach = [];
+
+        foreach ($this->actions as $currentAction) {
+            $entry = $actionsCollection->firstWhere('action', $currentAction->action);
+
+            if (is_null($entry)) {
+                $actionsToDetach[] = $currentAction;
+            }
+        }
+
+        foreach ($actionsCollection as $action) {
+            $model = $this->actions()->where('action', $action['action'])->first();
+
+            if (is_null($model)) {
+                $actionsToAttach[] = $action;
+            } elseif ($model->sort_order !== $action['sort_order']) {
+                $model->update(['sort_order' => $action['sort_order']]);
+            }
+        }
+
+        foreach ($actionsToDetach as $action) {
+            $action->delete();
+        }
+
+        if (count($actionsToAttach)) {
+            $this->actions()->createMany($actionsToAttach);
+        }
     }
 }

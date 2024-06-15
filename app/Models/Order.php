@@ -38,6 +38,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property-read \App\Models\Shop $shop
  * @property-read \App\Models\Receipt $receipt
  * @property-read \App\Models\OrderSetting $settings
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OrderAction $actions
  *
  * @method \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
  * @method static \Illuminate\Database\Eloquent\Builder|static inShop(int $shopId)
@@ -123,9 +124,9 @@ class Order extends Model
         return $this->hasMany(OrderStatusHistory::class);
     }
 
-    public function currentStatus()
+    public function currentStatus(): HasOne
     {
-        return $this->statusHistory()->latestOfMany();
+        return $this->hasOne(OrderStatusHistory::class)->latestOfMany();
     }
 
     public function receipt(): MorphOne
@@ -136,6 +137,11 @@ class Order extends Model
     public function settings(): HasOne
     {
         return $this->hasOne(OrderSetting::class, 'shop_id', 'shop_id');
+    }
+
+    public function actions(): HasMany
+    {
+        return $this->hasMany(OrderAction::class);
     }
 
     /**
