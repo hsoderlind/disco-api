@@ -66,7 +66,11 @@ class ProductStockService extends AbstractService
     {
         $this->data = DB::transaction(function () use ($id, $data) {
             $model = $this->read($id)->get();
-            $model->update($data);
+            $model->fill(collect($data)->except(['adjusted_quantity'])->toArray());
+            $model->adjustQuantity($data['adjusted_quantity']);
+            $model->save();
+
+            return $model;
         });
 
         return $this;

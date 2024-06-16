@@ -20,9 +20,10 @@ class ProductStockRules extends Rules
     public function getRules(): array
     {
         return [
-            'id' => ['sometimes', 'required', new ExistsInShop('products_stock')],
+            'id' => ['sometimes', 'required', new ExistsInShop('product_stocks')],
             'sku' => 'sometimes|string|nullable|max:255',
             'initial_quantity' => 'sometimes|required|integer|numeric',
+            'adjusted_quantity' => 'sometimes|required|numeric|integer',
             'min_order_quantity' => 'sometimes|required|integer|numeric',
             'out_of_stock_message' => 'sometimes|string|nullable|max:255',
             'allow_order_out_of_stock' => 'sometimes|boolean',

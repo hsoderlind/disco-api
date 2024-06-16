@@ -55,7 +55,7 @@ class PhysicalFileService
     public function createTemporaryUrl(int $userId)
     {
         return URL::temporarySignedRoute(
-            'signed_download',
+            'file.signed_download',
             now()->addMinutes(5),
             [
                 'shopId' => $this->model->shop_id,

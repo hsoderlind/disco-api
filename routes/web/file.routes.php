@@ -7,9 +7,13 @@ Route::controller(FileController::class)
     ->prefix('file')
     ->group(function () {
         Route::get('/download/{shopId}/{userId}/{id}', 'signedDownload')
-            ->name('signed_download')
+            ->name('file.signed_download')
             ->whereNumber('shopId')
             ->whereNumber('userId')
             ->whereNumber('id');
-    })
-    ->name('file.');
+        Route::get('/{shopId}/{id}', 'publicDownload')
+            ->name('file.web.download')
+            ->whereNumber('shopId')
+            ->whereNumber('id')
+            ->middleware(['set_shop']);
+    });

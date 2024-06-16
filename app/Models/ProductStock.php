@@ -113,4 +113,11 @@ class ProductStock extends Model
         return LogOptions::defaults()
             ->logFillable();
     }
+
+    public function adjustQuantity(int $adjustedQty)
+    {
+        $this->initial_quantity += $adjustedQty;
+
+        return $this->initial_quantity;
+    }
 }

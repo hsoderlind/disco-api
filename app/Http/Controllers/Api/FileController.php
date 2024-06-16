@@ -28,6 +28,15 @@ class FileController extends Controller
             );
     }
 
+    public function publicDownload(Request $request, int $shopId, int $id)
+    {
+        return $this->getService()
+            ->getPhysicalFileService($id)
+            ->download(
+                $request->query('disposition') === 'attachment'
+            );
+    }
+
     public function signedDownload(Request $request, int $shopId, int $userId, int $id)
     {
         ShopSession::setId($shopId);
