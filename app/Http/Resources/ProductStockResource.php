@@ -28,6 +28,7 @@ class ProductStockResource extends JsonResource
             'available_at' => $this->available_at,
             'available_quantity' => $this->available_quantity,
             'approx_available_quantity' => $this->approx_available_quantity,
+            'product' => new ProductResource($this->whenLoaded('product')),
         ];
     }
 }

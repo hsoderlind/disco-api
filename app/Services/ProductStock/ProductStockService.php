@@ -2,14 +2,18 @@
 
 namespace App\Services\ProductStock;
 
+use App\Http\Resources\ProductStockResource;
 use App\Mail\ProductOutOfStock;
 use App\Models\ProductStock;
 use App\Services\AbstractService;
 use App\Services\Shop\ShopService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class ProductStockService extends AbstractService
 {
+    protected $resource = ProductStockResource::class;
+
     public function newModel(array $data)
     {
         /** @var \App\Models\ProductStock */
@@ -32,11 +36,47 @@ class ProductStockService extends AbstractService
         return $this;
     }
 
+    public function list()
+    {
+        $this->data = ProductStock::join('products', 'product_stocks.product_id', '=', 'products.id')
+            ->where('product_stocks.shop_id', $this->shopId)
+            ->orderBy('products.name')
+            ->select('product_stocks.*')
+            ->with(['product', 'supplier'])
+            ->get();
+
+        return $this;
+    }
+
+    public function read(int $id)
+    {
+        $this->data = ProductStock::inShop($this->shopId)->findOrFail($id);
+
+        return $this;
+    }
+
     public function readByProduct(int $id)
     {
         $this->data = ProductStock::inShop($this->shopId)->forProduct($id)->first();
 
         return $this;
+    }
+
+    public function update(int $id, array $data)
+    {
+        $this->data = DB::transaction(function () use ($id, $data) {
+            $model = $this->read($id)->get();
+            $model->update($data);
+        });
+
+        return $this;
+    }
+
+    public function delete(int $id)
+    {
+        $deleted = $this->read($id)->get()->delete();
+
+        return $deleted;
     }
 
     public function canReserveItem(int $productId, int $qty)

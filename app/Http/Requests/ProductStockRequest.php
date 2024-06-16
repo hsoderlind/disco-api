@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ProductStockRequest extends FormRequest
 {
-    protected Rules $rules;
+    protected ProductStockRules $rules;
 
     protected function prepareForValidation()
     {

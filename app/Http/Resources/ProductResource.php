@@ -32,7 +32,7 @@ class ProductResource extends JsonResource
             'tax' => new TaxResource($this->tax),
             'barcodes' => BarcodeResource::collection($this->whenLoaded('barcodes')),
             'supplier' => new SupplierResource($this->supplier),
-            'mmanufacturer' => new ManufacturerResource($this->manufacturer),
+            'manufacturer' => new ManufacturerResource($this->manufacturer),
             'special_prices' => ProductSpecialPriceResource::collection($this->whenLoaded('specialPrices')),
             'current_special_price' => new ProductSpecialPriceResource($this->whenLoaded('currentSpecialPrice')),
             'stock' => new ProductStockResource($this->stock),
