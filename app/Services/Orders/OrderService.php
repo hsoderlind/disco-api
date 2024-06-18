@@ -45,11 +45,15 @@ class OrderService extends AbstractService implements JsonSerializable
 
     public function list()
     {
-        $this->data = Order::inShop($this->shopId)->with([
-            'customer',
-            'currentStatus',
-            'items',
-        ])->get();
+        $this->data = Order::inShop($this->shopId)
+            ->with([
+                'customer',
+                'currentStatus',
+                'totals',
+                'payment',
+            ])
+            ->orderBy('created_at')
+            ->get();
 
         return $this;
     }
@@ -237,7 +241,24 @@ class OrderService extends AbstractService implements JsonSerializable
 
     public function read(int $id)
     {
-        $this->data = Order::inShop($this->shopId)->findOrFail($id);
+        $this->data = Order::inShop($this->shopId)
+            ->with([
+                'customer',
+                'metadata',
+                'notes',
+                'totals',
+                'items',
+                'payment',
+                'shipping',
+                'statusHistory',
+                'statusHistory.oldStatus',
+                'statusHistory.note',
+                'currentStatus',
+                'receipt',
+                'activities',
+                'activities.causer',
+            ])
+            ->findOrFail($id);
 
         return $this;
     }
@@ -257,7 +278,7 @@ class OrderService extends AbstractService implements JsonSerializable
             ]);
         }
 
-        // TODO: run order status actions
+        OrderStatusActionService::factory()->runForOrder($order);
 
         return $this;
     }

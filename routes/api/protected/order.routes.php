@@ -11,6 +11,9 @@ Route::controller(OrderController::class)
             ->name('order.list');
         Route::post('/', 'create')
             ->name('order.create');
+        Route::get('/{id}', 'read')
+            ->name('order.read')
+            ->whereNumber('id');
         Route::put('/{id}', 'update')
             ->name('order.update')
             ->whereNumber('id');

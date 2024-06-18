@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -15,7 +15,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property-read int $order_id
  * @property-read \App\Models\OrderStatus $oldStatus
  * @property-read \App\Models\OrderStatus $newStatus
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Note[] $notes
+ * @property-read \App\Models\Note $note
  */
 class OrderStatusHistory extends Model
 {
@@ -55,9 +55,9 @@ class OrderStatusHistory extends Model
         return $this->belongsTo(OrderStatus::class);
     }
 
-    public function notes(): MorphMany
+    public function note(): MorphOne
     {
-        return $this->morphMany(Note::class, 'noteable');
+        return $this->morphOne(Note::class, 'noteable');
     }
 
     /**
