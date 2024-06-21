@@ -1,0 +1,11 @@
+<p class="mb-3 mt-8">
+	<b class="uppercase">Ordersammanfattning</b>
+	<br />
+	Ordernummer: @{{ $order->order_number }}<br />
+	Datum: @{{ $order->created_at->format('Y-m-d H:i') }}<br />
+	Namn: @{{ $order->customer->name }}<br />
+	@if (isset($order->customer->email)) E-postadress: @{{ $order->customer->email }}<br />
+	@endif @if (isset($order->customer->phone)) Telefon: @{{ $order->customer->phone }}<br />
+	@endif Faktureringsadress: @{{ $billingAddress }}<br />
+	Betalningssätt @{{ $order->payment?->title }}<br />
+</p>

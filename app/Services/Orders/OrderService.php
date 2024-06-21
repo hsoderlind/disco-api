@@ -263,22 +263,28 @@ class OrderService extends AbstractService implements JsonSerializable
         return $this;
     }
 
-    public function updateOrderStatus(int $orderId, int $orderStatusId, ?string $mailContent = null, ?string $note = null)
+    public function updateOrderStatus(int $orderId, array $data)
     {
         /** @var \App\Models\Order $order */
         $order = $this->read($orderId)->get();
 
-        $orderStatus = OrderStatusService::factory($this->shopId)->read($orderStatusId)->get();
-        $order->statusHistory()->create(['new_status_id' => $orderStatus->getKey()]);
+        $orderStatus = OrderStatusService::factory($this->shopId)->read($data['order_status_id'])->get();
+        $order->statusHistory()->create([
+            'old_status_id' => $order->currentStatus->newStatus->getKey(),
+            'new_status_id' => $orderStatus->getKey(),
+        ]);
 
-        if (! is_null($note)) {
+        activity()->performedOn($order)->log('Orderstatusen ändrad till '.$orderStatus->name);
+
+        if (isset($data['note'])) {
             $order->notes()->create([
-                'title' => 'Orderstatusen uppdaterades till '.$orderStatus->name,
-                'content' => $note,
+                'content' => $data['note'],
             ]);
         }
 
         OrderStatusActionService::factory()->runForOrder($order);
+
+        $order->save();
 
         return $this;
     }

@@ -11,15 +11,15 @@
 								<p
 									class="mb-3 py-3 border-solid border-r-0 border-l-0 border-t-2 border-b-2 border-t-cyan-800 border-b-cyan-800 text-lg uppercase"
 								>
-									Orderbekräftelse från @{{ $order->shop->name }} - Order nr. @{{ $order->order_number
-									}}.
+									Din beställning hos @{{ $order->shop->name }} har uppdaterats - Order nr. @{{
+									$order->order_number }}.
 								</p>
 
 								<p class="mb-3">
 									<b>Hej @{{ $order->customer->name }}</b>
 									<br />
-									Tack för din beställning! Vi har mottagit din beställning och kommer skicka dig ett
-									kvitto när ditt paket har skickats.
+									Vi vill informera dig om att statusen på din beställning har uppdaterats till "@{{
+									$order->currentStatus->newStatus->name }}".
 								</p>
 
 								<x-order-summary />
@@ -28,9 +28,10 @@
 
 								<x-order-items />
 
-								@if ($order->settings->purchase_information)
-								<p class="mt-8">{!! nl2br($order->settings->purchase_information) !!}</p>
+								@if ($customContent)
+								<p class="mt-8">{!! nl2br($customContent) !!}</p>
 								@endif
+
 								<p class="mt-8">Vänligen, <br />@{{ $order->shop->name }}</p>
 								<x-footer />
 							</td>

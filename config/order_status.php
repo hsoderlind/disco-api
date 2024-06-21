@@ -1,6 +1,8 @@
 <?php
 
 use App\Services\OrderStatus\Actions\OrderConfirmationAction;
+use App\Services\OrderStatus\Actions\OrderReceiptAction;
+use App\Services\OrderStatus\Actions\OrderStatusChangedAction;
 
 return [
     'actions' => [
@@ -14,7 +16,7 @@ return [
             'name' => 'order_receipt',
             'title' => 'Skicka orderkvitto',
             'description' => 'Skicka mejl med orderkvitto till kunden.',
-            'handler' => '', // The action to perform on the order
+            'handler' => OrderReceiptAction::class, // The action to perform on the order
         ],
         'order_partial_shipped' => [
             'name' => 'order_partial_shipped',
@@ -38,7 +40,7 @@ return [
             'name' => 'order_status_changed',
             'title' => 'Skicka orderpåminnelse',
             'description' => 'Skicka mejl om ändrad orderstatus till kunden',
-            'handler' => '', // The action to perform on the order
+            'handler' => OrderStatusChangedAction::class, // The action to perform on the order
         ],
         'order_payment_reminder' => [
             'name' => 'order_payment_reminder',

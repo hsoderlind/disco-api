@@ -2,6 +2,7 @@
 
 use App\Mail\OrderConfirmation;
 use App\Mail\OrderReceipt;
+use App\Mail\OrderStatusUpdated;
 use App\Models\Order;
 use App\Services\Shop\ShopSession;
 use Illuminate\Support\Facades\Route;
@@ -37,5 +38,12 @@ if (app()->isLocal()) {
         $order = Order::inShop(ShopSession::getId())->latest()->first();
 
         return (new OrderConfirmation($order))->render();
+    });
+
+    Route::get('/mail/order-status-updated', function () {
+        ShopSession::setId(1);
+        $order = Order::inShop(ShopSession::getId())->latest()->first();
+
+        return (new OrderStatusUpdated($order))->render();
     });
 }

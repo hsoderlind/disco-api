@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
+use App\Http\Requests\OrderStatusHistoryRequest;
 use App\Services\Orders\OrderService;
 use App\Services\Shop\ShopSession;
 
@@ -31,13 +32,11 @@ class OrderController extends Controller
         return $this->service->read($id)->toResource();
     }
 
-    public function update(OrderRequest $request, int $id)
+    public function update(OrderStatusHistoryRequest $request, int $id)
     {
         return $this->service->updateOrderStatus(
             $id,
-            $request->input('order_status_id'),
-            $request->input('note'),
-            $request->input('mail_content')
+            $request->validated()
         )->toResource();
     }
 }

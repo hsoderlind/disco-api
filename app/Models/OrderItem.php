@@ -4,11 +4,13 @@ namespace App\Models;
 
 use App\Casts\MinorCurrency;
 use App\Casts\MinorQuantity;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Number;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -28,9 +30,13 @@ use Spatie\Activitylog\Traits\LogsActivity;
  * @property int $vat
  * @property int $tax_value
  * @property int $quantity
+ * @property-read int $batch
  * @property-read \App\Models\Order $order
  * @property-read \App\Models\Product $product
  * @property-read \App\Models\Tax $tax
+ *
+ * @method \Illuminate\Database\Eloquent\Builder|static latestBatch()
+ * @method static \Illuminate\Database\Eloquent\Builder|static latestBatch()
  */
 class OrderItem extends Model
 {
@@ -63,6 +69,14 @@ class OrderItem extends Model
         parent::boot();
 
         static::creating(function ($instance) {
+            $instance->price_incl_vat_formatted = Number::currency($instance->calcPriceIncVat(), in: config('disco.currency'));
+            $instance->total_incl_vat_formatted = Number::currency($instance->calcTotalInclVat(), in: config('disco.currency'));
+
+            $prevInstance = static::latestBatch()->first();
+            $instance->batch = $prevInstance->batch + 1;
+        });
+
+        static::updating(function ($instance) {
             $instance->price_incl_vat_formatted = Number::currency($instance->calcPriceIncVat(), in: config('disco.currency'));
             $instance->total_incl_vat_formatted = Number::currency($instance->calcTotalInclVat(), in: config('disco.currency'));
         });
@@ -106,6 +120,13 @@ class OrderItem extends Model
     /**
      * Scopes
      */
+    public function scopeLatestBatch(Builder $query)
+    {
+        return $query->where('batch', function ($query) {
+            $query->select(DB::raw('MAX(batch)'))
+                ->from('order_items');
+        });
+    }
 
     /**
      * Methods

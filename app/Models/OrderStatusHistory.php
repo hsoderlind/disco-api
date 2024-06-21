@@ -21,17 +21,14 @@ class OrderStatusHistory extends Model
 {
     use HasFactory, LogsActivity, SoftDeletes;
 
-    protected $fillable = ['new_status_id'];
+    protected $fillable = [
+        'old_status_id',
+        'new_status_id',
+    ];
 
     /**
      * Boot
      */
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::updating(fn (OrderStatusHistory $instance) => $instance->old_status_id = $instance->original['new_status_id']);
-    }
 
     /**
      * Attributes

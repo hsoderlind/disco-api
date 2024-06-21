@@ -95,14 +95,14 @@
               <tr>
                 <td class="sm-px-6" style="border-radius: 4px; background-color: #fff; padding: 48px; font-size: 16px; color: #334155; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05)">
                   <p style="margin-bottom: 12px; border-left-width: 0px; border-right-width: 0px; border-left-style: solid; border-right-style: solid; border-bottom: 2px solid #155e75; border-top: 2px solid #155e75; padding-top: 12px; padding-bottom: 12px; font-size: 18px; text-transform: uppercase">
-                    Orderbekräftelse från {{ $order->shop->name }} - Order nr. {{ $order->order_number
-									}}.
+                    Din beställning hos {{ $order->shop->name }} har uppdaterats - Order nr. {{
+									$order->order_number }}.
                   </p>
                   <p style="margin-bottom: 12px;">
                     <b>Hej {{ $order->customer->name }}</b>
                     <br>
-                    Tack för din beställning! Vi har mottagit din beställning och kommer skicka dig ett
-                    kvitto när ditt paket har skickats.
+                    Vi vill informera dig om att statusen på din beställning har uppdaterats till "{{
+									$order->currentStatus->newStatus->name }}".
                   </p>
                   <p style="margin-bottom: 12px; margin-top: 32px">
                     <b style="text-transform: uppercase;">Ordersammanfattning</b>
@@ -145,8 +145,8 @@
                       </tr>
                       @endforeach
                     </table>
-                  </div> @if ($order->settings->purchase_information)
-                  <p style="margin-top: 32px;">{!! nl2br($order->settings->purchase_information) !!}</p>
+                  </div> @if ($customContent)
+                  <p style="margin-top: 32px;">{!! nl2br($customContent) !!}</p>
                   @endif
                   <p style="margin-top: 32px;">Vänligen, <br>{{ $order->shop->name }}</p>
                   <div style="margin-top: 24px; border-width: 0px; border-top: 2px #155e75; border-style: solid; padding-top: 24px">
